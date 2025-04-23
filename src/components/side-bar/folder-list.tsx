@@ -2,14 +2,18 @@
 
 import { useEffect, useState, useRef, ChangeEvent } from "react";
 import getFolderList from "./controllers/get-folders";
+import { createFolder, renameFolder, deleteFolder } from './controllers/folder-action';
 import {
   useSelectedFolder,
   type IFolderState,
 } from "./controllers/selected-folder";
 import { useTranslation } from "react-i18next";
-import { Folder } from "lucide-react";
+import { Folder, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { produce } from 'immer';
 import Empty from "./empty";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import type { IFolderItem } from "./types";
 import styles from "./index.module.css";
 
@@ -17,7 +21,72 @@ const FolderList = function () {
   const [dataSource, setDataSource] = useState([] as IFolderItem[]);
   const { name: selectedFolder, setName: setSelectedFolder } =
     useSelectedFolder((state: IFolderState) => state);
+  const inputRef = useRef("");
+  const actionTypeRef = useRef('add');
+  const renameOriginRef = useRef('');
   const { t } = useTranslation();
+
+  const handleAddFolder = function () {
+    const newDataSource = [
+      {
+        type: "input",
+        name: "",
+      },
+    ].concat(dataSource);
+    inputRef.current = "";
+    actionTypeRef.current = "add";
+    setDataSource(newDataSource);
+  };
+
+  const handleInputChange = function (event: ChangeEvent<HTMLInputElement>) {
+    inputRef.current = event.target?.value;
+  };
+
+  const handleSelect = function (folder: IFolderItem) {
+    if (folder.type === "input") {
+      return;
+    }
+    setSelectedFolder(folder.name);
+  };
+
+  const handleInputBlur = function (index: number) {
+    const newFolders = ([] as IFolderItem[]).concat(dataSource);
+    const renameOrigin = renameOriginRef.current;
+    const inputValue = inputRef.current;
+    // no rename indicates that it is in add mode
+    if (!renameOrigin) {
+      if (!inputValue) {
+        newFolders.shift();
+        setDataSource(newFolders);
+        return;
+      }
+      createFolder(inputValue)
+        .then(() => {
+          newFolders[0] = {
+            type: "folder",
+            name: inputValue,
+          };
+          setDataSource(newFolders);
+        })
+        .catch(() => {
+          newFolders.shift();
+          setDataSource(newFolders);
+        });
+      return;
+    }
+    
+    renameFolder(renameOrigin, inputValue).then(() => {
+      setDataSource(
+        produce(dataSource, (draft) => {
+          draft[index] = {
+            ...draft[index],
+            name: inputValue,
+            type: 'folder'
+          }
+        })
+      );
+    });
+  };
 
   useEffect(() => {
     getFolderList().then((ret) => {
@@ -39,7 +108,10 @@ const FolderList = function () {
 
   return (
     <div className={styles.folder_list}>
-      <div className={styles.list_header}></div>
+      <div className={styles.list_header}>
+        <span className={styles.header_label}>{t("folders")}</span>
+        <Plus className="cursor-pointer" size={14} />
+      </div>
       <div className={styles.list_folders}>
         {dataSource.length > 0 ? (
           dataSource.map((item, index) => {
@@ -55,8 +127,6 @@ const FolderList = function () {
                 )}
                 key={index}
                 onClick={() => handleSelect(item)}
-                onMouseEnter={() => handleEnter(item)}
-                onMouseLeave={() => handleLeave(item)}
               >
                 <div className={styles.cate_item_label}>
                   <Folder
@@ -72,66 +142,17 @@ const FolderList = function () {
                       type="text"
                       defaultValue={name}
                       onChange={handleInputChange}
-                      onBlur={handleInputBlur}
+                      onBlur={() => handleInputBlur(index)}
                     />
                   ) : (
                     <span className={styles.item_name}>{name}</span>
                   )}
                 </div>
-                {enterItem.name === name && enterItem.isEntering && (
-                  <div className={styles.cate_item_action}>
-                    <div
-                      style={{
-                        color: "hsl(var(--foreground))",
-                        marginRight: "6px",
-                      }}
-                      title={t("rename")}
-                    >
-                      <Pencil
-                        style={{
-                          color: "hsl(var(--foreground))",
-                        }}
-                        size={14}
-                        onClick={() => handleRename(index)}
-                      />
-                    </div>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <div title={t("remove")}>
-                          <Trash2
-                            style={{
-                              color: "var(--danger)",
-                            }}
-                            size={14}
-                          />
-                        </div>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            {t("confirmDelete")}
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            {t("deleteWarn")}
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => handleDelete(index)}
-                          >
-                            {t("confirm")}
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
-                )}
               </div>
             );
           })
         ) : (
-          <Empty tip="" />
+          <Empty tip={t('emptyFolders')} />
         )}
       </div>
     </div>

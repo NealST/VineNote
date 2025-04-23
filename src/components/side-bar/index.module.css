@@ -1,0 +1,33 @@
+.side_bar {
+  position: relative;
+  width: 200px;
+  height: 100vh;
+  border-right: 1px solid var(--sidebar-border);
+  background-color: var(--sidebar);
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.folder_list {
+  margin-top: 30px;
+}
+
+.list_header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 12px;
+}
+
+.header_label {
+  font-size: 12px;
+}
+
+

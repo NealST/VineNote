@@ -4,5 +4,6 @@
   "tags": "Tags",
   "settings": "Settings",
   "help": "Help & Feedback",
-  "folders": "Folders"
+  "folders": "Folders",
+  "emptyFolders": "Please add folders~"
 }
