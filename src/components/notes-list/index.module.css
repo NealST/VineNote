@@ -1,0 +1,27 @@
+.notes_list {
+  width: 260px;
+  height: 100vh;
+}
+
+.list_header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.header_label {
+  font-size: 14px;
+  color: var(--foreground);
+}
+
+.list_search {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-left: 12px;
+  padding-right: 12px;
+}

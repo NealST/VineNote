@@ -50,7 +50,7 @@ const Navigation = function ({ onSelect }: IProps) {
             style={{ color: "var(--sidebar-foreground)", fontSize: "12px" }}
             onClick={() => onSelect(id)}
           >
-            <Icon size={12} /> {name}
+            <Icon size={14} /> {name}
           </Button>
         );
       })}

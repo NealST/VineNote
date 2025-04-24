@@ -13,7 +13,6 @@ import { cn } from "@/lib/utils";
 import { produce } from 'immer';
 import Empty from "./empty";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import type { IFolderItem } from "./types";
 import styles from "./index.module.css";
 
@@ -110,7 +109,7 @@ const FolderList = function () {
     <div className={styles.folder_list}>
       <div className={styles.list_header}>
         <span className={styles.header_label}>{t("folders")}</span>
-        <Plus className="cursor-pointer" size={14} />
+        <Plus className="cursor-pointer" size={16} />
       </div>
       <div className={styles.list_folders}>
         {dataSource.length > 0 ? (
