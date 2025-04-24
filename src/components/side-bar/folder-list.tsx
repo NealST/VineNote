@@ -2,15 +2,19 @@
 
 import { useEffect, useState, useRef, ChangeEvent } from "react";
 import getFolderList from "./controllers/get-folders";
-import { createFolder, renameFolder, deleteFolder } from './controllers/folder-action';
+import {
+  createFolder,
+  renameFolder,
+  deleteFolder,
+} from "./controllers/folder-action";
 import {
   useSelectedFolder,
   type IFolderState,
 } from "./controllers/selected-folder";
 import { useTranslation } from "react-i18next";
-import { Folder, Plus } from "lucide-react";
+import { Folder, Plus, FolderPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { produce } from 'immer';
+import { produce } from "immer";
 import Empty from "./empty";
 import { Input } from "@/components/ui/input";
 import type { IFolderItem } from "./types";
@@ -21,8 +25,8 @@ const FolderList = function () {
   const { name: selectedFolder, setName: setSelectedFolder } =
     useSelectedFolder((state: IFolderState) => state);
   const inputRef = useRef("");
-  const actionTypeRef = useRef('add');
-  const renameOriginRef = useRef('');
+  const actionTypeRef = useRef("add");
+  const renameOriginRef = useRef("");
   const { t } = useTranslation();
 
   const handleAddFolder = function () {
@@ -73,15 +77,15 @@ const FolderList = function () {
         });
       return;
     }
-    
+
     renameFolder(renameOrigin, inputValue).then(() => {
       setDataSource(
         produce(dataSource, (draft) => {
           draft[index] = {
             ...draft[index],
             name: inputValue,
-            type: 'folder'
-          }
+            type: "folder",
+          };
         })
       );
     });
@@ -108,8 +112,15 @@ const FolderList = function () {
   return (
     <div className={styles.folder_list}>
       <div className={styles.list_header}>
-        <span className={styles.header_label}>{t("folders")}</span>
-        <Plus className="cursor-pointer" size={16} />
+        <span className={cn(styles.header_label, "text-muted-foreground")}>
+          {t("folders")}
+        </span>
+        <FolderPlus
+          className="cursor-pointer"
+          size={16}
+          style={{ color: "var(--ring)" }}
+          onClick={handleAddFolder}
+        />
       </div>
       <div className={styles.list_folders}>
         {dataSource.length > 0 ? (
@@ -127,31 +138,29 @@ const FolderList = function () {
                 key={index}
                 onClick={() => handleSelect(item)}
               >
-                <div className={styles.cate_item_label}>
-                  <Folder
-                    style={{
-                      color: "var(--foreground)",
-                      marginRight: "8px",
-                    }}
-                    size={18}
+                <Folder
+                  style={{
+                    color: "var(--foreground)",
+                    marginRight: "8px",
+                  }}
+                  size={18}
+                />
+                {isInput ? (
+                  <Input
+                    className={styles.item_input}
+                    type="text"
+                    defaultValue={name}
+                    onChange={handleInputChange}
+                    onBlur={() => handleInputBlur(index)}
                   />
-                  {isInput ? (
-                    <Input
-                      className={styles.item_input}
-                      type="text"
-                      defaultValue={name}
-                      onChange={handleInputChange}
-                      onBlur={() => handleInputBlur(index)}
-                    />
-                  ) : (
-                    <span className={styles.item_name}>{name}</span>
-                  )}
-                </div>
+                ) : (
+                  <span className={styles.item_name}>{name}</span>
+                )}
               </div>
             );
           })
         ) : (
-          <Empty tip={t('emptyFolders')} />
+          <Empty tip={t("emptyFolders")} />
         )}
       </div>
     </div>

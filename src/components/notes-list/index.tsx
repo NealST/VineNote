@@ -21,7 +21,7 @@ const NotesList = function() {
       </div>
       <Separator />
       <div className={styles.list_search}>
-        <Search size={14} style={{marginRight: '4px'}} />
+        <Search size={14} />
         <Input className='border-0 outline-0 focus-visible:border-0' type="text" placeholder={t('searchNotes')} />
       </div>
       <Separator />
