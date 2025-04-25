@@ -3,8 +3,9 @@ import getNavPath from '@/utils/get-nav-path';
 
 export const createFolder = async function(name: string) {
   const notesPath = await getNavPath('notes');
-  const ret = await mkdir(`${notesPath}/${name}`);
-  return ret;
+  const folderPath = `${notesPath}/${name}`;
+  await mkdir(folderPath);
+  return folderPath;
 }
 
 export const renameFolder = async function(oldName: string, newName: string) {
@@ -14,9 +15,8 @@ export const renameFolder = async function(oldName: string, newName: string) {
   await rename(oldPath, newPath);
 }
 
-export const deleteFolder = async function(name: string) {
-  const notesPath = await getNavPath('notes');
-  await remove(`${notesPath}/${name}`, {
+export const deleteFolder = async function(path: string) {
+  await remove(path, {
     recursive: true
   });
 }

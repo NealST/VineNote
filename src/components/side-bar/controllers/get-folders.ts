@@ -9,6 +9,14 @@ const getFolderList = async function() {
     const notesPath = `${appPath}/notes`;
     await ensureDir(notesPath);
     const entries = await readDir(notesPath);
+    if (entries.length > 0) {
+      return entries.map(item => {
+        return {
+          ...item,
+          path: `${notesPath}/${item.name}`
+        }
+      });
+    }
     return entries;
   } catch (e) {
     return [];

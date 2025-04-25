@@ -12,20 +12,25 @@ import {
   type IFolderState,
 } from "./controllers/selected-folder";
 import { useTranslation } from "react-i18next";
-import { Folder, Plus, FolderPlus } from "lucide-react";
+import { Folder, Ellipsis, FolderPlus, FolderPen, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { produce } from "immer";
 import Empty from "./empty";
 import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import type { IFolderItem } from "./types";
 import styles from "./index.module.css";
 
 const FolderList = function () {
   const [dataSource, setDataSource] = useState([] as IFolderItem[]);
-  const { name: selectedFolder, setName: setSelectedFolder } =
+  const { folder: selectedFolder, setFolder: setSelectedFolder } =
     useSelectedFolder((state: IFolderState) => state);
   const inputRef = useRef("");
-  const actionTypeRef = useRef("add");
   const renameOriginRef = useRef("");
   const { t } = useTranslation();
 
@@ -34,10 +39,11 @@ const FolderList = function () {
       {
         type: "input",
         name: "",
+        path: "",
       },
     ].concat(dataSource);
     inputRef.current = "";
-    actionTypeRef.current = "add";
+    renameOriginRef.current = "";
     setDataSource(newDataSource);
   };
 
@@ -49,7 +55,7 @@ const FolderList = function () {
     if (folder.type === "input") {
       return;
     }
-    setSelectedFolder(folder.name);
+    setSelectedFolder(folder);
   };
 
   const handleInputBlur = function (index: number) {
@@ -64,10 +70,11 @@ const FolderList = function () {
         return;
       }
       createFolder(inputValue)
-        .then(() => {
+        .then((folderPath) => {
           newFolders[0] = {
             type: "folder",
             name: inputValue,
+            path: folderPath,
           };
           setDataSource(newFolders);
         })
@@ -91,21 +98,38 @@ const FolderList = function () {
     });
   };
 
+  const handleRename = function (index: number) {
+    renameOriginRef.current = dataSource[index].name;
+    setDataSource(
+      produce(dataSource, (draft) => {
+        draft[index] = {
+          ...draft[index],
+          type: "input",
+        };
+      })
+    );
+  };
+
+  const handleDelete = function (index: number) {
+    deleteFolder(dataSource[index].path);
+  };
+
   useEffect(() => {
     getFolderList().then((ret) => {
       console.log("folders ret", ret);
       if (ret.length === 0) {
         return;
       }
-      setDataSource(
-        ret
-          .filter((item) => item.isDirectory)
-          .map((item) => ({
-            name: item.name,
-            type: "cate",
-          }))
-      );
-      setSelectedFolder(ret[0].name);
+      const retDataSource = ret
+        .filter((item) => item.isDirectory)
+        .map((item) => ({
+          name: item.name,
+          // @ts-ignore
+          path: item.path,
+          type: "folder",
+        }));
+      setDataSource(retDataSource);
+      setSelectedFolder(retDataSource[0]);
     });
   }, []);
 
@@ -126,35 +150,58 @@ const FolderList = function () {
         {dataSource.length > 0 ? (
           dataSource.map((item, index) => {
             const { name, type } = item;
-            const isSelected = name === selectedFolder;
+            const isSelected = name === selectedFolder.name;
             const isInput = type === "input";
             return (
               <div
                 className={cn(
                   styles.folder_item,
-                  isSelected ? styles.folder_selected : "",
+                  "hover:bg-accent",
+                  "text-accent-foreground",
+                  // 'text-muted-foreground hover:text-accent-foreground',
+                  "dark:hover:bg-accent/50",
+                  "h-8 rounded-md cursor-pointer",
+                  isSelected ? 'bg-accent' : "",
                   isInput ? styles.folder_input : ""
                 )}
                 key={index}
                 onClick={() => handleSelect(item)}
               >
-                <Folder
-                  style={{
-                    color: "var(--foreground)",
-                    marginRight: "8px",
-                  }}
-                  size={18}
-                />
-                {isInput ? (
-                  <Input
-                    className={styles.item_input}
-                    type="text"
-                    defaultValue={name}
-                    onChange={handleInputChange}
-                    onBlur={() => handleInputBlur(index)}
+                <div className={styles.item_content}>
+                  <Folder
+                    style={{
+                      marginRight: "8px",
+                    }}
+                    size={14}
                   />
-                ) : (
-                  <span className={styles.item_name}>{name}</span>
+                  {isInput ? (
+                    <Input
+                      className={cn(styles.item_input, "h-8")}
+                      type="text"
+                      defaultValue={name}
+                      onChange={handleInputChange}
+                      onBlur={() => handleInputBlur(index)}
+                    />
+                  ) : (
+                    <span className={styles.item_name}>{name}</span>
+                  )}
+                </div>
+                {!isInput && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <Ellipsis className="outline-0" size={14} />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem onClick={() => handleRename(index)}>
+                        <FolderPen size={12} />
+                        <span className={styles.menu_item}>{t("rename")}</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleDelete(index)}>
+                        <Trash2 size={12} />
+                        <span className={styles.menu_item}>{t("delete")}</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 )}
               </div>
             );

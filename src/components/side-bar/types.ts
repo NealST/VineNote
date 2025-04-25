@@ -3,4 +3,6 @@ export interface IFolderItem {
   type: string;
   // cate name
   name: string;
+  // folder path
+  path: string;
 }

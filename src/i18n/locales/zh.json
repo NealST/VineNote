@@ -6,5 +6,12 @@
   "help": "帮助与反馈",
   "folders": "文件夹",
   "allNotes": "笔记列表",
-  "searchNotes": "搜索笔记"
+  "searchNotes": "搜索笔记",
+  "rename": "重命名",
+  "delete": "删除",
+  "confirmDelete": "确认删除吗？",
+  "deleteWarn": "删除之后将不可恢复，请确认你的操作!",
+  "cancel": "取消",
+  "confirm": "确定",
+  "untitled": "未命名"
 }

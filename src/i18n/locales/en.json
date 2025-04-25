@@ -6,5 +6,12 @@
   "help": "Help & Feedback",
   "folders": "Folders",
   "allNotes": "All Notes",
-  "searchNotes": "Search notes by keywords and tags"
+  "searchNotes": "Search notes by keywords and tags",
+  "rename": "Rename",
+  "delete": "Delete",
+  "confirmDelete": "Sure to delete?",
+  "deleteWarn": "It will be not able to be recovered after deleted,please confirm your action!",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "untitled": "Untitled"
 }
