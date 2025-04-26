@@ -157,7 +157,7 @@ const FolderList = function () {
                 className={cn(
                   styles.folder_item,
                   "hover:bg-accent",
-                  "text-accent-foreground",
+                  "text-sidebar-foreground",
                   // 'text-muted-foreground hover:text-accent-foreground',
                   "dark:hover:bg-accent/50",
                   "h-8 rounded-md cursor-pointer",
@@ -183,7 +183,7 @@ const FolderList = function () {
                       onBlur={() => handleInputBlur(index)}
                     />
                   ) : (
-                    <span className={styles.item_name}>{name}</span>
+                    <span className={cn(styles.item_name, 'text-sidebar-foreground')}>{name}</span>
                   )}
                 </div>
                 {!isInput && (

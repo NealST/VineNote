@@ -13,5 +13,13 @@
   "deleteWarn": "It will be not able to be recovered after deleted,please confirm your action!",
   "cancel": "Cancel",
   "confirm": "Confirm",
-  "untitled": "Untitled"
+  "untitled": "Untitled",
+  "wordCount": "Word Count",
+  "export": "Export",
+  "export2Html": "Export as HTML",
+  "export2Pdf": "Export as PDF",
+  "export2Image": "Export as Image",
+  "export2Markdown": "Export as Markdown",
+  "focusmode": "Focus mode",
+  "unFocusmode": "Exit focus mode"
 }

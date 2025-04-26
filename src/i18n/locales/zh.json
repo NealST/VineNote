@@ -13,5 +13,13 @@
   "deleteWarn": "删除之后将不可恢复，请确认你的操作!",
   "cancel": "取消",
   "confirm": "确定",
-  "untitled": "未命名"
+  "untitled": "未命名",
+  "wordCount": "字数",
+  "export": "导出",
+  "export2Html": "导出为 HTML",
+  "export2Pdf": "导出为 PDF",
+  "export2Image": "导出为图片",
+  "export2Markdown": "导出为 Markdown",
+  "focusmode": "专注模式",
+  "unFocusmode": "退出专注模式"
 }

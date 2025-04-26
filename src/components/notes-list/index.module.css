@@ -1,6 +1,7 @@
 .notes_list {
-  width: 260px;
+  width: 220px;
   height: 100vh;
+  border-right: 1px solid var(--border);
 }
 
 .list_header {
@@ -8,7 +9,7 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  height: 50px;
+  height: 44px;
   padding-left: 12px;
   padding-right: 12px;
 }
@@ -28,4 +29,13 @@
 
 .list_display {
   padding: 10px;
+}
+
+.file_item {
+  padding: 10px;
+  margin-bottom: 8px;
+}
+
+.item_time {
+  margin-top: 8px;
 }

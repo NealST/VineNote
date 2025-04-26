@@ -1,0 +1,35 @@
+.editor {
+  display: flex;
+  flex: 1;
+  height: 100vh;
+  flex-direction: column;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 45px;
+  padding-left: 12px;
+  padding-right: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.info_title {
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.info_count {
+  font-size: 12px;
+}
+
+.header_action {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+

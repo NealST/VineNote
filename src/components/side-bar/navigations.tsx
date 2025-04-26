@@ -47,7 +47,7 @@ const Navigation = function ({ onSelect }: IProps) {
             key={id}
             variant="ghost"
             className="w-full justify-start cursor-pointer"
-            style={{ color: "var(--sidebar-foreground)", fontSize: "12px" }}
+            style={{ fontSize: "12px" }}
             onClick={() => onSelect(id)}
           >
             <Icon className="text-muted-foreground" size={14} />
