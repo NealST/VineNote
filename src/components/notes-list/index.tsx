@@ -97,7 +97,7 @@ const NotesList = function () {
           {selectedFolder?.name || t("allNotes")}
         </span>
         <FilePlus
-          className="cursor-pointer text-ring"
+          className="cursor-pointer text-foreground"
           size={16}
           onClick={handleAddFile}
         />

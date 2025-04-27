@@ -92,7 +92,7 @@ const Header = function (props: IProps) {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Icon
-                          style={{ marginLeft: "16px" }}
+                          style={{ marginLeft: "20px" }}
                           className="cursor-pointer"
                           size={14}
                           key={id}
@@ -129,7 +129,7 @@ const Header = function (props: IProps) {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Icon
-                    style={{ marginLeft: "16px" }}
+                    style={{ marginLeft: "20px" }}
                     className="cursor-pointer"
                     size={14}
                     key={id}

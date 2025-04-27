@@ -140,9 +140,8 @@ const FolderList = function () {
           {t("folders")}
         </span>
         <FolderPlus
-          className="cursor-pointer"
+          className="cursor-pointer text-foreground"
           size={16}
-          style={{ color: "var(--ring)" }}
           onClick={handleAddFolder}
         />
       </div>
