@@ -17,7 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 import styles from "./index.module.css";
 
 interface IProps {
@@ -76,7 +76,7 @@ const Header = function (props: IProps) {
     <div className={styles.header}>
       <div className={styles.header_info}>
         <span className={styles.info_title}>{selectedFile.name}</span>
-        <span className={cn(styles.info_count, 'text-muted-foreground')}>
+        <span className={cn(styles.info_count, "text-muted-foreground")}>
           {t("wordCount")}: {textCount}
         </span>
       </div>
@@ -129,7 +129,10 @@ const Header = function (props: IProps) {
                 <TooltipTrigger asChild>
                   <Icon
                     style={{ marginLeft: "20px" }}
-                    className="cursor-pointer"
+                    className={cn(
+                      "cursor-pointer",
+                      id === "delete" ? "text-destructive" : ""
+                    )}
                     size={16}
                     onClick={() => action("done")}
                   />
