@@ -161,7 +161,23 @@
   box-sizing: border-box;
 }
 
-.container {
+.main {
   display: flex;
   flex-direction: row;
+  width: 100%;
+}
+
+.toolbar-container {
+  overflow: auto;
+  
+  /* Firefox */
+  scrollbar-width: none; 
+  
+  /* IE 10+ */
+  -ms-overflow-style: none;
+}
+
+/* WebKit (Chrome/Safari/Edge) */
+.toolbar-container::-webkit-scrollbar {
+  display: none;
 }

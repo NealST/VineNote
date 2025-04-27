@@ -12,7 +12,7 @@ import { withTooltip } from './tooltip';
 
 export const Toolbar = withCn(
   ToolbarPrimitive.Root,
-  'relative flex items-center select-none'
+  'relative flex items-center select-none toolbar-container'
 );
 
 const a = cn('flex items-center');

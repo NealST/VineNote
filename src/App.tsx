@@ -6,7 +6,7 @@ import "./App.css";
 function App() {
  
   return (
-    <main className="container">
+    <main className="main">
       <SideBar />
       <NotesList />
       <Editor />
