@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useSelectedFile } from "@/components/notes-list/controllers/selected-file";
-import useTextCount from "./controllers/text-count";
+import { useTextCount } from "./controllers/text-count";
 import { useTranslation } from "react-i18next";
 import { Focus, ArrowRightFromLine, Trash2, Minimize } from "lucide-react";
 import { emitter } from "@/utils/events";
@@ -94,8 +94,7 @@ const Header = function (props: IProps) {
                         <Icon
                           style={{ marginLeft: "20px" }}
                           className="cursor-pointer"
-                          size={14}
-                          key={id}
+                          size={16}
                         />
                       </TooltipTrigger>
                       <TooltipContent>
@@ -125,14 +124,13 @@ const Header = function (props: IProps) {
             );
           }
           return (
-            <TooltipProvider>
+            <TooltipProvider key={id}>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Icon
                     style={{ marginLeft: "20px" }}
                     className="cursor-pointer"
-                    size={14}
-                    key={id}
+                    size={16}
                     onClick={() => action("done")}
                   />
                 </TooltipTrigger>

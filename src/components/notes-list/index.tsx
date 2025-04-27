@@ -119,7 +119,11 @@ const NotesList = function () {
             const isSelected = id === selectedFile.id;
             return (
               <div
-                className={cn(styles.file_item, "hover:bg-card rounded-md cursor-pointer", isSelected ? 'bg-card' : '')}
+                className={cn(
+                  styles.file_item,
+                  "hover:bg-accent rounded-md cursor-pointer",
+                  isSelected ? "bg-accent" : ""
+                )}
                 key={id}
                 onClick={() => setSelectedFile(item)}
               >
@@ -130,14 +134,21 @@ const NotesList = function () {
                     onBlur={() => handleInputBlur(index)}
                   />
                 ) : (
-                  <div className={cn(styles.item_name, "text-card-foreground text-sm")}>
+                  <div
+                    className={cn(
+                      styles.item_name,
+                      "text-sm text-muted-foreground",
+                      isSelected ? "text-accent-foreground" : ""
+                    )}
+                  >
                     {name}
                   </div>
                 )}
                 <div
                   className={cn(
                     styles.item_time,
-                    "text-muted-foreground text-sm"
+                    "text-muted-foreground text-sm",
+                    isSelected ? "text-accent-foreground" : ""
                   )}
                 >
                   {metadata.modified || metadata.created}

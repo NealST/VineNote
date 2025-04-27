@@ -5,7 +5,7 @@ export interface ITextState {
   setCount: (count: number) => void;
 };
 
-const useTextCount = create<ITextState>(set => {
+export const useTextCount = create<ITextState>(set => {
   return {
     count: 0,
     setCount: (count: number) => {
@@ -13,5 +13,3 @@ const useTextCount = create<ITextState>(set => {
     }
   }
 });
-
-export default useTextCount;
