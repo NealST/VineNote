@@ -49,9 +49,8 @@ import {
   useStoreSelect,
 } from '@udecode/plate/react';
 import { CheckIcon, XIcon } from 'lucide-react';
-
 import { suggestionPlugin } from '@/components/editor/plugins/suggestion-plugin';
-
+import i18n from '@/i18n';
 import { Avatar, AvatarFallback, AvatarImage } from './avatar';
 import {
   type TDiscussion,
@@ -68,36 +67,38 @@ export interface ResolvedSuggestion extends TResolvedSuggestion {
 
 export const BLOCK_SUGGESTION = '__block__';
 
+const t = i18n.t;
+
 export const TYPE_TEXT_MAP: Record<string, (node?: TElement) => string> = {
-  [AudioPlugin.key]: () => 'Audio',
-  [BlockquotePlugin.key]: () => 'Blockquote',
-  [CalloutPlugin.key]: () => 'Callout',
-  [CodeBlockPlugin.key]: () => 'Code Block',
-  [ColumnPlugin.key]: () => 'Column',
-  [EquationPlugin.key]: () => 'Equation',
-  [FilePlugin.key]: () => 'File',
-  [HEADING_KEYS.h1]: () => `Heading 1`,
-  [HEADING_KEYS.h2]: () => `Heading 2`,
-  [HEADING_KEYS.h3]: () => `Heading 3`,
-  [HEADING_KEYS.h4]: () => `Heading 4`,
-  [HEADING_KEYS.h5]: () => `Heading 5`,
-  [HEADING_KEYS.h6]: () => `Heading 6`,
-  [HorizontalRulePlugin.key]: () => 'Horizontal Rule',
-  [ImagePlugin.key]: () => 'Image',
-  [MediaEmbedPlugin.key]: () => 'Media',
+  [AudioPlugin.key]: () => t('audio'),
+  [BlockquotePlugin.key]: () => t('blockquote'),
+  [CalloutPlugin.key]: () => t('callout'),
+  [CodeBlockPlugin.key]: () => t('codeBlock'),
+  [ColumnPlugin.key]: () => t('column'),
+  [EquationPlugin.key]: () => t('equation'),
+  [FilePlugin.key]: () => t('file'),
+  [HEADING_KEYS.h1]: () => t(`heading1`),
+  [HEADING_KEYS.h2]: () => t(`heading2`),
+  [HEADING_KEYS.h3]: () => t(`heading3`),
+  [HEADING_KEYS.h4]: () => t(`heading4`),
+  [HEADING_KEYS.h5]: () => t(`heading5`),
+  [HEADING_KEYS.h6]: () => t(`heading6`),
+  [HorizontalRulePlugin.key]: () => t('horiRule'),
+  [ImagePlugin.key]: () => t('image'),
+  [MediaEmbedPlugin.key]: () => t('media'),
   [ParagraphPlugin.key]: (node) => {
     if (node?.[IndentListPlugin.key] === INDENT_LIST_KEYS.todo)
-      return 'Todo List';
+      return t('todoList');
     if (node?.[IndentListPlugin.key] === ListStyleType.Decimal)
-      return 'Ordered List';
-    if (node?.[IndentListPlugin.key] === ListStyleType.Disc) return 'List';
+      return t('orderedList');
+    if (node?.[IndentListPlugin.key] === ListStyleType.Disc) return t('list');
 
-    return 'Paragraph';
+    return t('paragraph');
   },
-  [TablePlugin.key]: () => 'Table',
-  [TocPlugin.key]: () => 'Table of Contents',
-  [TogglePlugin.key]: () => 'Toggle',
-  [VideoPlugin.key]: () => 'Video',
+  [TablePlugin.key]: () => t('table'),
+  [TocPlugin.key]: () => t('toc'),
+  [TogglePlugin.key]: () => t('toggle'),
+  [VideoPlugin.key]: () => t('video'),
 };
 
 export const BlockSuggestionCard = ({
@@ -126,9 +127,8 @@ export const BlockSuggestionCard = ({
   };
 
   const [hovering, setHovering] = useState(false);
-
   const suggestionText2Array = (text: string) => {
-    if (text === BLOCK_SUGGESTION) return ['line breaks'];
+    if (text === BLOCK_SUGGESTION) return [t('lineBreaks')];
 
     return text.split(BLOCK_SUGGESTION).filter(Boolean);
   };
@@ -166,7 +166,7 @@ export const BlockSuggestionCard = ({
                 {suggestionText2Array(suggestion.text!).map((text, index) => (
                   <div key={index} className="flex items-center gap-2">
                     <span className="text-sm text-muted-foreground">
-                      Delete:
+                      {t('delete')}:
                     </span>
 
                     <span key={index} className="text-sm">
@@ -183,11 +183,11 @@ export const BlockSuggestionCard = ({
                   (text, index) => (
                     <div key={index} className="flex items-center gap-2">
                       <span className="text-sm text-muted-foreground">
-                        Add:
+                        {t('add')}:
                       </span>
 
                       <span key={index} className="text-sm">
-                        {text || 'line breaks'}
+                        {text || t('lineBreaks')}
                       </span>
                     </div>
                   )
@@ -204,8 +204,8 @@ export const BlockSuggestionCard = ({
                         key={index}
                         className="flex items-start gap-2 text-brand/80"
                       >
-                        <span className="text-sm">with:</span>
-                        <span className="text-sm">{text || 'line breaks'}</span>
+                        <span className="text-sm">{t('with')}:</span>
+                        <span className="text-sm">{text || t('lineBreaks')}</span>
                       </div>
                     </React.Fragment>
                   )
@@ -215,9 +215,9 @@ export const BlockSuggestionCard = ({
                   <React.Fragment key={index}>
                     <div key={index} className="flex items-start gap-2">
                       <span className="text-sm text-muted-foreground">
-                        {index === 0 ? 'Replace:' : 'Delete:'}
+                        {index === 0 ? `${t('replace')}:` : `${t('delete')}:`}
                       </span>
-                      <span className="text-sm">{text || 'line breaks'}</span>
+                      <span className="text-sm">{text || t('lineBreaks')}</span>
                     </div>
                   </React.Fragment>
                 ))}
