@@ -1,7 +1,5 @@
 'use client';
 
-import * as React from 'react';
-
 import type { DialogProps } from '@radix-ui/react-dialog';
 
 import { Command as CommandPrimitive } from '@udecode/cmdk';
@@ -14,7 +12,7 @@ import {
 } from '@udecode/cn';
 import { cva } from 'class-variance-authority';
 import { Search } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -43,12 +41,13 @@ export const Command = withVariants(CommandPrimitive, commandVariants, [
 ]);
 
 export function CommandDialog({ children, ...props }: DialogProps) {
+  const { t } = useTranslation();
   return (
     <Dialog {...props}>
       <DialogContent className="overflow-hidden p-0 shadow-lg">
-        <DialogTitle className="sr-only">Command Dialog</DialogTitle>
+        <DialogTitle className="sr-only">{t('commandDialog')}</DialogTitle>
         <DialogDescription className="sr-only">
-          Search through commands and documentation using the command menu
+          {t('commandDesc')}
         </DialogDescription>
         <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]]:px-2 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:size-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:size-5">
           {children}

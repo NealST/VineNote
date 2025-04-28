@@ -4,7 +4,7 @@ import React from 'react';
 
 import { cn, withRef } from '@udecode/cn';
 import { EraserIcon } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 import {
   type TColor,
   ColorDropdownMenuItems,
@@ -36,9 +36,10 @@ export const ColorPickerContent = withRef<
     },
     ref
   ) => {
+    const { t } = useTranslation();
     return (
       <div ref={ref} className={cn('flex flex-col', className)} {...props}>
-        <DropdownMenuGroup label="Custom Colors">
+        <DropdownMenuGroup label={t('customColors')}>
           <ColorCustom
             color={color}
             className="px-2"
@@ -48,7 +49,7 @@ export const ColorPickerContent = withRef<
             updateCustomColor={updateCustomColor}
           />
         </DropdownMenuGroup>
-        <DropdownMenuGroup label="Default Colors">
+        <DropdownMenuGroup label={t('defaultColors')}>
           <ColorDropdownMenuItems
             color={color}
             className="px-2"
@@ -60,7 +61,7 @@ export const ColorPickerContent = withRef<
           <DropdownMenuGroup>
             <DropdownMenuItem className="p-2" onClick={clearColor}>
               <EraserIcon />
-              <span>Clear</span>
+              <span>{t('clear')}</span>
             </DropdownMenuItem>
           </DropdownMenuGroup>
         )}

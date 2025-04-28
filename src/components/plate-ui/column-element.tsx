@@ -16,7 +16,7 @@ import {
   withHOC,
 } from '@udecode/plate/react';
 import { GripHorizontal } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 import { Button } from './button';
 import {
   Tooltip,
@@ -88,6 +88,7 @@ export const ColumnElement = withHOC(
 );
 
 const ColumnDragHandle = React.memo(() => {
+  const { t } = useTranslation();
   return (
     <TooltipProvider>
       <Tooltip>
@@ -103,7 +104,7 @@ const ColumnDragHandle = React.memo(() => {
           </Button>
         </TooltipTrigger>
         <TooltipPortal>
-          <TooltipContent>Drag to move column</TooltipContent>
+          <TooltipContent>{t('drag2moveCol')}</TooltipContent>
         </TooltipPortal>
       </Tooltip>
     </TooltipProvider>

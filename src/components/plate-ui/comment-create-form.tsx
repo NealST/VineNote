@@ -25,7 +25,7 @@ import {
 import { Plate, useEditorRef, useStoreSelect } from '@udecode/plate/react';
 import { type CreatePlateEditorOptions, PlateLeaf } from '@udecode/plate/react';
 import { ArrowUpIcon } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 import { useCreateEditor } from '@/components/editor/controllers/use-create-editor';
 import {
   Avatar,
@@ -101,7 +101,7 @@ export function CommentCreateForm({
     discussionStore,
     (state) => state.discussions
   );
-
+  const { t } = useTranslation();
   const editor = useEditorRef();
   const discussionId = useCommentId() ?? discussionIdProp;
   const [resetKey, setResetKey] = React.useState(0);
@@ -254,7 +254,7 @@ export function CommentCreateForm({
             <Editor
               variant="comment"
               className="min-h-[25px] grow pt-0.5 pr-8"
-              placeholder="Reply..."
+              placeholder={t('reply')}
               autoComplete="off"
               autoFocus={autoFocus}
             />

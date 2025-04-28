@@ -7,7 +7,7 @@ import { NodeApi } from '@udecode/plate';
 import { formatCodeBlock, isLangSupported } from '@udecode/plate-code-block';
 import { PlateElement } from '@udecode/plate/react';
 import { BracesIcon, CheckIcon, CopyIcon } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 import { Button } from './button';
 import { CodeBlockCombobox } from './code-block-combobox';
 
@@ -79,7 +79,7 @@ function CopyButton({
   'value'
 >) {
   const [hasCopied, setHasCopied] = React.useState(false);
-
+  const { t } = useTranslation();
   React.useEffect(() => {
     setTimeout(() => {
       setHasCopied(false);
@@ -96,7 +96,7 @@ function CopyButton({
       }}
       {...props}
     >
-      <span className="sr-only">Copy</span>
+      <span className="sr-only">{t('copy')}</span>
       {hasCopied ? (
         <CheckIcon className="!size-3" />
       ) : (

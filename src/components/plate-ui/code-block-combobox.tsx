@@ -7,7 +7,7 @@ import type { TCodeBlockElement } from '@udecode/plate-code-block';
 import { cn } from '@udecode/cn';
 import { useEditorRef, useElement, useReadOnly } from '@udecode/plate/react';
 import { Check } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 import { Button } from './button';
 import {
   Command,
@@ -118,7 +118,7 @@ export function CodeBlockCombobox() {
   const element = useElement<TCodeBlockElement>();
   const value = element.lang || 'plaintext';
   const [searchValue, setSearchValue] = React.useState('');
-
+  const { t } = useTranslation();
   const items = React.useMemo(
     () =>
       languages.filter(
@@ -154,9 +154,9 @@ export function CodeBlockCombobox() {
             className="h-9"
             value={searchValue}
             onValueChange={(value) => setSearchValue(value)}
-            placeholder="Search language..."
+            placeholder={t('searchLang')}
           />
-          <CommandEmpty>No language found.</CommandEmpty>
+          <CommandEmpty>{t('noLangFound')}.</CommandEmpty>
 
           <CommandList className="h-[344px] overflow-y-auto">
             <CommandGroup>

@@ -1,7 +1,5 @@
-import React from 'react';
-
 import type { SlateElementProps } from '@udecode/plate';
-
+import { useTranslation } from 'react-i18next';
 import { cn } from '@udecode/cn';
 import { SlateElement } from '@udecode/plate';
 
@@ -11,7 +9,7 @@ export function DateElementStatic({
   ...props
 }: SlateElementProps) {
   const { element } = props;
-
+  const { t } = useTranslation();
   return (
     <SlateElement className={cn(className, 'inline-block')} {...props}>
       <span
@@ -33,9 +31,9 @@ export function DateElementStatic({
               new Date(today.setDate(today.getDate() + 2)).toDateString() ===
               elementDate.toDateString();
 
-            if (isToday) return 'Today';
-            if (isYesterday) return 'Yesterday';
-            if (isTomorrow) return 'Tomorrow';
+            if (isToday) return t('today');
+            if (isYesterday) return t('yesterday');
+            if (isTomorrow) return t('tomorrow');
 
             return elementDate.toLocaleDateString(undefined, {
               day: 'numeric',
@@ -44,7 +42,7 @@ export function DateElementStatic({
             });
           })()
         ) : (
-          <span>Pick a date</span>
+          <span>{t('pickDate')}</span>
         )}
       </span>
       {children}

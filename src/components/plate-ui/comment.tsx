@@ -20,7 +20,7 @@ import {
   TrashIcon,
   XIcon,
 } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 import { Avatar, AvatarFallback, AvatarImage } from './avatar';
 import {
   discussionStore,
@@ -316,10 +316,12 @@ export function CommentMoreDropdown(props: CommentMoreDropdownProps) {
   const discussions = useStoreValue(discussionStore, 'discussions');
 
   const selectedEditCommentRef = React.useRef<boolean>(false);
+  
+  const { t } = useTranslation();
 
   const onDeleteComment = React.useCallback(() => {
     if (!comment.id)
-      return alert('You are operating too quickly, please try again later.');
+      return alert(t('operateTip'));
 
     // Find and update the discussion
     const updatedDiscussions = discussions.map((discussion: any) => {
@@ -352,7 +354,7 @@ export function CommentMoreDropdown(props: CommentMoreDropdownProps) {
     selectedEditCommentRef.current = true;
 
     if (!comment.id)
-      return alert('You are operating too quickly, please try again later.');
+      return alert(t('operateTip'));
 
     setEditingId(comment.id);
   }, [comment.id, setEditingId]);
@@ -382,11 +384,11 @@ export function CommentMoreDropdown(props: CommentMoreDropdownProps) {
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={onEditComment}>
             <PencilIcon className="size-4" />
-            Edit comment
+            {t('editComment')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={onDeleteComment}>
             <TrashIcon className="size-4" />
-            Delete comment
+            {t('deleteComment')}
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
