@@ -16,7 +16,7 @@ import {
   useEditorPlugin,
   usePlateState,
 } from '@udecode/plate/react';
-
+import { useTranslation } from 'react-i18next';
 import { useIsTouchDevice } from '@/hooks/use-is-touch-device';
 
 import {
@@ -37,6 +37,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
   const [value, setValue] = useState<Value>(null);
   const isTouch = useIsTouchDevice();
   const [readOnly] = usePlateState('readOnly');
+  const { t } = useTranslation();
 
   const handleTurnInto = useCallback(
     (type: string) => {
@@ -117,7 +118,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
               setValue('askAI');
             }}
           >
-            Ask AI
+            {t('askAi')}
           </ContextMenuItem>
           <ContextMenuItem
             onClick={() => {
@@ -127,7 +128,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
               editor.tf.focus();
             }}
           >
-            Delete
+            {t('delete')}
           </ContextMenuItem>
           <ContextMenuItem
             onClick={() => {
@@ -136,31 +137,31 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
                 .blockSelection.duplicate();
             }}
           >
-            Duplicate
+            {t('duplicate')}
             {/* <ContextMenuShortcut>⌘ + D</ContextMenuShortcut> */}
           </ContextMenuItem>
           <ContextMenuSub>
-            <ContextMenuSubTrigger>Turn into</ContextMenuSubTrigger>
+            <ContextMenuSubTrigger>{t('turnInto')}</ContextMenuSubTrigger>
             <ContextMenuSubContent className="w-48">
               <ContextMenuItem
                 onClick={() => handleTurnInto(ParagraphPlugin.key)}
               >
-                Paragraph
+                {t('paragraph')}
               </ContextMenuItem>
 
               <ContextMenuItem onClick={() => handleTurnInto(HEADING_KEYS.h1)}>
-                Heading 1
+                {t('heading1')}
               </ContextMenuItem>
               <ContextMenuItem onClick={() => handleTurnInto(HEADING_KEYS.h2)}>
-                Heading 2
+                {t('heading2')}
               </ContextMenuItem>
               <ContextMenuItem onClick={() => handleTurnInto(HEADING_KEYS.h3)}>
-                Heading 3
+                {t('heading3')}
               </ContextMenuItem>
               <ContextMenuItem
                 onClick={() => handleTurnInto(BlockquotePlugin.key)}
               >
-                Blockquote
+                {t('blockQuote')}
               </ContextMenuItem>
             </ContextMenuSubContent>
           </ContextMenuSub>
@@ -174,7 +175,7 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
                 .blockSelection.setIndent(1)
             }
           >
-            Indent
+            {t('indent')}
           </ContextMenuItem>
           <ContextMenuItem
             onClick={() =>
@@ -183,19 +184,19 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
                 .blockSelection.setIndent(-1)
             }
           >
-            Outdent
+            {t('outdent')}
           </ContextMenuItem>
           <ContextMenuSub>
-            <ContextMenuSubTrigger>Align</ContextMenuSubTrigger>
+            <ContextMenuSubTrigger>{t('align')}</ContextMenuSubTrigger>
             <ContextMenuSubContent className="w-48">
               <ContextMenuItem onClick={() => handleAlign('left')}>
-                Left
+                {t('left')}
               </ContextMenuItem>
               <ContextMenuItem onClick={() => handleAlign('center')}>
-                Center
+                {t('center')}
               </ContextMenuItem>
               <ContextMenuItem onClick={() => handleAlign('right')}>
-                Right
+                {t('right')}
               </ContextMenuItem>
             </ContextMenuSubContent>
           </ContextMenuSub>

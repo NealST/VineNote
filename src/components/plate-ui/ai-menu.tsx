@@ -18,7 +18,7 @@ import {
   usePluginOption,
 } from '@udecode/plate/react';
 import { Loader2Icon } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 import { useChat } from '@/components/editor/controllers/use-chat';
 
 import { AIChatEditor } from './ai-chat-editor';
@@ -32,7 +32,7 @@ export function AIMenu() {
   const mode = usePluginOption(AIChatPlugin, 'mode');
   const streaming = usePluginOption(AIChatPlugin, 'streaming');
   const isSelecting = useIsSelecting();
-
+  const { t } = useTranslation();
   const [value, setValue] = React.useState('');
 
   const chat = useChat();
@@ -139,7 +139,7 @@ export function AIMenu() {
           {isLoading ? (
             <div className="flex grow items-center gap-2 p-2 text-sm text-muted-foreground select-none">
               <Loader2Icon className="size-4 animate-spin" />
-              {messages.length > 1 ? 'Editing...' : 'Thinking...'}
+              {messages.length > 1 ? t('editing') : t('thinking')}
             </div>
           ) : (
             <InputCommand
@@ -157,7 +157,7 @@ export function AIMenu() {
                 }
               }}
               onValueChange={setInput}
-              placeholder="Ask AI anything..."
+              placeholder={t('askAi')}
               data-plate-focus
               autoFocus
             />

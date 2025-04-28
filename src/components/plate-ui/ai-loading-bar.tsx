@@ -7,7 +7,7 @@ import {
   usePluginOption,
 } from '@udecode/plate/react';
 import { Pause } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 import { useChat } from '@/components/editor/controllers/use-chat';
 
 import { Button } from './button';
@@ -15,7 +15,7 @@ import { Button } from './button';
 export const AILoadingBar = () => {
   const chat = useChat();
   const mode = usePluginOption(AIChatPlugin, 'mode');
-
+  const { t } = useTranslation();
   const streaming = usePluginOption(AIChatPlugin, 'streaming');
 
   const { status } = chat;
@@ -40,7 +40,7 @@ export const AILoadingBar = () => {
       )}
     >
       <span className="h-4 w-4 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent" />
-      <span>{status === 'submitted' ? 'Thinking...' : 'Writing...'}</span>
+      <span>{status === 'submitted' ? t('thinking') : t('writing')}</span>
       <Button
         size="sm"
         variant="ghost"
@@ -48,7 +48,7 @@ export const AILoadingBar = () => {
         onClick={() => api.aiChat.stop()}
       >
         <Pause className="h-4 w-4" />
-        Stop
+        {t('stop')}
         <kbd className="ml-1 rounded bg-border px-1 font-mono text-[10px] text-muted-foreground shadow-sm">
           Esc
         </kbd>
