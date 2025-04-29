@@ -63,8 +63,10 @@ import {
   useOpenState,
 } from './dropdown-menu';
 import { ToolbarButton } from './toolbar';
+import i18n from '@/i18n';
 
 type Group = {
+  id: string;
   group: string;
   items: Item[];
 };
@@ -77,48 +79,51 @@ interface Item {
   label?: string;
 }
 
+const t = i18n.t;
+
 const groups: Group[] = [
   {
-    group: 'Basic blocks',
+    id: 'basicBlocks',
+    group: t('basicBlocks'),
     items: [
       {
         icon: <PilcrowIcon />,
-        label: 'Paragraph',
+        label: t('paragraph'),
         value: ParagraphPlugin.key,
       },
       {
         icon: <Heading1Icon />,
-        label: 'Heading 1',
+        label: t('heading1'),
         value: HEADING_KEYS.h1,
       },
       {
         icon: <Heading2Icon />,
-        label: 'Heading 2',
+        label: t('heading2'),
         value: HEADING_KEYS.h2,
       },
       {
         icon: <Heading3Icon />,
-        label: 'Heading 3',
+        label: t('heading3'),
         value: HEADING_KEYS.h3,
       },
       {
         icon: <TableIcon />,
-        label: 'Table',
+        label: t('table'),
         value: TablePlugin.key,
       },
       {
         icon: <FileCodeIcon />,
-        label: 'Code',
+        label: t('code'),
         value: CodeBlockPlugin.key,
       },
       {
         icon: <QuoteIcon />,
-        label: 'Quote',
+        label: t('quote'),
         value: BlockquotePlugin.key,
       },
       {
         icon: <MinusIcon />,
-        label: 'Divider',
+        label: t('divider'),
         value: HorizontalRulePlugin.key,
       },
     ].map((item) => ({
@@ -129,26 +134,27 @@ const groups: Group[] = [
     })),
   },
   {
-    group: 'Lists',
+    id: 'lists',
+    group: t('lists'),
     items: [
       {
         icon: <ListIcon />,
-        label: 'Bulleted list',
+        label: t('bulletedList'),
         value: ListStyleType.Disc,
       },
       {
         icon: <ListOrderedIcon />,
-        label: 'Numbered list',
+        label: t('numberedList'),
         value: ListStyleType.Decimal,
       },
       {
         icon: <SquareIcon />,
-        label: 'To-do list',
+        label: t('todoList'),
         value: INDENT_LIST_KEYS.todo,
       },
       {
         icon: <ChevronRightIcon />,
-        label: 'Toggle list',
+        label: t('toggleList'),
         value: TogglePlugin.key,
       },
     ].map((item) => ({
@@ -159,21 +165,22 @@ const groups: Group[] = [
     })),
   },
   {
-    group: 'Media',
+    id: 'media',
+    group: t('media'),
     items: [
       {
         icon: <ImageIcon />,
-        label: 'Image',
+        label: t('image'),
         value: ImagePlugin.key,
       },
       {
         icon: <FilmIcon />,
-        label: 'Embed',
+        label: t('embed'),
         value: MediaEmbedPlugin.key,
       },
       {
         icon: <PenToolIcon />,
-        label: 'Excalidraw',
+        label: t('excalidraw'),
         value: ExcalidrawPlugin.key,
       },
     ].map((item) => ({
@@ -184,22 +191,23 @@ const groups: Group[] = [
     })),
   },
   {
-    group: 'Advanced blocks',
+    id: 'advanceBlocks',
+    group: t('advancedBlocks'),
     items: [
       {
         icon: <TableOfContentsIcon />,
-        label: 'Table of contents',
+        label: t('toc'),
         value: TocPlugin.key,
       },
       {
         icon: <Columns3Icon />,
-        label: '3 columns',
+        label: t('3colums'),
         value: 'action_three_columns',
       },
       {
         focusEditor: false,
         icon: <RadicalIcon />,
-        label: 'Equation',
+        label: t('equation'),
         value: EquationPlugin.key,
       },
     ].map((item) => ({
@@ -210,23 +218,24 @@ const groups: Group[] = [
     })),
   },
   {
-    group: 'Inline',
+    id: 'inline',
+    group: t('inline'),
     items: [
       {
         icon: <Link2Icon />,
-        label: 'Link',
+        label: t('link'),
         value: LinkPlugin.key,
       },
       {
         focusEditor: true,
         icon: <CalendarIcon />,
-        label: 'Date',
+        label: t('date'),
         value: DatePlugin.key,
       },
       {
         focusEditor: false,
         icon: <RadicalIcon />,
-        label: 'Inline Equation',
+        label: t('inlineEquation'),
         value: InlineEquationPlugin.key,
       },
     ].map((item) => ({
@@ -254,8 +263,8 @@ export function InsertDropdownMenu(props: DropdownMenuProps) {
         className="flex max-h-[500px] min-w-0 flex-col overflow-y-auto"
         align="start"
       >
-        {groups.map(({ group, items: nestedItems }) => (
-          <DropdownMenuGroup key={group} label={group}>
+        {groups.map(({ id, group, items: nestedItems }) => (
+          <DropdownMenuGroup key={id} label={group}>
             {nestedItems.map(({ icon, label, value, onSelect }) => (
               <DropdownMenuItem
                 key={value}

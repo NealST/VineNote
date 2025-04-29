@@ -13,7 +13,7 @@ import {
   useSelected,
 } from '@udecode/plate/react';
 import { RadicalIcon } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 import { EquationPopoverContent } from './equation-popover';
 import { Popover, PopoverTrigger } from './popover';
 
@@ -27,7 +27,7 @@ export const InlineEquationElement = withRef<typeof PlateElement>(
       []
     );
     const [open, setOpen] = useState(selected && isCollapsed);
-
+    const { t } = useTranslation();
     useEquationElement({
       element,
       katexRef: katexRef,
@@ -76,7 +76,7 @@ export const InlineEquationElement = withRef<typeof PlateElement>(
               {element.texExpression.length === 0 && (
                 <span>
                   <RadicalIcon className="mr-1 inline-block h-[19px] w-4 py-[1.5px] align-text-bottom" />
-                  New equation
+                  {t('newEquation')}
                 </span>
               )}
             </div>

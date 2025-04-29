@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 import { CopilotPlugin } from '@udecode/plate-ai/react';
 import { useElement, usePluginOption } from '@udecode/plate/react';
 

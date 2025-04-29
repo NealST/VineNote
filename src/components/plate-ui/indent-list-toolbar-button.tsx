@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 import {
   ListStyleType,
   someIndentList,
@@ -9,7 +7,7 @@ import {
 } from '@udecode/plate-indent-list';
 import { useEditorRef, useEditorSelector } from '@udecode/plate/react';
 import { List, ListOrdered } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +25,7 @@ import {
 export function NumberedIndentListToolbarButton() {
   const editor = useEditorRef();
   const openState = useOpenState();
-
+  const { t } = useTranslation();
   const pressed = useEditorSelector(
     (editor) =>
       someIndentList(editor, [
@@ -50,7 +48,7 @@ export function NumberedIndentListToolbarButton() {
           })
         }
         data-state={pressed ? 'on' : 'off'}
-        tooltip="Numbered List"
+        tooltip={t('numberedList')}
       >
         <ListOrdered className="size-4" />
       </ToolbarSplitButtonPrimary>
@@ -69,7 +67,7 @@ export function NumberedIndentListToolbarButton() {
                 })
               }
             >
-              Decimal (1, 2, 3)
+              {t('decimal')} (1, 2, 3)
             </DropdownMenuItem>
             <DropdownMenuItem
               onSelect={() =>
@@ -78,7 +76,7 @@ export function NumberedIndentListToolbarButton() {
                 })
               }
             >
-              Lower Alpha (a, b, c)
+              {t('lowerAlpha')} (a, b, c)
             </DropdownMenuItem>
             <DropdownMenuItem
               onSelect={() =>
@@ -87,7 +85,7 @@ export function NumberedIndentListToolbarButton() {
                 })
               }
             >
-              Upper Alpha (A, B, C)
+              {t('upperAlpha')} (A, B, C)
             </DropdownMenuItem>
             <DropdownMenuItem
               onSelect={() =>
@@ -96,7 +94,7 @@ export function NumberedIndentListToolbarButton() {
                 })
               }
             >
-              Lower Roman (i, ii, iii)
+              {t('lowerRoman')} (i, ii, iii)
             </DropdownMenuItem>
             <DropdownMenuItem
               onSelect={() =>
@@ -105,7 +103,7 @@ export function NumberedIndentListToolbarButton() {
                 })
               }
             >
-              Upper Roman (I, II, III)
+              {t('upperRoman')} (I, II, III)
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
@@ -117,7 +115,7 @@ export function NumberedIndentListToolbarButton() {
 export function BulletedIndentListToolbarButton() {
   const editor = useEditorRef();
   const openState = useOpenState();
-
+  const { t } = useTranslation();
   const pressed = useEditorSelector(
     (editor) =>
       someIndentList(editor, [
@@ -138,7 +136,7 @@ export function BulletedIndentListToolbarButton() {
           });
         }}
         data-state={pressed ? 'on' : 'off'}
-        tooltip="Bulleted List"
+        tooltip={t('bulletedList')}
       >
         <List className="size-4" />
       </ToolbarSplitButtonPrimary>
@@ -159,7 +157,7 @@ export function BulletedIndentListToolbarButton() {
             >
               <div className="flex items-center gap-2">
                 <div className="size-2 rounded-full border border-current bg-current" />
-                Default
+                {t('default')}
               </div>
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -171,7 +169,7 @@ export function BulletedIndentListToolbarButton() {
             >
               <div className="flex items-center gap-2">
                 <div className="size-2 rounded-full border border-current" />
-                Circle
+                {t('circle')}
               </div>
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -183,7 +181,7 @@ export function BulletedIndentListToolbarButton() {
             >
               <div className="flex items-center gap-2">
                 <div className="size-2 border border-current bg-current" />
-                Square
+                {t('square')}
               </div>
             </DropdownMenuItem>
           </DropdownMenuGroup>

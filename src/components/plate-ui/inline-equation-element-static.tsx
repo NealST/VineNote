@@ -1,5 +1,3 @@
-import React from 'react';
-
 import type { TEquationElement } from '@udecode/plate-math';
 
 import { cn } from '@udecode/cn';

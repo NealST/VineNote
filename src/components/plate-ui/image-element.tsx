@@ -1,13 +1,11 @@
 'use client';
 
-import React from 'react';
-
 import { cn, withRef } from '@udecode/cn';
 import { useDraggable } from '@udecode/plate-dnd';
 import { Image, ImagePlugin, useMediaState } from '@udecode/plate-media/react';
 import { ResizableProvider, useResizableValue } from '@udecode/plate-resizable';
 import { PlateElement, withHOC } from '@udecode/plate/react';
-
+import { useTranslation } from 'react-i18next';
 import { Caption, CaptionTextarea } from './caption';
 import { MediaPopover } from './media-popover';
 import {
@@ -21,9 +19,8 @@ export const ImageElement = withHOC(
   withRef<typeof PlateElement>(
     ({ children, className, nodeProps, ...props }, ref) => {
       const { align = 'center', focused, readOnly, selected } = useMediaState();
-
       const width = useResizableValue('width');
-
+      const { t } = useTranslation();
       const { isDragging, handleRef } = useDraggable({
         element: props.element,
       });
@@ -72,7 +69,7 @@ export const ImageElement = withHOC(
                   onFocus={(e) => {
                     e.preventDefault();
                   }}
-                  placeholder="Write a caption..."
+                  placeholder={t('writeCaption')}
                 />
               </Caption>
             </figure>
