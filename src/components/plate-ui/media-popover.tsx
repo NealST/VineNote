@@ -19,7 +19,7 @@ import {
   useSelected,
 } from '@udecode/plate/react';
 import { Link, Trash2Icon } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 import { Button, buttonVariants } from './button';
 import { CaptionButton } from './caption';
 import { inputVariants } from './input';
@@ -35,7 +35,7 @@ export function MediaPopover({ children, plugin }: MediaPopoverProps) {
   const editor = useEditorRef();
   const readOnly = useReadOnly();
   const selected = useSelected();
-
+  const { t } = useTranslation();
   const selectionCollapsed = useEditorSelector(
     (editor) => !editor.api.isExpanded(),
     []
@@ -74,7 +74,7 @@ export function MediaPopover({ children, plugin }: MediaPopoverProps) {
 
               <FloatingMediaPrimitive.UrlInput
                 className={inputVariants({ h: 'sm', variant: 'ghost' })}
-                placeholder="Paste the embed link..."
+                placeholder={t('pasteEmbedLink')}
                 options={{ plugin }}
               />
             </div>
@@ -84,10 +84,10 @@ export function MediaPopover({ children, plugin }: MediaPopoverProps) {
             <FloatingMediaPrimitive.EditButton
               className={buttonVariants({ size: 'sm', variant: 'ghost' })}
             >
-              Edit link
+              {t('editLink')}
             </FloatingMediaPrimitive.EditButton>
 
-            <CaptionButton variant="ghost">Caption</CaptionButton>
+            <CaptionButton variant="ghost">{t('caption')}</CaptionButton>
 
             <Separator orientation="vertical" className="mx-1 h-6" />
 

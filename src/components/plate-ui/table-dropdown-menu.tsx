@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 
@@ -32,13 +32,14 @@ import {
   useOpenState,
 } from './dropdown-menu';
 import { ToolbarButton } from './toolbar';
+import { useTranslation } from 'react-i18next';
 
 export function TableDropdownMenu(props: DropdownMenuProps) {
   const tableSelected = useEditorSelector(
     (editor) => editor.api.some({ match: { type: TablePlugin.key } }),
     []
   );
-
+  const { t } = useTranslation();
   const { editor, tf } = useEditorPlugin(TablePlugin);
   const openState = useOpenState();
   const mergeState = useTableMergeState();
@@ -46,7 +47,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
   return (
     <DropdownMenu modal={false} {...openState} {...props}>
       <DropdownMenuTrigger asChild>
-        <ToolbarButton pressed={openState.open} tooltip="Table" isDropdown>
+        <ToolbarButton pressed={openState.open} tooltip={t('table')} isDropdown>
           <Table />
         </ToolbarButton>
       </DropdownMenuTrigger>
@@ -59,7 +60,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
               <Grid3x3Icon />
-              <span>Table</span>
+              <span>{t('table')}</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent className="m-0 p-0">
               <TablePicker />
@@ -69,7 +70,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
           <DropdownMenuSub>
             <DropdownMenuSubTrigger disabled={!tableSelected}>
               <div className="size-4" />
-              <span>Cell</span>
+              <span>{t('cell')}</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
               <DropdownMenuItem
@@ -81,7 +82,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
                 }}
               >
                 <Combine />
-                Merge cells
+                {t('mergeCells')}
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="min-w-[180px]"
@@ -92,7 +93,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
                 }}
               >
                 <Ungroup />
-                Split cell
+                {t('splitCell')}
               </DropdownMenuItem>
             </DropdownMenuSubContent>
           </DropdownMenuSub>
@@ -100,7 +101,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
           <DropdownMenuSub>
             <DropdownMenuSubTrigger disabled={!tableSelected}>
               <div className="size-4" />
-              <span>Row</span>
+              <span>{t('row')}</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
               <DropdownMenuItem

@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 
 import { SuggestionPlugin } from '@udecode/plate-suggestion/react';
@@ -11,7 +9,7 @@ import {
   usePluginOption,
 } from '@udecode/plate/react';
 import { Eye, Pen, PencilLineIcon } from 'lucide-react';
-
+import i18n from '@/i18n';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,6 +19,8 @@ import {
   useOpenState,
 } from './dropdown-menu';
 import { ToolbarButton } from './toolbar';
+
+const t = i18n.t;
 
 export function ModeDropdownMenu(props: DropdownMenuProps) {
   const editor = useEditorRef();
@@ -39,19 +39,19 @@ export function ModeDropdownMenu(props: DropdownMenuProps) {
     editing: (
       <>
         <Pen />
-        <span className="hidden lg:inline">Editing</span>
+        <span className="hidden lg:inline">{t('editing')}</span>
       </>
     ),
     suggestion: (
       <>
         <PencilLineIcon />
-        <span className="hidden lg:inline">Suggestion</span>
+        <span className="hidden lg:inline">{t('suggestion')}</span>
       </>
     ),
     viewing: (
       <>
         <Eye />
-        <span className="hidden lg:inline">Viewing</span>
+        <span className="hidden lg:inline">{t('viewing')}</span>
       </>
     ),
   };
@@ -61,7 +61,7 @@ export function ModeDropdownMenu(props: DropdownMenuProps) {
       <DropdownMenuTrigger asChild>
         <ToolbarButton
           pressed={openState.open}
-          tooltip="Editing mode"
+          tooltip={t('editingMode')}
           isDropdown
         >
           {item[value]}

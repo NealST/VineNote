@@ -1,12 +1,10 @@
 'use client';
 
-import React from 'react';
-
 import { cn, withRef } from '@udecode/cn';
 import { useMediaState } from '@udecode/plate-media/react';
 import { ResizableProvider } from '@udecode/plate-resizable';
 import { PlateElement, withHOC } from '@udecode/plate/react';
-
+import { useTranslation } from 'react-i18next';
 import { Caption, CaptionTextarea } from './caption';
 
 export const MediaAudioElement = withHOC(
@@ -14,7 +12,7 @@ export const MediaAudioElement = withHOC(
   withRef<typeof PlateElement>(
     ({ children, className, nodeProps, ...props }, ref) => {
       const { align = 'center', readOnly, unsafeUrl } = useMediaState();
-
+      const { t } = useTranslation();
       return (
         <PlateElement ref={ref} className={cn(className, 'mb-1')} {...props}>
           <figure
@@ -29,7 +27,7 @@ export const MediaAudioElement = withHOC(
               <CaptionTextarea
                 className="h-20"
                 readOnly={readOnly}
-                placeholder="Write a caption..."
+                placeholder={t('writeCaption')}
               />
             </Caption>
           </figure>

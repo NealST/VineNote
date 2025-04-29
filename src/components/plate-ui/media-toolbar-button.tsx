@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useTransition } from 'react';
 
 import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 
@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useFilePicker } from 'use-file-picker';
-
+import i18n from '@/i18n';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -47,6 +47,7 @@ import {
   ToolbarSplitButtonSecondary,
 } from './toolbar';
 
+const t = i18n.t;
 const MEDIA_CONFIG: Record<
   string,
   {
@@ -59,26 +60,26 @@ const MEDIA_CONFIG: Record<
   [AudioPlugin.key]: {
     accept: ['audio/*'],
     icon: <AudioLinesIcon className="size-4" />,
-    title: 'Insert Audio',
-    tooltip: 'Audio',
+    title: t('insertAudio'),
+    tooltip: t('audio'),
   },
   [FilePlugin.key]: {
     accept: ['*'],
     icon: <FileUpIcon className="size-4" />,
-    title: 'Insert File',
-    tooltip: 'File',
+    title: t('insertFile'),
+    tooltip: t('file'),
   },
   [ImagePlugin.key]: {
     accept: ['image/*'],
     icon: <ImageIcon className="size-4" />,
-    title: 'Insert Image',
-    tooltip: 'Image',
+    title: t('insertImage'),
+    tooltip: t('image'),
   },
   [VideoPlugin.key]: {
     accept: ['video/*'],
     icon: <FilmIcon className="size-4" />,
-    title: 'Insert Video',
-    tooltip: 'Video',
+    title: t('insertVideo'),
+    tooltip: t('video'),
   },
 };
 
@@ -132,11 +133,11 @@ export function MediaToolbarButton({
             <DropdownMenuGroup>
               <DropdownMenuItem onSelect={() => openFilePicker()}>
                 {currentConfig.icon}
-                Upload from computer
+                {t('uploadFromComputer')}
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setDialogOpen(true)}>
                 <LinkIcon />
-                Insert via URL
+                {t('insertViaUrl')}
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
@@ -172,9 +173,8 @@ function MediaUrlDialogContent({
 }) {
   const editor = useEditorRef();
   const [url, setUrl] = useState('');
-
   const embedMedia = useCallback(() => {
-    if (!isUrl(url)) return toast.error('Invalid URL');
+    if (!isUrl(url)) return toast.error(t('invalidUrl'));
 
     setOpen(false);
     editor.tf.insertNodes({
@@ -208,14 +208,14 @@ function MediaUrlDialogContent({
       </AlertDialogDescription>
 
       <AlertDialogFooter>
-        <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
         <AlertDialogAction
           onClick={(e) => {
             e.preventDefault();
             embedMedia();
           }}
         >
-          Accept
+          {t('accept')}
         </AlertDialogAction>
       </AlertDialogFooter>
     </>

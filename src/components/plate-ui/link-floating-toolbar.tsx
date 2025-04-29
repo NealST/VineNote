@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 import { cn } from '@udecode/cn';
 import {
   type UseVirtualFloatingOptions,
@@ -19,7 +17,7 @@ import {
 } from '@udecode/plate-link/react';
 import { useFormInputProps } from '@udecode/plate/react';
 import { ExternalLink, Link, Text, Unlink } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 import { buttonVariants } from './button';
 import { inputVariants } from './input';
 import { popoverVariants } from './popover';
@@ -54,7 +52,7 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
     ref: insertRef,
     textInputProps,
   } = useFloatingLinkInsert(insertState);
-
+  const { t } = useTranslation();
   const editState = useFloatingLinkEditState({
     ...state,
     floatingOptions: {
@@ -83,7 +81,7 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
 
         <FloatingLinkUrlInput
           className={inputVariants({ h: 'sm', variant: 'ghost' })}
-          placeholder="Paste link"
+          placeholder={t('pasteLink')}
           data-plate-focus
         />
       </div>
@@ -94,7 +92,7 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
         </div>
         <input
           className={inputVariants({ h: 'sm', variant: 'ghost' })}
-          placeholder="Text to display"
+          placeholder={t('text2display')}
           data-plate-focus
           {...textInputProps}
         />
@@ -111,7 +109,7 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
         type="button"
         {...editButtonProps}
       >
-        Edit link
+        {t('editLink')}
       </button>
 
       <Separator orientation="vertical" />

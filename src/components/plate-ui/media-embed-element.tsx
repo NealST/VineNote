@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 import { Tweet } from 'react-tweet';
 
@@ -9,7 +8,7 @@ import { parseTwitterUrl, parseVideoUrl } from '@udecode/plate-media';
 import { MediaEmbedPlugin, useMediaState } from '@udecode/plate-media/react';
 import { ResizableProvider, useResizableValue } from '@udecode/plate-resizable';
 import { PlateElement, withHOC } from '@udecode/plate/react';
-
+import { useTranslation } from 'react-i18next';
 import { Caption, CaptionTextarea } from './caption';
 import { MediaPopover } from './media-popover';
 import {
@@ -35,7 +34,7 @@ export const MediaEmbedElement = withHOC(
     });
     const width = useResizableValue('width');
     const provider = embed?.provider;
-
+    const { t } = useTranslation();
     return (
       <MediaPopover plugin={MediaEmbedPlugin}>
         <PlateElement ref={ref} className={cn(className, 'py-2.5')} {...props}>
@@ -122,7 +121,7 @@ export const MediaEmbedElement = withHOC(
             </Resizable>
 
             <Caption style={{ width }} align={align}>
-              <CaptionTextarea placeholder="Write a caption..." />
+              <CaptionTextarea placeholder={t('writeCaption')} />
             </Caption>
           </figure>
 

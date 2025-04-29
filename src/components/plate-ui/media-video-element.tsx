@@ -1,9 +1,8 @@
 'use client';
 
-import React from 'react';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 import ReactPlayer from 'react-player';
-
+import i18n from '@/i18n';
 import { cn, withRef } from '@udecode/cn';
 import { useDraggable } from '@udecode/plate-dnd';
 import { parseTwitterUrl, parseVideoUrl } from '@udecode/plate-media';
@@ -112,7 +111,7 @@ export const MediaVideoElement = withHOC(
             <Caption style={{ width }} align={align}>
               <CaptionTextarea
                 readOnly={readOnly}
-                placeholder="Write a caption..."
+                placeholder={i18n.t('writeCaption')}
               />
             </Caption>
           </figure>

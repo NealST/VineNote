@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { withRef } from '@udecode/cn';
 import { getMentionOnSelectItem } from '@udecode/plate-mention';
 import { PlateElement } from '@udecode/plate/react';
-
+import i18n from '@/i18n';
 import {
   InlineCombobox,
   InlineComboboxContent,
@@ -42,7 +42,7 @@ export const MentionInputElement = withRef<typeof PlateElement>(
           </span>
 
           <InlineComboboxContent className="my-1.5">
-            <InlineComboboxEmpty>No results</InlineComboboxEmpty>
+            <InlineComboboxEmpty>{i18n.t('noResults')}</InlineComboboxEmpty>
 
             <InlineComboboxGroup>
               {MENTIONABLES.map((item) => (

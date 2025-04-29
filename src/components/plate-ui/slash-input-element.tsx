@@ -41,7 +41,7 @@ import {
   insertBlock,
   insertInlineElement,
 } from '@/components/editor/transforms';
-
+import i18n from '@/i18n';
 import {
   InlineCombobox,
   InlineComboboxContent,
@@ -53,6 +53,7 @@ import {
 } from './inline-combobox';
 
 type Group = {
+  id: string;
   group: string;
   items: Item[];
 };
@@ -69,9 +70,12 @@ interface Item {
   label?: string;
 }
 
+const t = i18n.t;
+
 const groups: Group[] = [
   {
-    group: 'AI',
+    id: "AI",
+    group: t('AI'),
     items: [
       {
         focusEditor: false,
@@ -84,71 +88,72 @@ const groups: Group[] = [
     ],
   },
   {
-    group: 'Basic blocks',
+    id: 'Basic blocks',
+    group: t('basicBlocks'),
     items: [
       {
         icon: <PilcrowIcon />,
         keywords: ['paragraph'],
-        label: 'Text',
+        label: t('text'),
         value: ParagraphPlugin.key,
       },
       {
         icon: <Heading1Icon />,
         keywords: ['title', 'h1'],
-        label: 'Heading 1',
+        label: t('heading1'),
         value: HEADING_KEYS.h1,
       },
       {
         icon: <Heading2Icon />,
         keywords: ['subtitle', 'h2'],
-        label: 'Heading 2',
+        label: t('heading2'),
         value: HEADING_KEYS.h2,
       },
       {
         icon: <Heading3Icon />,
         keywords: ['subtitle', 'h3'],
-        label: 'Heading 3',
+        label: t('heading3'),
         value: HEADING_KEYS.h3,
       },
       {
         icon: <ListIcon />,
         keywords: ['unordered', 'ul', '-'],
-        label: 'Bulleted list',
+        label: t('bulletedList'),
         value: ListStyleType.Disc,
       },
       {
         icon: <ListOrdered />,
         keywords: ['ordered', 'ol', '1'],
-        label: 'Numbered list',
+        label: t('numberedList'),
         value: ListStyleType.Decimal,
       },
       {
         icon: <Square />,
         keywords: ['checklist', 'task', 'checkbox', '[]'],
-        label: 'To-do list',
+        label: t('todoList'),
         value: INDENT_LIST_KEYS.todo,
       },
       {
         icon: <ChevronRightIcon />,
         keywords: ['collapsible', 'expandable'],
-        label: 'Toggle',
+        label: t('toggle'),
         value: TogglePlugin.key,
       },
       {
         icon: <Code2 />,
         keywords: ['```'],
-        label: 'Code Block',
+        label: t('codeBlock'),
         value: CodeBlockPlugin.key,
       },
       {
         icon: <Table />,
-        label: 'Table',
+        label: t('table'),
         value: TablePlugin.key,
       },
       {
         icon: <Quote />,
         keywords: ['citation', 'blockquote', 'quote', '>'],
-        label: 'Blockquote',
+        label: t('blockQuote'),
         value: BlockquotePlugin.key,
       },
     ].map((item) => ({
@@ -159,23 +164,24 @@ const groups: Group[] = [
     })),
   },
   {
-    group: 'Advanced blocks',
+    id: 'Advanced blocks',
+    group: t('advancedBlocks'),
     items: [
       {
         icon: <TableOfContentsIcon />,
         keywords: ['toc'],
-        label: 'Table of contents',
+        label: t('toc'),
         value: TocPlugin.key,
       },
       {
         icon: <Columns3Icon />,
-        label: '3 columns',
+        label: t('3columns'),
         value: 'action_three_columns',
       },
       {
         focusEditor: false,
         icon: <RadicalIcon />,
-        label: 'Equation',
+        label: t('equation'),
         value: EquationPlugin.key,
       },
     ].map((item) => ({
@@ -186,19 +192,20 @@ const groups: Group[] = [
     })),
   },
   {
-    group: 'Inline',
+    id: "Inline",
+    group: t('inline'),
     items: [
       {
         focusEditor: true,
         icon: <CalendarIcon />,
         keywords: ['time'],
-        label: 'Date',
+        label: t('date'),
         value: DatePlugin.key,
       },
       {
         focusEditor: false,
         icon: <RadicalIcon />,
-        label: 'Inline Equation',
+        label: t('inlineEquation'),
         value: InlineEquationPlugin.key,
       },
     ].map((item) => ({
@@ -228,8 +235,8 @@ export const SlashInputElement = withRef<typeof PlateElement>(
           <InlineComboboxContent>
             <InlineComboboxEmpty>No results</InlineComboboxEmpty>
 
-            {groups.map(({ group, items }) => (
-              <InlineComboboxGroup key={group}>
+            {groups.map(({ id, group, items }) => (
+              <InlineComboboxGroup key={id}>
                 <InlineComboboxGroupLabel>{group}</InlineComboboxGroupLabel>
 
                 {items.map(
@@ -240,7 +247,7 @@ export const SlashInputElement = withRef<typeof PlateElement>(
                       onClick={() => onSelect(editor, value)}
                       label={label}
                       focusEditor={focusEditor}
-                      group={group}
+                      group={id}
                       keywords={keywords}
                     >
                       <div className="mr-2 text-muted-foreground">{icon}</div>

@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 import type { TLinkElement } from '@udecode/plate-link';
 
 import { cn, withRef } from '@udecode/cn';
