@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
-
+import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { TEquationElement } from '@udecode/plate-math';
 
 import { cn, withRef } from '@udecode/cn';
@@ -15,7 +15,7 @@ import { Popover, PopoverTrigger } from './popover';
 export const EquationElement = withRef<typeof PlateElement>(
   ({ children, className, ...props }, ref) => {
     const element = useElement<TEquationElement>();
-
+    const { t } = useTranslation();
     const selected = useSelected();
     const [open, setOpen] = useState(selected);
     const katexRef = useRef<HTMLDivElement | null>(null);
@@ -56,7 +56,7 @@ export const EquationElement = withRef<typeof PlateElement>(
               ) : (
                 <div className="flex h-7 w-full items-center gap-2 text-sm whitespace-nowrap text-muted-foreground">
                   <RadicalIcon className="size-6 text-muted-foreground/80" />
-                  <div>Add a Tex equation</div>
+                  <div>{t('addTexEquation')}</div>
                 </div>
               )}
             </div>

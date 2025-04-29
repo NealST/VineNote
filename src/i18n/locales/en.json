@@ -94,5 +94,19 @@
   "today": "Today",
   "yesterday": "Yesterday",
   "tomorrow": "Tomorrow",
-  "pickDate": "Pick a date"
+  "pickDate": "Pick a date",
+  "close": "Close",
+  "drag2move": "Drag to move",
+  "noResults": "No results",
+  "addTexEquation": "Add a Tex equation",
+  "done": "Done",
+  "aiCommands": "AI commands",
+  "bold": "Bold",
+  "italic": "Italic",
+  "underline": "Underline",
+  "strikethrough": "Strikethrough",
+  "code": "Code",
+  "textColor": "Text color",
+  "bgColor": "Background color",
+  "highlight": "Highlight"
 }

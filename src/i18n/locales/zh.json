@@ -94,5 +94,19 @@
   "today": "今天",
   "yesterday": "昨天",
   "tomorrow": "明天",
-  "pickDate": "选择日期"
+  "pickDate": "选择日期",
+  "close": "关闭",
+  "drag2move": "拖动",
+  "noResults": "无结果",
+  "addTexEquation": "插入 LaTeX 公式",
+  "done": "完成",
+  "aiCommands": "AI",
+  "bold": "加粗",
+  "italic": "斜体",
+  "underline": "下划线",
+  "strikethrough": "删除线",
+  "code": "行内代码",
+  "textColor": "文字颜色",
+  "bgColor": "背景色",
+  "highlight": "高亮"
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import TextareaAutosize, {
   type TextareaAutosizeProps,
 } from 'react-textarea-autosize';
@@ -17,7 +17,7 @@ import {
   useReadOnly,
 } from '@udecode/plate/react';
 import { CornerDownLeftIcon } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 import { Button } from './button';
 import { PopoverContent } from './popover';
 
@@ -39,7 +39,7 @@ const EquationPopoverContent = ({
   const editor = useEditorRef();
   const readOnly = useReadOnly();
   const element = useElement<TEquationElement>();
-
+  const { t } = useTranslation();
   useEffect(() => {
     if (isInline && open) {
       setOpen(true);
@@ -76,7 +76,7 @@ const EquationPopoverContent = ({
       />
 
       <Button variant="secondary" className="px-3" onClick={onClose}>
-        Done <CornerDownLeftIcon className="size-3.5" />
+        {t('done')} <CornerDownLeftIcon className="size-3.5" />
       </Button>
     </PopoverContent>
   );

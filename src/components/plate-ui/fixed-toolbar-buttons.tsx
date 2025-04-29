@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 import {
   BoldPlugin,
   CodePlugin,
@@ -62,10 +60,11 @@ import { TableDropdownMenu } from './table-dropdown-menu';
 import { ToggleToolbarButton } from './toggle-toolbar-button';
 import { ToolbarGroup } from './toolbar';
 import { TurnIntoDropdownMenu } from './turn-into-dropdown-menu';
+import { useTranslation } from 'react-i18next';
 
 export function FixedToolbarButtons() {
   const readOnly = useEditorReadOnly();
-
+  const { t } = useTranslation();
   return (
     <div className="flex w-full">
       {!readOnly && (
@@ -76,7 +75,7 @@ export function FixedToolbarButtons() {
           </ToolbarGroup>
 
           <ToolbarGroup>
-            <AIToolbarButton tooltip="AI commands">
+            <AIToolbarButton tooltip={t('aiCommands')}>
               <WandSparklesIcon />
             </AIToolbarButton>
           </ToolbarGroup>
@@ -96,45 +95,45 @@ export function FixedToolbarButtons() {
           </ToolbarGroup>
 
           <ToolbarGroup>
-            <MarkToolbarButton nodeType={BoldPlugin.key} tooltip="Bold (⌘+B)">
+            <MarkToolbarButton nodeType={BoldPlugin.key} tooltip={`${t('bold')} (⌘+B)`}>
               <BoldIcon />
             </MarkToolbarButton>
 
             <MarkToolbarButton
               nodeType={ItalicPlugin.key}
-              tooltip="Italic (⌘+I)"
+              tooltip={`${t('italic')} (⌘+I)`}
             >
               <ItalicIcon />
             </MarkToolbarButton>
 
             <MarkToolbarButton
               nodeType={UnderlinePlugin.key}
-              tooltip="Underline (⌘+U)"
+              tooltip={`${t('underline')} (⌘+U)`}
             >
               <UnderlineIcon />
             </MarkToolbarButton>
 
             <MarkToolbarButton
               nodeType={StrikethroughPlugin.key}
-              tooltip="Strikethrough (⌘+⇧+M)"
+              tooltip={`${t('strikethrough')} (⌘+⇧+M)`}
             >
               <StrikethroughIcon />
             </MarkToolbarButton>
 
-            <MarkToolbarButton nodeType={CodePlugin.key} tooltip="Code (⌘+E)">
+            <MarkToolbarButton nodeType={CodePlugin.key} tooltip={`${t('code')} (⌘+E)`}>
               <Code2Icon />
             </MarkToolbarButton>
 
             <ColorDropdownMenu
               nodeType={FontColorPlugin.key}
-              tooltip="Text color"
+              tooltip={t('textColor')}
             >
               <BaselineIcon />
             </ColorDropdownMenu>
 
             <ColorDropdownMenu
               nodeType={FontBackgroundColorPlugin.key}
-              tooltip="Background color"
+              tooltip={t('bgColor')}
             >
               <PaintBucketIcon />
             </ColorDropdownMenu>
@@ -177,7 +176,7 @@ export function FixedToolbarButtons() {
       <div className="grow" />
 
       <ToolbarGroup>
-        <MarkToolbarButton nodeType={HighlightPlugin.key} tooltip="Highlight">
+        <MarkToolbarButton nodeType={HighlightPlugin.key} tooltip={t("highlight")}>
           <HighlighterIcon />
         </MarkToolbarButton>
         <CommentToolbarButton />
