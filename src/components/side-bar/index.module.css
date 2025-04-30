@@ -45,6 +45,10 @@
   margin-bottom: 6px;
 }
 
+.folder_input {
+  background-color: var(--sidebar);
+}
+
 .item_content {
   display: flex;
   flex-direction: row;

@@ -3,6 +3,7 @@
   flex: 1;
   height: 100vh;
   flex-direction: column;
+  position: relative;
 }
 
 .header {
@@ -15,6 +16,9 @@
   padding-left: 12px;
   padding-right: 12px;
   border-bottom: 1px solid var(--border);
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .info_title {
@@ -33,3 +37,21 @@
   align-items: center;
 }
 
+.editor_main {
+  height: 100vh;
+  max-height: 100vh;
+  padding-top: 45px;
+}
+
+.editor_main_container {
+  overflow-y: scroll;
+  /* Firefox */
+  scrollbar-width: none;
+  /* IE 10+ */
+  -ms-overflow-style: none;
+}
+
+/* WebKit (Chrome/Safari/Edge) */
+.editor_main_container::-webkit-scrollbar {
+  display: none;
+}

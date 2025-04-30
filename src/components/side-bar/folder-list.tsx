@@ -12,17 +12,17 @@ import {
   type IFolderState,
 } from "./controllers/selected-folder";
 import { useTranslation } from "react-i18next";
-import { Folder, Ellipsis, FolderPlus, FolderPen, Trash2 } from "lucide-react";
+import { Folder, FolderPlus, FolderPen, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { produce } from "immer";
 import Empty from "./empty";
 import { Input } from "@/components/ui/input";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 import type { IFolderItem } from "./types";
 import styles from "./index.module.css";
 
@@ -30,7 +30,8 @@ const FolderList = function () {
   const [dataSource, setDataSource] = useState([] as IFolderItem[]);
   const { folder: selectedFolder, setFolder: setSelectedFolder } =
     useSelectedFolder((state: IFolderState) => state);
-  const inputRef = useRef("");
+  const inputValueRef = useRef("");
+  const inputRef = useRef<HTMLInputElement>(null);
   const renameOriginRef = useRef("");
   const { t } = useTranslation();
 
@@ -42,13 +43,13 @@ const FolderList = function () {
         path: "",
       },
     ].concat(dataSource);
-    inputRef.current = "";
+    inputValueRef.current = "";
     renameOriginRef.current = "";
     setDataSource(newDataSource);
   };
 
   const handleInputChange = function (event: ChangeEvent<HTMLInputElement>) {
-    inputRef.current = event.target?.value;
+    inputValueRef.current = event.target?.value;
   };
 
   const handleSelect = function (folder: IFolderItem) {
@@ -61,7 +62,7 @@ const FolderList = function () {
   const handleInputBlur = function (index: number) {
     const newFolders = ([] as IFolderItem[]).concat(dataSource);
     const renameOrigin = renameOriginRef.current;
-    const inputValue = inputRef.current;
+    const inputValue = inputValueRef.current;
     // no rename indicates that it is in add mode
     if (!renameOrigin) {
       if (!inputValue) {
@@ -84,7 +85,18 @@ const FolderList = function () {
         });
       return;
     }
-
+    // verify whether the inputValue has existed
+    if (!inputValue || dataSource.some(item => item.name === inputValue)) {
+      setDataSource(
+        produce(dataSource, (draft) => {
+          draft[index] = {
+            ...draft[index],
+            type: "folder",
+          };
+        })
+      );
+      return;
+    }
     renameFolder(renameOrigin, inputValue).then(() => {
       setDataSource(
         produce(dataSource, (draft) => {
@@ -108,6 +120,9 @@ const FolderList = function () {
         };
       })
     );
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 10);
   };
 
   const handleDelete = function (index: number) {
@@ -152,57 +167,61 @@ const FolderList = function () {
             const isSelected = name === selectedFolder.name;
             const isInput = type === "input";
             return (
-              <div
-                className={cn(
-                  styles.folder_item,
-                  "hover:bg-accent",
-                  "text-sidebar-foreground",
-                  // 'text-muted-foreground hover:text-accent-foreground',
-                  "dark:hover:bg-accent/50",
-                  "h-8 rounded-md cursor-pointer",
-                  isSelected ? 'bg-accent' : "",
-                  isInput ? styles.folder_input : ""
-                )}
-                key={index}
-                onClick={() => handleSelect(item)}
-              >
-                <div className={styles.item_content}>
-                  <Folder
-                    style={{
-                      marginRight: "8px",
-                    }}
-                    size={14}
-                  />
-                  {isInput ? (
-                    <Input
-                      className={cn(styles.item_input, "h-8")}
-                      type="text"
-                      defaultValue={name}
-                      onChange={handleInputChange}
-                      onBlur={() => handleInputBlur(index)}
-                    />
-                  ) : (
-                    <span className={cn(styles.item_name, 'text-sidebar-foreground')}>{name}</span>
-                  )}
-                </div>
-                {!isInput && (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <Ellipsis className="outline-0" size={14} />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem onClick={() => handleRename(index)}>
-                        <FolderPen size={12} />
-                        <span className={styles.menu_item}>{t("rename")}</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleDelete(index)}>
-                        <Trash2 size={12} />
-                        <span className={styles.menu_item}>{t("delete")}</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                )}
-              </div>
+              <ContextMenu key={index}>
+                <ContextMenuTrigger>
+                  <div
+                    className={cn(
+                      styles.folder_item,
+                      "hover:bg-accent",
+                      "text-sidebar-foreground",
+                      // 'text-muted-foreground hover:text-accent-foreground',
+                      "dark:hover:bg-accent/50",
+                      "h-8 rounded-md cursor-pointer",
+                      isSelected && !isInput ? "bg-accent" : "",
+                      isInput ? styles.folder_input : ""
+                    )}
+                    onClick={() => handleSelect(item)}
+                  >
+                    <div className={styles.item_content}>
+                      <Folder
+                        style={{
+                          marginRight: "8px",
+                        }}
+                        size={14}
+                      />
+                      {isInput ? (
+                        <Input
+                          className={cn(styles.item_input, "h-8")}
+                          ref={inputRef}
+                          type="text"
+                          defaultValue={name}
+                          onChange={handleInputChange}
+                          onBlur={() => handleInputBlur(index)}
+                        />
+                      ) : (
+                        <span
+                          className={cn(
+                            styles.item_name,
+                            "text-sidebar-foreground"
+                          )}
+                        >
+                          {name}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </ContextMenuTrigger>
+                <ContextMenuContent>
+                  <ContextMenuItem onClick={() => handleRename(index)}>
+                    <FolderPen size={12} />
+                    <span className={styles.menu_item}>{t("rename")}</span>
+                  </ContextMenuItem>
+                  <ContextMenuItem onClick={() => handleDelete(index)}>
+                    <Trash2 size={12} />
+                    <span className={styles.menu_item}>{t("delete")}</span>
+                  </ContextMenuItem>
+                </ContextMenuContent>
+              </ContextMenu>
             );
           })
         ) : (

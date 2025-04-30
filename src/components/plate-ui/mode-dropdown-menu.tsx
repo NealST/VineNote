@@ -39,7 +39,7 @@ export function ModeDropdownMenu(props: DropdownMenuProps) {
     editing: (
       <>
         <Pen />
-        <span className="hidden lg:inline">{t('editing')}</span>
+        <span className="hidden lg:inline">{t('editingTip')}</span>
       </>
     ),
     suggestion: (

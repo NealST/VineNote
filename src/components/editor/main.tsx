@@ -12,6 +12,7 @@ import { useTextCount } from './controllers/text-count';
 import { readFile, writeToFile } from './controllers/file-action';
 import debounce from '@/utils/debounce';
 import { Toaster } from 'sonner';
+import styles from './index.module.css';
 
 const DELAY_TIME = 2000;
 
@@ -42,7 +43,7 @@ function PlateEditor() {
   return (
     <DndProvider backend={HTML5Backend}>
       <Plate editor={editor} onChange={debounce(handleChange, DELAY_TIME)}>
-        <EditorContainer>
+        <EditorContainer className={styles.editor_main_container}>
           <Editor variant="demo" ref={editorRef} />
         </EditorContainer>
       </Plate>
@@ -52,7 +53,7 @@ function PlateEditor() {
 
 const MainEditor = function() {
   return (
-    <div data-registry="plate">
+    <div data-registry="plate" className={styles.editor_main}>
       <SettingsProvider>
         <PlateEditor />
       </SettingsProvider>
