@@ -131,7 +131,7 @@
   "embed": "Embed",
   "excalidraw": "Excalidraw",
   "advancedBlocks": "Advanced blocks",
-  "3colums": "3 columns",
+  "3columns": "3 columns",
   "inline": "Inline",
   "link": "Link",
   "date": "Date",
@@ -183,5 +183,6 @@
   "leftBorder": "Left Border",
   "noBorder": "No Border",
   "outsideBorders": "Outside Borders",
-  "colors": "Colors"
+  "colors": "Colors",
+  "createHeading2toc": "Create a heading to display the table of contents"
 }

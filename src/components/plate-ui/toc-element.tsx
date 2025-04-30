@@ -7,7 +7,7 @@ import {
 } from '@udecode/plate-heading/react';
 import { PlateElement } from '@udecode/plate/react';
 import { cva } from 'class-variance-authority';
-
+import { useTranslation } from 'react-i18next';
 import { Button } from './button';
 
 const headingItemVariants = cva(
@@ -26,7 +26,7 @@ const headingItemVariants = cva(
 export const TocElement = withRef<typeof PlateElement>(
   ({ children, className, ...props }, ref) => {
     const state = useTocElementState();
-
+    const { t } = useTranslation();
     const { props: btnProps } = useTocElement(state);
 
     const { headingList } = state;
@@ -50,7 +50,7 @@ export const TocElement = withRef<typeof PlateElement>(
             ))
           ) : (
             <div className="text-sm text-gray-500">
-              Create a heading to display the table of contents.
+              {t('createHeading2toc')}
             </div>
           )}
         </div>

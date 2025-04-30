@@ -131,7 +131,7 @@
   "embed": "嵌入块",
   "excalidraw": "手绘白板",
   "advancedBlocks": "高级内容块",
-  "3colums": "3 栏布局",
+  "3columns": "3 栏布局",
   "inline": "行内元素",
   "link": "链接",
   "date": "日期",
@@ -183,5 +183,6 @@
   "leftBorder": "左边框",
   "noBorder": "无边框",
   "outsideBorders": "外侧框线",
-  "colors": "颜色"
+  "colors": "颜色",
+  "createHeading2toc": "创建目录标题"
 }

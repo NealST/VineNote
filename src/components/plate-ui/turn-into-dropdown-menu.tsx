@@ -33,7 +33,7 @@ import {
   setBlockType,
   STRUCTURAL_TYPES,
 } from '@/components/editor/transforms';
-
+import i18n from '@/i18n';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,70 +44,72 @@ import {
 } from './dropdown-menu';
 import { ToolbarButton } from './toolbar';
 
+const t = i18n.t;
+
 const turnIntoItems = [
   {
     icon: <PilcrowIcon />,
     keywords: ['paragraph'],
-    label: 'Text',
+    label: t('text'),
     value: ParagraphPlugin.key,
   },
   {
     icon: <Heading1Icon />,
     keywords: ['title', 'h1'],
-    label: 'Heading 1',
+    label: t('heading1'),
     value: HEADING_KEYS.h1,
   },
   {
     icon: <Heading2Icon />,
     keywords: ['subtitle', 'h2'],
-    label: 'Heading 2',
+    label: t('heading2'),
     value: HEADING_KEYS.h2,
   },
   {
     icon: <Heading3Icon />,
     keywords: ['subtitle', 'h3'],
-    label: 'Heading 3',
+    label: t('heading3'),
     value: HEADING_KEYS.h3,
   },
   {
     icon: <ListIcon />,
     keywords: ['unordered', 'ul', '-'],
-    label: 'Bulleted list',
+    label: t('bulletedList'),
     value: ListStyleType.Disc,
   },
   {
     icon: <ListOrderedIcon />,
     keywords: ['ordered', 'ol', '1'],
-    label: 'Numbered list',
+    label: t('numberedList'),
     value: ListStyleType.Decimal,
   },
   {
     icon: <SquareIcon />,
     keywords: ['checklist', 'task', 'checkbox', '[]'],
-    label: 'To-do list',
+    label: t('todoList'),
     value: INDENT_LIST_KEYS.todo,
   },
   {
     icon: <ChevronRightIcon />,
     keywords: ['collapsible', 'expandable'],
-    label: 'Toggle list',
+    label: t('toggleList'),
     value: TogglePlugin.key,
   },
   {
     icon: <FileCodeIcon />,
     keywords: ['```'],
-    label: 'Code',
+    label: t('code'),
     value: CodeBlockPlugin.key,
   },
   {
     icon: <QuoteIcon />,
     keywords: ['citation', 'blockquote', '>'],
-    label: 'Quote',
+    label: t('quote'),
     value: BlockquotePlugin.key,
   },
   {
     icon: <Columns3Icon />,
-    label: '3 columns',
+    label: t('3columns'),
     value: 'action_three_columns',
   },
 ];
@@ -135,7 +137,7 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
         <ToolbarButton
           className="min-w-[125px]"
           pressed={openState.open}
-          tooltip="Turn into"
+          tooltip={t('turnInto')}
           isDropdown
         >
           {selectedItem.label}
@@ -155,7 +157,7 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
           onValueChange={(type) => {
             setBlockType(editor, type);
           }}
-          label="Turn into"
+          label={t('turnInto')}
         >
           {turnIntoItems.map(({ icon, label, value: itemValue }) => (
             <DropdownMenuRadioItem

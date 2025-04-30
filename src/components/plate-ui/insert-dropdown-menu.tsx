@@ -201,7 +201,7 @@ const groups: Group[] = [
       },
       {
         icon: <Columns3Icon />,
-        label: t('3colums'),
+        label: t('3columns'),
         value: 'action_three_columns',
       },
       {
