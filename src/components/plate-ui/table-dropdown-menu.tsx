@@ -113,7 +113,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
                 }}
               >
                 <ArrowUp />
-                Insert row before
+                {t('insertRowBefore')}
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="min-w-[180px]"
@@ -124,7 +124,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
                 }}
               >
                 <ArrowDown />
-                Insert row after
+                {t('insertRowAfter')}
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="min-w-[180px]"
@@ -135,7 +135,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
                 }}
               >
                 <XIcon />
-                Delete row
+                {t('deleteRow')}
               </DropdownMenuItem>
             </DropdownMenuSubContent>
           </DropdownMenuSub>
@@ -143,7 +143,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
           <DropdownMenuSub>
             <DropdownMenuSubTrigger disabled={!tableSelected}>
               <div className="size-4" />
-              <span>Column</span>
+              <span>{t('column')}</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
               <DropdownMenuItem
@@ -155,7 +155,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
                 }}
               >
                 <ArrowLeft />
-                Insert column before
+                {t('insertColumnBefore')}
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="min-w-[180px]"
@@ -166,7 +166,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
                 }}
               >
                 <ArrowRight />
-                Insert column after
+                {t('insertColumnAfter')}
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="min-w-[180px]"
@@ -177,7 +177,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
                 }}
               >
                 <XIcon />
-                Delete column
+                {t('deleteColumn')}
               </DropdownMenuItem>
             </DropdownMenuSubContent>
           </DropdownMenuSub>
@@ -191,7 +191,7 @@ export function TableDropdownMenu(props: DropdownMenuProps) {
             }}
           >
             <Trash2Icon />
-            Delete table
+            {t('deleteTable')}
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
