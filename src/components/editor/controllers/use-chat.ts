@@ -6,15 +6,15 @@ import { faker } from '@faker-js/faker';
 import { useSettings } from '@/components/settings';
 
 export const useChat = () => {
-  const { keys, model } = useSettings();
+  const { settings } = useSettings();
 
   return useBaseChat({
     id: 'editor',
     api: '/api/ai/command',
     body: {
       // !!! DEMO ONLY: don't use API keys client-side
-      apiKey: keys.openai,
-      model: model.value,
+      apiKey: settings.modelApiKey,
+      model: settings.model,
     },
     // Mock the API response. Remove it when you implement the route /api/ai/command
     fetch: async (input, init) => {
