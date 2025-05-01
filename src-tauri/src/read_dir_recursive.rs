@@ -4,9 +4,9 @@ use std::fmt::Debug;
 use std::fs;
 use std::fs::metadata;
 use std::path::PathBuf;
+use std::time::SystemTime;
 use uuid::Uuid;
 use walkdir::WalkDir;
-use std::time::SystemTime;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct FileInfo {
@@ -29,7 +29,7 @@ struct MetadataInfo {
 fn format_system_time(st: SystemTime) -> String {
     // SystemTime -> DateTime<Local>
     let local_dt: DateTime<Local> = st.into();
-    
+
     // formatted to yyyy-MM-dd HH:mm:ss
     local_dt.format("%Y-%m-%d %H:%M:%S").to_string()
 }

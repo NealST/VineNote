@@ -20,6 +20,9 @@
   "export2Pdf": "导出为 PDF",
   "export2Image": "导出为图片",
   "export2Markdown": "导出为 Markdown",
+  "exportSuccess": "导出成功",
+  "exportFail": "导出失败",
+  "systemAlert": "系统提示",
   "focusmode": "专注模式",
   "unFocusmode": "退出专注模式",
   "thinking": "思考中...",
@@ -157,7 +160,7 @@
   "viewing": "浏览态",
   "editingMode": "编辑模式",
   "insert": "插入",
-  "kbInput": "键盘输入模式",
+  "kbInput": "键盘输入",
   "superscript": "上标",
   "subscript": "下标",
   "typaragraph": "段落输入",
@@ -184,5 +187,7 @@
   "noBorder": "无边框",
   "outsideBorders": "外侧框线",
   "colors": "颜色",
-  "createHeading2toc": "创建目录标题"
+  "createHeading2toc": "创建标题以展示目录",
+  "emptyFileTitle": "向上生长的力量，VineNote 伴你度过美好一天",
+  "emptyFileSubTitle": "让笔尖破土，让文字扎根，让灵感走向云端，让故事攀援生长，每个字符都是新生的藤芽，最终长成思维的藤蔓"
 }

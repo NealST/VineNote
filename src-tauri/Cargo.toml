@@ -26,4 +26,5 @@ tauri-plugin-fs = "2"
 uuid = "1.16.0"
 chrono = "0.4.40"
 walkdir = "2.5.0"
+tauri-plugin-dialog = "2"
 

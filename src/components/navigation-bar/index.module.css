@@ -1,0 +1,65 @@
+.navigation_bar {
+  position: relative;
+  flex: 0 0 200px;
+  height: 100vh;
+  border-right: 1px solid var(--sidebar-border);
+  background-color: var(--sidebar);
+  padding-left: 6px;
+  padding-right: 12px;
+}
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.folder_list {
+  margin-top: 30px;
+}
+
+.list_header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 12px;
+  padding-right: 8px;
+}
+
+.header_label {
+  font-size: 12px;
+}
+
+.list_folders {
+  padding-top: 10px;
+}
+
+.folder_item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 12px;
+  padding-right: 8px;
+  margin-bottom: 6px;
+}
+
+.folder_input {
+  background-color: var(--sidebar);
+}
+
+.item_content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.item_name {
+  font-size: 14px;
+}
+
+.menu_item {
+  font-size: 12px;
+}
+

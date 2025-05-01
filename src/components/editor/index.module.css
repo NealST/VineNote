@@ -1,9 +1,9 @@
 .editor {
-  display: flex;
   flex: 1;
   height: 100vh;
-  flex-direction: column;
   position: relative;
+  width: 0;/* 强制宽度计算 */
+  min-width: 0;
 }
 
 .header {
@@ -54,4 +54,21 @@
 /* WebKit (Chrome/Safari/Edge) */
 .editor_main_container::-webkit-scrollbar {
   display: none;
+}
+
+.empty {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.empty_content_title {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.empty_content_subtitle {
+  text-align: center;
 }

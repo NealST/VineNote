@@ -1,6 +1,6 @@
 import { rename, remove, create } from "@tauri-apps/plugin-fs";
 import { invoke } from "@tauri-apps/api/core";
-import type { IFolderItem } from "@/components/side-bar/types";
+import type { IFolderItem } from "@/components/navigation-bar/types";
 
 export const createFile = async function (
   selectedFolder: IFolderItem,

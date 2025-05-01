@@ -1,8 +1,9 @@
 import { useMemo } from "react";
-import { useSelectedFile } from "@/components/notes-list/controllers/selected-file";
 import { useTextCount } from "./controllers/text-count";
+import useFocusMode from "./controllers/focus-mode";
 import { useTranslation } from "react-i18next";
 import { Focus, ArrowRightFromLine, Trash2, Minimize } from "lucide-react";
+import type { IArticleItem } from "../notes-list/types";
 import { emitter } from "@/utils/events";
 import {
   DropdownMenu,
@@ -17,17 +18,27 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
 import styles from "./index.module.css";
 
 interface IProps {
-  isFocusMode: boolean;
-  onToggleFocusMode: (isFocusMode: boolean) => void;
+  selectedFile: IArticleItem;
 }
 
 const Header = function (props: IProps) {
-  const { isFocusMode, onToggleFocusMode } = props;
-  const selectedFile = useSelectedFile((state) => state.selectedFile);
+  const { selectedFile } = props;
+  const { isFocusMode, setFocusMode } = useFocusMode();
   const textCount = useTextCount((state) => state.count);
   const { t } = useTranslation();
 
@@ -59,15 +70,17 @@ const Header = function (props: IProps) {
 
   const actionStrategy = useMemo(
     () => ({
-      focusmode: () => onToggleFocusMode(!isFocusMode),
-      unFocusmode: () => onToggleFocusMode(!isFocusMode),
+      focusmode: () => setFocusMode(!isFocusMode),
+      unFocusmode: () => setFocusMode(!isFocusMode),
       export: (type: string) => {
         emitter.emit("export", {
           type,
           file: selectedFile,
         });
       },
-      delete: () => {},
+      delete: () => {
+        emitter.emit("deleteFile", selectedFile);
+      },
     }),
     [isFocusMode, selectedFile]
   );
@@ -75,7 +88,7 @@ const Header = function (props: IProps) {
   return (
     <div className={styles.header}>
       <div className={styles.header_info}>
-        <span className={styles.info_title}>{selectedFile.name}</span>
+        <span className={styles.info_title}>{selectedFile?.name}</span>
         <span className={cn(styles.info_count, "text-muted-foreground")}>
           {t("wordCount")}: {textCount}
         </span>
@@ -123,6 +136,40 @@ const Header = function (props: IProps) {
               </DropdownMenu>
             );
           }
+          if (id === "delete") {
+            return (
+              <AlertDialog key={id}>
+                <AlertDialogTrigger>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Icon
+                          style={{ marginLeft: "20px" }}
+                          className={cn("cursor-pointer", "text-destructive")}
+                          size={16}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{t(id)}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{t("confirmDelete")}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {t("deleteWarn")}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => action("done")}>{t("confirm")}</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            );
+          }
           return (
             <TooltipProvider key={id}>
               <Tooltip>
@@ -130,8 +177,7 @@ const Header = function (props: IProps) {
                   <Icon
                     style={{ marginLeft: "20px" }}
                     className={cn(
-                      "cursor-pointer",
-                      id === "delete" ? "text-destructive" : ""
+                      "cursor-pointer"
                     )}
                     size={16}
                     onClick={() => action("done")}

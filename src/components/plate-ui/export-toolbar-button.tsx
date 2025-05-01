@@ -120,12 +120,20 @@ import { EquationElementStatic } from './equation-element-static';
 import { InlineEquationElementStatic } from './inline-equation-element-static';
 import { ToolbarButton } from './toolbar';
 
+import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
+import { emitter } from '@/utils/events';
+import type { IArticleItem } from '@/components/notes-list/types';
+import { save, message } from '@tauri-apps/plugin-dialog';
+import { writeFile, writeTextFile } from '@tauri-apps/plugin-fs';
+
 const siteUrl = 'https://platejs.org';
 const lowlight = createLowlight(all);
 
 export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
   const editor = useEditorRef();
   const openState = useOpenState();
+  const { t } = useTranslation();
 
   const getCanvas = async () => {
     const { default: html2canvas } = await import('html2canvas-pro');
@@ -171,7 +179,7 @@ export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
     window.URL.revokeObjectURL(blobUrl);
   };
 
-  const exportToPdf = async () => {
+  const exportToPdf = async (file: IArticleItem) => {
     const canvas = await getCanvas();
 
     const PDFLib = await import('pdf-lib');
@@ -185,17 +193,56 @@ export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
       x: 0,
       y: 0,
     });
-    const pdfBase64 = await pdfDoc.saveAsBase64({ dataUri: true });
+    // 获取 unit8Array
+    const pdfBytes = await pdfDoc.save();
+    const path = await save({
+      title: t('export2Pdf'),
+      filters: [
+        {
+          name: file.name,
+          extensions: ['pdf']
+        }
+      ]
+    });
+    if (path) {
+      await writeFile(path, pdfBytes);
+      await message(t('exportSuccess'), {
+        title: t('systemAlert'),
+        kind: 'info'
+      });
+    }
+    // const pdfBase64 = await pdfDoc.saveAsBase64({ dataUri: true });
 
-    await downloadFile(pdfBase64, 'plate.pdf');
+    // await downloadFile(pdfBase64, 'plate.pdf');
   };
 
-  const exportToImage = async () => {
+  const exportToImage = async (file: IArticleItem) => {
     const canvas = await getCanvas();
-    await downloadFile(canvas.toDataURL('image/png'), 'plate.png');
+    canvas.toBlob(async (blob) => {
+      try {
+        const filePath = await save({
+          title: t('export2Image'),
+          filters: [
+            {
+              name: file.name,
+              extensions: ['png']
+            }
+          ]
+        });
+        if (filePath && blob) {
+          const arrayBuffer = await blob.arrayBuffer();
+          await writeFile(filePath, new Uint8Array(arrayBuffer));
+          await message(t('exportSuccess'), { title: t('systemAlert'), kind: 'info' });
+        }
+      } catch(e) {
+        console.log('e', e);
+        await message(t('exportFail'), {title: t('systemAlert'), kind:'error'})
+      }
+    }, 'image/png');
+    // await downloadFile(canvas.toDataURL('image/png'), 'plate.png');
   };
 
-  const exportToHtml = async () => {
+  const exportToHtml = async (file: IArticleItem) => {
     const components = {
       [BaseAudioPlugin.key]: MediaAudioElementStatic,
       [BaseBlockquotePlugin.key]: BlockquoteElementStatic,
@@ -364,41 +411,62 @@ export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
       </body>
     </html>`;
 
-    const url = `data:text/html;charset=utf-8,${encodeURIComponent(html)}`;
+    const filePath = await save({
+      title: t('export2Html'),
+      filters: [{ name: file.name, extensions: ['html'] }]
+    });
+    if (filePath) {
+      await writeTextFile(filePath, html);
+      await message(t('exportSuccess'), { title: t('systemAlert'), kind: 'info' });
+    }
 
-    await downloadFile(url, 'plate.html');
+    // const url = `data:text/html;charset=utf-8,${encodeURIComponent(html)}`;
+
+    // await downloadFile(url, 'plate.html');
   };
 
-  const exportToMarkdown = async () => {
+  const exportToMarkdown = async (file: IArticleItem) => {
     const md = editor.getApi(MarkdownPlugin).markdown.serialize();
-    const url = `data:text/markdown;charset=utf-8,${encodeURIComponent(md)}`;
-    await downloadFile(url, 'plate.md');
+    const filePath = await save({
+      title: t('export2Markdown'),
+      filters: [{ name: file.name, extensions: ['md'] }]
+    });
+    if (filePath) {
+      await writeTextFile(filePath, md);
+      await message(t('exportSuccess'), { title: t('systemAlert'), kind: 'info' });
+    }
+    // const url = `data:text/markdown;charset=utf-8,${encodeURIComponent(md)}`;
+    // await downloadFile(url, 'plate.md');
+    return md;
   };
 
-  return (
-    <DropdownMenu modal={false} {...openState} {...props}>
-      <DropdownMenuTrigger asChild>
-        <ToolbarButton pressed={openState.open} tooltip="Export" isDropdown>
-          <ArrowDownToLineIcon className="size-4" />
-        </ToolbarButton>
-      </DropdownMenuTrigger>
+  useEffect(() => {
+    const handleExport = async function({type, file }: {type: string, file: IArticleItem}) {
+      console.log('type', type);
+      try {
+        switch(type) {
+          case 'html':
+            await exportToHtml(file);
+            break;
+          case 'pdf':
+            await exportToPdf(file);
+            break;
+          case 'image':
+            await exportToImage(file);
+            break;
+          case 'markdown':
+            await exportToMarkdown(file);
+            break;
+        }
+      } catch(e) {
+        console.log("export error", e);
+      }
+    };
+    emitter.on('export', handleExport);
+    return () => {
+      emitter.off('export', handleExport);
+    }
+  }, []);
 
-      <DropdownMenuContent align="start">
-        <DropdownMenuGroup>
-          <DropdownMenuItem onSelect={exportToHtml}>
-            Export as HTML
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={exportToPdf}>
-            Export as PDF
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={exportToImage}>
-            Export as Image
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={exportToMarkdown}>
-            Export as Markdown
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
+  return null;
 }

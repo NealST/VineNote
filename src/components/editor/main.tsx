@@ -7,21 +7,20 @@ import { Plate } from '@udecode/plate/react';
 import { useCreateEditor } from './controllers/use-create-editor';
 import { Editor, EditorContainer } from '@/components/plate-ui/editor';
 import { SettingsProvider } from '@/components/settings';
-import { useSelectedFile } from '../notes-list/controllers/selected-file';
 import { useTextCount } from './controllers/text-count';
 import { readFile, writeToFile } from './controllers/file-action';
 import debounce from '@/utils/debounce';
+import type { IArticleItem } from "../notes-list/types";
 import { Toaster } from 'sonner';
 import styles from './index.module.css';
 
 const DELAY_TIME = 2000;
 
-function PlateEditor() {
+function PlateEditor({selectedFile}: {selectedFile: IArticleItem}) {
   const editor = useCreateEditor();
-  const selectedFile = useSelectedFile(state => state.selectedFile);
   const setTextCount = useTextCount(state => state.setCount);
   const editorRef = useRef<HTMLDivElement>(null);
-  const filePath = selectedFile.path;
+  const filePath = selectedFile?.path;
 
   const handleChange = useCallback(({value}) => {
     console.log("editor value", value);
@@ -51,11 +50,11 @@ function PlateEditor() {
   );
 }
 
-const MainEditor = function() {
+const MainEditor = function({selectedFile}: {selectedFile: IArticleItem}) {
   return (
     <div data-registry="plate" className={styles.editor_main}>
       <SettingsProvider>
-        <PlateEditor />
+        <PlateEditor selectedFile={selectedFile} />
       </SettingsProvider>
 
       <Toaster />

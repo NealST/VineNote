@@ -1,22 +1,28 @@
-'use client'
+import NavigationBar from "../navigation-bar";
+import NotesList from "../notes-list";
+import useFocusMode from "../editor/controllers/focus-mode";
+import { cn } from "@/lib/utils";
+import { motion } from "motion/react";
+import styles from "./index.module.css";
 
-import Navigation from './navigations';
-import FolderList from './folder-list';
-import styles from './index.module.css';
+const SideBar = function () {
+  const isEditorInFocusMode = useFocusMode((state) => state.isFocusMode);
 
-const SideBar = function() {
-
-  const handleNavSelect = function() {
-
-  }
-  
   return (
-    <div className={styles.side_bar}>
-      <Navigation onSelect={handleNavSelect} />
-      
-      <FolderList />
-    </div>
-  )
+    <motion.div
+      className={cn(styles.side_bar)}
+      animate={{
+        display: isEditorInFocusMode ? "none" : "flex",
+        transition: {
+          type: 'tween',
+          duration: 0.2
+        }
+      }}
+    >
+      <NavigationBar />
+      <NotesList />
+    </motion.div>
+  );
 };
 
 export default SideBar;

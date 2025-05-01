@@ -1,27 +1,22 @@
 import Header from "./header";
 import MainEditor from "./main";
-import useFocusMode from "./controllers/focus-mode";
+import { useSelectedFile } from "../notes-list/controllers/selected-file";
+import Empty from "./empty";
 import styles from "./index.module.css";
 
 const Editor = function () {
-  const { isFocusMode, setFocusMode } = useFocusMode();
-
-  const handleToggleFocusMode = function (focusMode: boolean) {
-    setFocusMode(focusMode);
-  };
+  const selectedFile = useSelectedFile((state) => state.selectedFile);
 
   return (
-    <div
-      className={styles.editor}
-      style={{
-        width: isFocusMode ? "100vw" : "calc(100vw - 420px)",
-      }}
-    >
-      <Header
-        onToggleFocusMode={handleToggleFocusMode}
-        isFocusMode={isFocusMode}
-      />
-      <MainEditor />
+    <div className={styles.editor}>
+      {!selectedFile ? (
+        <Empty />
+      ) : (
+        <>
+          <Header selectedFile={selectedFile} />
+          <MainEditor selectedFile={selectedFile} />
+        </>
+      )}
     </div>
   );
 };

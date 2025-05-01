@@ -1,10 +1,10 @@
-import { useState, useRef, useEffect, ChangeEvent } from "react";
+import { useState, useRef, useEffect, ChangeEvent, useCallback } from "react";
 import { FilePlus, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import Empty from "./empty";
 import { useTranslation } from "react-i18next";
-import { useSelectedFolder } from "../side-bar/controllers/selected-folder";
+import { useSelectedFolder } from "../navigation-bar/controllers/selected-folder";
 import { uid } from "uid";
 import { createTimeStamp } from "./controllers/create-time-format";
 import {
@@ -15,6 +15,7 @@ import {
 } from "./controllers/file-actions";
 import { useSelectedFile } from "./controllers/selected-file";
 import { produce } from "immer";
+import { emitter } from "@/utils/events";
 import { cn } from "@/lib/utils";
 import type { IArticleItem } from "./types";
 import styles from "./index.module.css";
@@ -68,6 +69,28 @@ const NotesList = function () {
     inputRef.current = event.target?.value;
   };
 
+  const handleDeleteFile = useCallback(function(file: IArticleItem) {
+    const len = dataSource.length;
+    const deleteIndex = dataSource.findIndex(item => item.id === file.id);
+    deleteFile(file.path).then(() => {
+      if (len === 1) {
+        setSelectedFile(null);
+        setDataSource([]);
+        return;
+      }
+      if (deleteIndex === len - 1) {
+        setSelectedFile(dataSource[deleteIndex - 1]);
+      } else {
+        setSelectedFile(dataSource[deleteIndex + 1]);
+      }
+      setDataSource(produce(dataSource, draft => {
+        draft.splice(deleteIndex, 1);
+      }));
+    }).catch(() => {
+      // todo: add exception log for delete fail
+    })
+  }, [dataSource]);
+
   useEffect(() => {
     if (!selectedFolder?.path) {
       return;
@@ -89,6 +112,15 @@ const NotesList = function () {
       }
     });
   }, [selectedFolder]);
+
+  useEffect(() => {
+
+    emitter.on('deleteFile', handleDeleteFile);
+
+    return () => {
+      emitter.off('deleteFile', handleDeleteFile);
+    }
+  }, []);
 
   return (
     <div className={styles.notes_list}>
@@ -116,7 +148,7 @@ const NotesList = function () {
         {dataSource.length > 0 ? (
           dataSource.map((item, index) => {
             const { id, name, action, metadata } = item;
-            const isSelected = id === selectedFile.id;
+            const isSelected = id === selectedFile?.id;
             return (
               <div
                 className={cn(
