@@ -173,7 +173,7 @@ const FolderList = function () {
                     className={cn(
                       styles.folder_item,
                       "hover:bg-accent",
-                      "text-sidebar-foreground",
+                      "text-sidebar-accent-foreground",
                       // 'text-muted-foreground hover:text-accent-foreground',
                       "dark:hover:bg-accent/50",
                       "h-8 rounded-md cursor-pointer",
@@ -202,7 +202,7 @@ const FolderList = function () {
                         <span
                           className={cn(
                             styles.item_name,
-                            "text-sidebar-foreground"
+                            "text-sidebar-accent-foreground"
                           )}
                         >
                           {name}

@@ -191,7 +191,15 @@
   "createHeading2toc": "Create a heading to display the table of contents",
   "emptyFileTitle": "Rise and Thrive - VineNote Fuels Your Creative Day",
   "emptyFileSubTitle": "With every stroke of ink that cracks the soil, with every word that anchors deep, with every spark that ascends to skies, with every tale that coils upward—each character is a vine's first breath, unfurling into the forest of your mind",
+  "theme": "Theme",
   "lightTheme": "Light",
   "darkTheme": "Dark",
-  "systemTheme": "System"
+  "systemTheme": "System",
+  "language": "Language",
+  "upload": "Upload",
+  "model": "Model",
+  "get": "Get",
+  "hide": "Hide",
+  "show": "Show",
+  "saveChanges": "Save changes"
 }

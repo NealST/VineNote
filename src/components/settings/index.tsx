@@ -325,14 +325,13 @@ export function SettingsDialog({ children }: { children: ReactNode }) {
               target="_blank"
             >
               <ExternalLinkIcon className="size-4" />
-              <span className="sr-only">Get {label}</span>
+              <span className="sr-only">{t('get')} {label}</span>
             </a>
           </Button>
         </div>
 
         <Input
           id={label}
-          className="pr-10"
           defaultValue={defaultValue}
           onChange={(e) => handleChange(e.target.value)}
           placeholder=""
@@ -352,7 +351,7 @@ export function SettingsDialog({ children }: { children: ReactNode }) {
             <Eye className="size-4" />
           )}
           <span className="sr-only">
-            {showKey[service] ? "Hide" : "Show"} {label}
+            {showKey[service] ? t("hide") : t("show")} {label}
           </span>
         </Button>
       </div>
@@ -368,9 +367,9 @@ export function SettingsDialog({ children }: { children: ReactNode }) {
           <DialogDescription>{t("configurationTip")}</DialogDescription>
         </DialogHeader>
 
-        <form className="space-y-10" onSubmit={handleSubmit}>
+        <form className="space-y-4" onSubmit={handleSubmit}>
           {/* theme Settings Group */}
-          <div className="space-y-4">
+          <div className="space-y-2">
             <div className="flex items-center gap-2">
               <div className="size-8 rounded-full bg-blue-100 p-2 dark:bg-blue-900">
                 <SunMoon className="size-4 text-blue-600 dark:text-blue-400" />
@@ -378,11 +377,11 @@ export function SettingsDialog({ children }: { children: ReactNode }) {
               <h4 className="font-semibold">{t("theme")}</h4>
             </div>
 
-            <div className="space-y-4">{renderThemeMode()}</div>
+            <div className="space-y-2">{renderThemeMode()}</div>
           </div>
 
           {/* language Settings Group */}
-          <div className="space-y-4">
+          <div className="space-y-2">
             <div className="flex items-center gap-2">
               <div className="size-8 rounded-full bg-orange-100 p-2 dark:bg-orange-900">
                 <BookA className="size-4 text-orange-600 dark:text-orange-400" />
@@ -390,46 +389,42 @@ export function SettingsDialog({ children }: { children: ReactNode }) {
               <h4 className="font-semibold">{t("language")}</h4>
             </div>
 
-            <div className="space-y-4">{renderLanguageMode()}</div>
+            <div className="space-y-2">{renderLanguageMode()}</div>
           </div>
 
           {/* AI Settings Group */}
-          <div className="space-y-4">
+          <div className="space-y-2">
             <div className="flex items-center gap-2">
               <div className="size-8 rounded-full bg-purple-100 p-2 dark:bg-purple-900">
                 <Wand2Icon className="size-4 text-purple-600 dark:text-purple-400" />
               </div>
-              <h4 className="font-semibold">AI</h4>
+              <h4 className="font-semibold">{t('ai')}</h4>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-2">
               {renderModel()}
               {renderApiKeyInput("openai", "OpenAI API key")}
             </div>
           </div>
 
           {/* Upload Settings Group */}
-          <div className="space-y-4">
+          <div className="space-y-2">
             <div className="flex items-center gap-2">
               <div className="size-8 rounded-full bg-red-100 p-2 dark:bg-red-900">
                 <Upload className="size-4 text-red-600 dark:text-red-400" />
               </div>
-              <h4 className="font-semibold">Upload</h4>
+              <h4 className="font-semibold">{t('upload')}</h4>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-2">
               {renderApiKeyInput("uploadthing", "Uploadthing API key")}
             </div>
           </div>
 
           <Button size="lg" className="w-full" type="submit">
-            Save changes
+            {t('saveChanges')}
           </Button>
         </form>
-
-        <p className="text-sm text-muted-foreground">
-          Not stored anywhere. Used only for current session requests.
-        </p>
       </DialogContent>
     </Dialog>
   );
