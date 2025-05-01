@@ -6,10 +6,11 @@ import styles from "./index.module.css";
 
 const Editor = function () {
   const selectedFile = useSelectedFile((state) => state.selectedFile);
+  const isFileEmpty = !selectedFile || !selectedFile.path;
 
   return (
     <div className={styles.editor}>
-      {!selectedFile ? (
+      {isFileEmpty ? (
         <Empty />
       ) : (
         <>

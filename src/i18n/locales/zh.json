@@ -190,5 +190,8 @@
   "colors": "颜色",
   "createHeading2toc": "创建标题以展示目录",
   "emptyFileTitle": "向上生长的力量，VineNote 伴你度过美好一天",
-  "emptyFileSubTitle": "让笔尖破土，让文字扎根，让灵感走向云端，让故事攀援生长，每个字符都是新生的藤芽，最终长成思维的藤蔓"
+  "emptyFileSubTitle": "让笔尖破土，让文字扎根，让灵感走向云端，让故事攀援生长，每个字符都是新生的藤芽，最终长成思维的藤蔓",
+  "lightTheme": "浅色",
+  "darkTheme": "深色",
+  "systemTheme": "跟随系统"
 }

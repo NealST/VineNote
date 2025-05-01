@@ -151,13 +151,13 @@ export function SettingsDialog({ children }: { children: ReactNode }) {
   // const { getOptions, setOption } = useEditorPlugin(CopilotPlugin);
 
   const handleThemeChange = function (value: Theme) {
+    console.log('theme value', value);
     setTheme(value);
     const newSettings = {
       ...settings,
       theme: value,
     };
     setSettings(newSettings);
-    setConfig(JSON.stringify(newSettings));
   };
 
   const handleLanguageChange = function (value: Language) {
@@ -167,7 +167,6 @@ export function SettingsDialog({ children }: { children: ReactNode }) {
       language: value,
     };
     setSettings(newSettings);
-    setConfig(JSON.stringify(newSettings));
   };
 
   const handleFontChange = function (value: string) {
@@ -185,7 +184,6 @@ export function SettingsDialog({ children }: { children: ReactNode }) {
       model: value,
     };
     setSettings(newSettings);
-    setConfig(JSON.stringify(newSettings));
   };
 
   const handleModelApiKeyChange = function (value: string) {
