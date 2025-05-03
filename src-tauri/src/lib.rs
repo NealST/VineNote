@@ -1,5 +1,6 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 mod read_dir_recursive;
+mod rss;
 use read_dir_recursive::read_dir_recursive;
 
 #[tauri::command]

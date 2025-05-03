@@ -28,4 +28,6 @@ chrono = "0.4.40"
 walkdir = "2.5.0"
 tauri-plugin-dialog = "2"
 tauri-plugin-store = "2"
+reqwest = "0.12.15"
+quick-xml = "0.37.5"
 
