@@ -19,7 +19,7 @@ const Navigation = function ({ onSelect }: IProps) {
       Icon: Notebook,
     },
     {
-      id: "read",
+      id: "rss",
       name: t("rss"),
       Icon: Rss,
     },

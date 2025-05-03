@@ -46,6 +46,10 @@ const FolderList = function () {
     inputValueRef.current = "";
     renameOriginRef.current = "";
     setDataSource(newDataSource);
+
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 10);
   };
 
   const handleInputChange = function (event: ChangeEvent<HTMLInputElement>) {
@@ -60,28 +64,28 @@ const FolderList = function () {
   };
 
   const handleInputBlur = function (index: number) {
-    const newFolders = ([] as IFolderItem[]).concat(dataSource);
     const renameOrigin = renameOriginRef.current;
     const inputValue = inputValueRef.current;
     // no rename indicates that it is in add mode
     if (!renameOrigin) {
       if (!inputValue) {
-        newFolders.shift();
-        setDataSource(newFolders);
+        setDataSource(produce(dataSource, draft => {
+          draft.shift();
+        }));
         return;
       }
       createFolder(inputValue)
         .then((folderPath) => {
-          newFolders[0] = {
-            type: "folder",
-            name: inputValue,
-            path: folderPath,
-          };
-          setDataSource(newFolders);
+          setDataSource(produce(dataSource, draft => {
+            draft[0].type = 'folder';
+            draft[0].name = inputValue;
+            draft[0].path = folderPath;
+          }));
         })
         .catch(() => {
-          newFolders.shift();
-          setDataSource(newFolders);
+          setDataSource(produce(dataSource, draft => {
+            draft.shift();
+          }));
         });
       return;
     }
@@ -89,10 +93,7 @@ const FolderList = function () {
     if (!inputValue || dataSource.some(item => item.name === inputValue)) {
       setDataSource(
         produce(dataSource, (draft) => {
-          draft[index] = {
-            ...draft[index],
-            type: "folder",
-          };
+          draft[index].type = 'folder';
         })
       );
       return;
@@ -100,11 +101,8 @@ const FolderList = function () {
     renameFolder(renameOrigin, inputValue).then(() => {
       setDataSource(
         produce(dataSource, (draft) => {
-          draft[index] = {
-            ...draft[index],
-            name: inputValue,
-            type: "folder",
-          };
+          draft[index].type = 'folder';
+          draft[index].name = inputValue;
         })
       );
     });
@@ -114,10 +112,7 @@ const FolderList = function () {
     renameOriginRef.current = dataSource[index].name;
     setDataSource(
       produce(dataSource, (draft) => {
-        draft[index] = {
-          ...draft[index],
-          type: "input",
-        };
+        draft[index].type = 'input';
       })
     );
     setTimeout(() => {
@@ -126,7 +121,11 @@ const FolderList = function () {
   };
 
   const handleDelete = function (index: number) {
-    deleteFolder(dataSource[index].path);
+    deleteFolder(dataSource[index].path).then(() => {
+      setDataSource(produce(dataSource, draft => {
+        draft.splice(index, 1);
+      }))
+    })
   };
 
   useEffect(() => {
@@ -144,7 +143,9 @@ const FolderList = function () {
           type: "folder",
         }));
       setDataSource(retDataSource);
-      setSelectedFolder(retDataSource[0]);
+      if (retDataSource.length > 0) {
+        setSelectedFolder(retDataSource[0]);
+      }
     });
   }, []);
 

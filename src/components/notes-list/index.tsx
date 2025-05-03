@@ -135,10 +135,10 @@ const NotesList = function () {
         />
       </div>
       <Separator />
-      <div className={styles.list_search}>
+      <div className={cn(styles.list_search, 'h-9')}>
         <Search size={14} />
         <Input
-          className="border-0 outline-0 focus-visible:border-0"
+          className="border-0 outline-0 focus-visible:border-0 focus-visible:ring-[0px]"
           type="text"
           placeholder={t("searchNotes")}
         />
