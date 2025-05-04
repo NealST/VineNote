@@ -150,7 +150,7 @@ const FolderList = function () {
   }, []);
 
   return (
-    <div className={styles.folder_list}>
+    <div className={styles.data_list}>
       <div className={styles.list_header}>
         <span className={cn(styles.header_label, "text-muted-foreground")}>
           {t("folders")}
@@ -161,7 +161,7 @@ const FolderList = function () {
           onClick={handleAddFolder}
         />
       </div>
-      <div className={styles.list_folders}>
+      <div className={styles.list_display}>
         {dataSource.length > 0 ? (
           dataSource.map((item, index) => {
             const { name, type } = item;
@@ -179,7 +179,7 @@ const FolderList = function () {
                       "dark:hover:bg-accent/50",
                       "h-8 rounded-md cursor-pointer",
                       isSelected && !isInput ? "bg-accent" : "",
-                      isInput ? styles.folder_input : ""
+                      isInput ? styles.item_input : ""
                     )}
                     onClick={() => handleSelect(item)}
                   >
@@ -192,7 +192,7 @@ const FolderList = function () {
                       />
                       {isInput ? (
                         <Input
-                          className={cn(styles.item_input, "h-8")}
+                          className="h-8"
                           ref={inputRef}
                           type="text"
                           defaultValue={name}

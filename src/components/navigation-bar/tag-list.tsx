@@ -141,7 +141,7 @@ const TagList = function () {
   }, []);
 
   return (
-    <div className={styles.folder_list}>
+    <div className={styles.data_list}>
       <div className={styles.list_header}>
         <span className={cn(styles.header_label, "text-muted-foreground")}>
           {t("allTags")}
@@ -152,7 +152,7 @@ const TagList = function () {
           onClick={handleAddTag}
         />
       </div>
-      <div className={styles.list_folders}>
+      <div className={styles.list_display}>
         {dataSource.length > 0 ? (
           dataSource.map((item, index) => {
             const { name, type, id } = item;
@@ -163,14 +163,14 @@ const TagList = function () {
                 <ContextMenuTrigger>
                   <div
                     className={cn(
-                      styles.folder_item,
+                      styles.display_item,
                       "hover:bg-accent",
                       "text-sidebar-accent-foreground",
                       // 'text-muted-foreground hover:text-accent-foreground',
                       "dark:hover:bg-accent/50",
                       "h-8 rounded-md cursor-pointer",
                       isSelected && !isInput ? "bg-accent" : "",
-                      isInput ? styles.folder_input : ""
+                      isInput ? styles.item_input : ""
                     )}
                     onClick={() => handleSelect(item)}
                   >
@@ -183,7 +183,7 @@ const TagList = function () {
                       />
                       {isInput ? (
                         <Input
-                          className={cn(styles.item_input, "h-8")}
+                          className="h-8"
                           ref={inputRef}
                           type="text"
                           defaultValue={name}

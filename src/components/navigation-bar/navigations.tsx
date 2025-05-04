@@ -3,15 +3,13 @@
 import { useTranslation } from "react-i18next";
 import { Notebook, Rss, Tag, Settings, CircleHelp } from "lucide-react";
 import { Button } from "../ui/button";
+import { useSelectedNav } from './controllers/selected-nav';
 import { SettingsDialog } from "../settings";
 import styles from "./index.module.css";
 
-interface IProps {
-  onSelect: (navId: string) => void;
-}
-
-const Navigation = function ({ onSelect }: IProps) {
+const Navigation = function () {
   const { t } = useTranslation();
+  const setSelectedNav = useSelectedNav(state => state.setId);
   const dataSource = [
     {
       id: "notes",
@@ -39,6 +37,13 @@ const Navigation = function ({ onSelect }: IProps) {
       Icon: CircleHelp,
     },
   ];
+
+  const handleSelect = function(id: string) {
+    if (['notes', 'rss', 'tags'].includes(id)) {
+      setSelectedNav(id);
+    }
+  }
+
   return (
     <div className={styles.navigation}>
       {dataSource.map((item) => {
@@ -50,7 +55,6 @@ const Navigation = function ({ onSelect }: IProps) {
                 variant="ghost"
                 className="w-full justify-start cursor-pointer"
                 style={{ fontSize: "12px" }}
-                onClick={() => onSelect(id)}
               >
                 <Icon className="text-muted-foreground" size={14} />
                 <span className="text-muted-foreground">{name}</span>
@@ -64,7 +68,7 @@ const Navigation = function ({ onSelect }: IProps) {
             variant="ghost"
             className="w-full justify-start cursor-pointer"
             style={{ fontSize: "12px" }}
-            onClick={() => onSelect(id)}
+            onClick={() => handleSelect(id)}
           >
             <Icon className="text-muted-foreground" size={14} />
             <span className="text-muted-foreground">{name}</span>

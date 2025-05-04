@@ -14,7 +14,7 @@
   align-items: flex-start;
 }
 
-.folder_list {
+.data_list {
   margin-top: 30px;
 }
 
@@ -31,11 +31,11 @@
   font-size: 12px;
 }
 
-.list_folders {
+.list_display {
   padding-top: 10px;
 }
 
-.folder_item {
+.display_item {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -45,7 +45,7 @@
   margin-bottom: 6px;
 }
 
-.folder_input {
+.item_input {
   background-color: var(--sidebar);
 }
 

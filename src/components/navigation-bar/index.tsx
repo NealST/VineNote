@@ -1,28 +1,28 @@
 'use client'
 
-import { useState } from 'react';
 import Navigation from './navigations';
 import FolderList from './folder-list';
 import TagList from './tag-list';
+import RssList from './rss-list';
+import { useSelectedNav } from './controllers/selected-nav';
 import styles from './index.module.css';
 
 const NavigationBar = function() {
   
-  const [activeNav, setActiveNav] = useState('notes');
-
-  const handleNavSelect = function(navId: string) {
-    setActiveNav(navId);
-  }
+  const selectedNav = useSelectedNav(state => state.id);
   
   return (
     <div className={styles.navigation_bar}>
-      <Navigation onSelect={handleNavSelect} />
+      <Navigation />
       
       {
-        activeNav === 'notes' && <FolderList />
+        selectedNav === 'notes' && <FolderList />
       }
       {
-        activeNav === 'tags' && <TagList />
+        selectedNav === 'tags' && <TagList />
+      }
+      {
+        selectedNav === 'rss' && <RssList />
       }
     </div>
   )
