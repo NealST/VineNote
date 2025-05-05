@@ -23,6 +23,7 @@ import {
   getRssInfo,
   deleteRss,
   getRssList,
+  useListen
 } from "./controllers/rss-action";
 import { produce } from "immer";
 import { useSelectedRss } from "./controllers/selected-rss";
@@ -37,6 +38,7 @@ const RssList = function () {
   const { rss: selectedRss, setRss: setSelectedRss } = useSelectedRss();
   const rssUrlRef = useRef("");
   const rssFilePathRef = useRef("");
+  const isSubmittingRef = useRef(false);
   const renameRssIndexRef = useRef<number>();
 
   const handleChange = (value: string) => {
@@ -54,41 +56,45 @@ const RssList = function () {
       setErrMsg(t("submitExistRss"));
       return;
     }
-
+    if (isSubmittingRef.current) {
+      return
+    }
+    isSubmittingRef.current = true;
+    console.log('exec submit');
     const rssFilePath = rssFilePathRef.current;
     const renameRssIndex = renameRssIndexRef.current;
     if (renameRssIndex !== undefined) {
       try {
         const rssChannel = await getRssInfo(rssUrl);
-        await renameRss(
-          rssFilePathRef.current,
-          dataSource[renameRssIndex].link,
-          rssUrl
-        );
-        setDataSource(
-          produce(dataSource, (draft) => {
-            draft[renameRssIndex] = rssChannel;
-          })
-        );
-        setSelectedRss(rssChannel);
+        // await renameRss(
+        //   rssFilePathRef.current,
+        //   dataSource[renameRssIndex].link,
+        //   rssUrl
+        // );
+        // setDataSource(
+        //   produce(dataSource, (draft) => {
+        //     draft[renameRssIndex] = rssChannel;
+        //   })
+        // );
+        //setSelectedRss(rssChannel);
       } catch (e) {
         console.error("rename rss error", e);
       }
     } else {
       try {
         const rssChannel = await getRssInfo(rssUrl);
-        await createRss(rssFilePath, rssUrl);
-        setDataSource(
-          produce(dataSource, (draft) => {
-            draft.push({
-              title: rssChannel.title,
-              link: rssChannel.link,
-              description: rssChannel.description,
-              items: rssChannel.items,
-            });
-          })
-        );
-        setSelectedRss(rssChannel);
+        // await createRss(rssFilePath, rssUrl);
+        // setDataSource(
+        //   produce(dataSource, (draft) => {
+        //     draft.push({
+        //       title: rssChannel.title,
+        //       link: rssChannel.link,
+        //       description: rssChannel.description,
+        //       items: rssChannel.items,
+        //     });
+        //   })
+        // );
+        // setSelectedRss(rssChannel);
       } catch (e) {
         console.error("create rss error", e);
       }
@@ -96,6 +102,7 @@ const RssList = function () {
     // reset
     rssUrlRef.current = "";
     renameRssIndexRef.current = undefined;
+    isSubmittingRef.current = false;
   };
 
   const handleSelect = function (rss: IRssItem) {
@@ -117,6 +124,8 @@ const RssList = function () {
       );
     });
   };
+
+  useListen();
 
   useEffect(() => {
     getRssList().then((ret) => {

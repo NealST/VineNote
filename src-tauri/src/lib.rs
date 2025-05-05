@@ -2,7 +2,8 @@
 mod read_dir_recursive;
 mod rss;
 use read_dir_recursive::read_dir_recursive;
-use rss::{Channel, fetch_and_parse_rss};
+use rss::{fetch_and_parse_rss, Channel};
+use tauri::AppHandle;
 
 #[tauri::command]
 fn get_dir_info(path: &str) -> String {
@@ -13,13 +14,15 @@ fn get_dir_info(path: &str) -> String {
 }
 
 #[tauri::command]
-async fn get_rss(url: String) -> Result<Channel, String> {
-  fetch_and_parse_rss(&url).await
+fn get_rss(app: AppHandle, url: String) {
+    println!("input rss url: {}", url);
+    fetch_and_parse_rss(app, &url);
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())

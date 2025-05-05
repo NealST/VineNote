@@ -31,4 +31,6 @@ tauri-plugin-store = "2"
 reqwest = "0.12.15"
 quick-xml = "0.37.5"
 serde-xml-rs = "0.8.0"
+tokio = "1.44.2"
+tauri-plugin-http = "2"
 

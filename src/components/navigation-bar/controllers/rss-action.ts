@@ -7,12 +7,28 @@ import {
 import getNavPath from "@/utils/get-nav-path";
 import { produce } from "immer";
 import { invoke } from "@tauri-apps/api/core";
+import { listen, type UnlistenFn } from "@tauri-apps/api/event";
+import { useEffect, useRef } from "react";
 import type { IRssItem } from "../types";
 
-export const getRssInfo = async function(rssUrl: string) {
-  const rssChannel: IRssItem = await invoke('get_rss', { url: rssUrl });
-  console.log('rssChannel', rssChannel);
-  return rssChannel;
+export const useListen = function () {
+  const unlistenRef = useRef<UnlistenFn>();
+  useEffect(() => {
+    async function listenLoaded() {
+      unlistenRef.current = await listen<IRssItem>("rss-loaded", (event) => {
+        console.log("rss loaded event", event);
+      });
+    }
+    listenLoaded();
+    return () => {
+      const unlisten = unlistenRef.current;
+      unlisten && unlisten();
+    };
+  }, []);
+};
+
+export const getRssInfo = async function (rssUrl: string) {
+  await invoke("get_rss", { url: rssUrl });
 };
 
 export const createRssFile = async function (filePath: string) {
@@ -44,9 +60,9 @@ export const createRss = async function (filePath: string, rssUrl: string) {
   const rssContentJson = await readTextFile(filePath);
   const rssContent = JSON.parse(rssContentJson);
   const newRssItem = {
-    title: '',
+    title: "",
     link: rssUrl,
-    description: ''
+    description: "",
   };
   if (rssContent.length === 0) {
     await writeTextFile(filePath, JSON.stringify([newRssItem]));
@@ -80,7 +96,7 @@ export const renameRss = async function (
     (item: IRssItem) => item.link === oldLink
   );
   const newRssContent = produce(rssContent, (draft: IRssItem[]) => {
-    draft[renameIndex].link = newLink
+    draft[renameIndex].link = newLink;
   });
   await writeTextFile(filePath, JSON.stringify(newRssContent));
 };
