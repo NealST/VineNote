@@ -2,7 +2,13 @@ import { useMemo } from "react";
 import { useTextCount } from "./controllers/text-count";
 import useFocusMode from "./controllers/focus-mode";
 import { useTranslation } from "react-i18next";
-import { Focus, ArrowRightFromLine, Trash2, Minimize } from "lucide-react";
+import {
+  Focus,
+  ArrowRightFromLine,
+  Trash2,
+  Minimize,
+  Tags,
+} from "lucide-react";
 import type { IArticleItem } from "../notes-list/types";
 import { emitter } from "@/utils/events";
 import {
@@ -29,6 +35,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import AddTag from './header-actions/tag';
 import { cn } from "@/lib/utils";
 import styles from "./index.module.css";
 
@@ -56,16 +68,23 @@ const Header = function (props: IProps) {
             Icon: Focus,
           },
         ];
-    return result.concat([
+    return [
       {
-        id: "export",
-        Icon: ArrowRightFromLine,
+        id: "tag",
+        Icon: Tags,
       },
-      {
-        id: "delete",
-        Icon: Trash2,
-      },
-    ]);
+    ]
+      .concat(result)
+      .concat([
+        {
+          id: "export",
+          Icon: ArrowRightFromLine,
+        },
+        {
+          id: "delete",
+          Icon: Trash2,
+        },
+      ]);
   }, [isFocusMode]);
 
   const actionStrategy = useMemo(
@@ -94,9 +113,16 @@ const Header = function (props: IProps) {
         </span>
       </div>
       <div className={styles.header_action}>
+        <AddTag />
+
         {actions.map((item) => {
           const { id, Icon } = item;
           const action = actionStrategy[id as keyof typeof actionStrategy];
+          if (id === "tag") {
+            return (
+              <AddTag key={id}
+            );
+          }
           if (id === "export") {
             return (
               <DropdownMenu modal={false} key={id}>
@@ -164,7 +190,9 @@ const Header = function (props: IProps) {
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => action("done")}>{t("confirm")}</AlertDialogAction>
+                    <AlertDialogAction onClick={() => action("done")}>
+                      {t("confirm")}
+                    </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
@@ -176,9 +204,7 @@ const Header = function (props: IProps) {
                 <TooltipTrigger asChild>
                   <Icon
                     style={{ marginLeft: "20px" }}
-                    className={cn(
-                      "cursor-pointer"
-                    )}
+                    className={cn("cursor-pointer")}
                     size={16}
                     onClick={() => action("done")}
                   />
