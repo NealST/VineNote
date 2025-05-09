@@ -23,14 +23,14 @@ export const getTagList = async function () {
     await createTagFile(tagsFilePath);
     return {
       filePath: tagsFilePath,
-      dataSource: [],
+      dataSource: [] as ITagItem[],
     };
   }
   const tagsContentJson = await readTextFile(tagsFilePath);
   const tagsContent = JSON.parse(tagsContentJson);
   return {
     filePath: tagsFilePath,
-    dataSource: tagsContent,
+    dataSource: tagsContent as ITagItem[],
   };
 };
 

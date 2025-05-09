@@ -10,14 +10,15 @@ import { SettingsProvider } from '@/components/settings';
 import { useTextCount } from './controllers/text-count';
 import { readFile, writeToFile } from './controllers/file-action';
 import debounce from '@/utils/debounce';
-import type { IArticleItem } from "../notes-list/types";
+import { useSelectedFile } from "../notes-list/controllers/selected-file";
 import { Toaster } from 'sonner';
 import styles from './index.module.css';
 
 const DELAY_TIME = 2000;
 
-function PlateEditor({selectedFile}: {selectedFile: IArticleItem}) {
+function PlateEditor() {
   const editor = useCreateEditor();
+  const selectedFile = useSelectedFile((state) => state.selectedFile);
   const setTextCount = useTextCount(state => state.setCount);
   const editorRef = useRef<HTMLDivElement>(null);
   const filePath = selectedFile?.path;
@@ -28,15 +29,17 @@ function PlateEditor({selectedFile}: {selectedFile: IArticleItem}) {
     // count the character number of editor
     setTextCount(editorRef.current?.textContent?.length || 0);
     // write edit content to file path automatically
-    writeToFile(value, filePath);
+    filePath && writeToFile(value, filePath);
   }, [filePath]);
 
   useEffect(() => {
     console.log('selected path', filePath);
-    readFile(filePath).then(content => {
-      console.log('file content', content);
-      editor.tf.setValue(JSON.parse(content || '[]'));
-    });
+    if (filePath) {
+      readFile(filePath).then(content => {
+        console.log('file content', content);
+        editor.tf.setValue(JSON.parse(content || '[]'));
+      });
+    }
   }, [filePath]);
 
   return (
@@ -50,11 +53,11 @@ function PlateEditor({selectedFile}: {selectedFile: IArticleItem}) {
   );
 }
 
-const MainEditor = function({selectedFile}: {selectedFile: IArticleItem}) {
+const MainEditor = function() {
   return (
     <div data-registry="plate" className={styles.editor_main}>
       <SettingsProvider>
-        <PlateEditor selectedFile={selectedFile} />
+        <PlateEditor />
       </SettingsProvider>
 
       <Toaster />

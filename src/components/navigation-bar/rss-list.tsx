@@ -65,8 +65,7 @@ const RssList = function () {
     const renameRssIndex = renameRssIndexRef.current;
     if (renameRssIndex !== undefined) {
       try {
-        // const rssChannel = await getRssInfo(rssUrl);
-        const xmlContent = await window.electronAPI.requestRss(rssUrl);
+        const rssChannel = await getRssInfo(rssUrl);
         console.log('requested xml content', xmlContent);
         // await renameRss(
         //   rssFilePathRef.current,
@@ -84,9 +83,7 @@ const RssList = function () {
       }
     } else {
       try {
-        // const rssChannel = await getRssInfo(rssUrl);
-        const xmlContent = await window.electronAPI.requestRss(rssUrl);
-        console.log('requested xml content', xmlContent);
+        const rssChannel = await getRssInfo(rssUrl);
         // await createRss(rssFilePath, rssUrl);
         // setDataSource(
         //   produce(dataSource, (draft) => {

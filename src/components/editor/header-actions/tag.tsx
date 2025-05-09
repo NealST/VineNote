@@ -10,7 +10,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Tags, X } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,19 +21,24 @@ import {
   CommandEmpty,
 } from "@/components/ui/command";
 import { useTranslation } from "react-i18next";
+import { getTagList } from "@/components/navigation-bar/controllers/tag-action";
+import { useSelectedFile } from "@/components/notes-list/controllers/selected-file";
+import type { ITagItem } from "@/components/navigation-bar/types";
 import styles from "./index.module.css";
 
 const AddTag = function () {
   const { t } = useTranslation();
   const [inputValue, setInputValue] = useState("");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [availableTags, setAvailableTags] = useState<string[]>([]);
+  const selectedFile = useSelectedFile((state) => state.selectedFile);
+  const [selectedTags, setSelectedTags] = useState<ITagItem[]>([]);
+  const [availableTags, setAvailableTags] = useState<ITagItem[]>([]);
+  const tagFilePathRef = useRef("");
 
   // filter the avaliable tags
   const filteredTags = useMemo(() => {
     return availableTags.filter(
       (tag) =>
-        tag.toLowerCase().includes(inputValue.toLowerCase()) &&
+        tag.name.includes(inputValue.toLowerCase()) &&
         !selectedTags.includes(tag)
     );
   }, [inputValue, availableTags, selectedTags]);
@@ -45,7 +50,19 @@ const AddTag = function () {
 
   const handleDeleteTag = function (index: number) {};
 
-  const handleAddTag = function (tag: string) {};
+  const handleAddTag = function (tag: ITagItem) {};
+
+  useEffect(() => {
+    getTagList().then((ret) => {
+        console.log("file tags ret", ret);
+        const { filePath, dataSource } = ret;
+        tagFilePathRef.current = filePath;
+        setAvailableTags(dataSource);
+        if (dataSource.length > 0) {
+          setSelectedTags(dataSource.filter(item => item.files.some(fileItem => fileItem.path === selectedFile?.path)))
+        }
+      })
+  }, []);
 
   return (
     <Popover>
@@ -64,6 +81,7 @@ const AddTag = function () {
       <PopoverContent>
         <div className={styles.tag_content}>
           <Input
+            className="focus-visible:ring-0"
             placeholder={t("addTag")}
             onChange={(e) => {
               setInputValue(e.target.value.trim());
@@ -81,16 +99,16 @@ const AddTag = function () {
                 {/* 现有标签建议 */}
                 {filteredTags.map((tag) => (
                   <CommandItem
-                    key={tag}
+                    key={tag.name}
                     onSelect={() => handleAddTag(tag)}
                     className="cursor-pointer px-4 py-2 text-sm hover:bg-accent"
                   >
-                    {tag}
+                    {tag.name}
                   </CommandItem>
                 ))}
 
                 {/* 创建新标签选项 */}
-                {inputValue && !availableTags.includes(inputValue) && (
+                {inputValue && availableTags.every(item => !item.name.includes(inputValue)) && (
                   <CommandItem
                     onSelect={handleCreateTag}
                     className="cursor-pointer px-4 py-2 text-sm text-primary hover:bg-accent"
@@ -109,8 +127,8 @@ const AddTag = function () {
           </div>
           <div className={styles.tag_selected}>
             {selectedTags.map((tag, index) => (
-              <Badge key={tag} variant="secondary">
-                {tag}
+              <Badge key={tag.name} variant="secondary">
+                {tag.name}
                 <button
                   onClick={() => handleDeleteTag(index)}
                   className="ml-2 rounded-full hover:bg-accent"

@@ -14,8 +14,8 @@ const Editor = function () {
         <Empty />
       ) : (
         <>
-          <Header selectedFile={selectedFile} />
-          <MainEditor selectedFile={selectedFile} />
+          <Header />
+          <MainEditor />
         </>
       )}
     </div>
