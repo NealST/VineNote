@@ -16,11 +16,11 @@ const Navigation = function () {
       name: t("notes"),
       Icon: Notebook,
     },
-    {
-      id: "rss",
-      name: t("rss"),
-      Icon: Rss,
-    },
+    // {
+    //   id: "rss",
+    //   name: t("rss"),
+    //   Icon: Rss,
+    // },
     {
       id: "tags",
       name: t("tags"),

@@ -14,6 +14,8 @@ import {
   getFiles,
 } from "./controllers/file-actions";
 import { useSelectedFile } from "./controllers/selected-file";
+import { useSelectedTag } from "@/components/navigation-bar/controllers/selected-tag";
+import { useSelectedNav } from "../navigation-bar/controllers/selected-nav";
 import { produce } from "immer";
 import { emitter } from "@/utils/events";
 import { cn } from "@/lib/utils";
@@ -24,8 +26,12 @@ const NotesList = function () {
   const [dataSource, setDataSource] = useState<IArticleItem[]>([]);
   const { selectedFile, setSelectedFile } = useSelectedFile();
   const selectedFolder = useSelectedFolder((state) => state.folder);
+  const selectedTag = useSelectedTag((state) => state.tag);
+  const selectedNav = useSelectedNav((state) => state.id);
   const inputRef = useRef("");
   const { t } = useTranslation();
+  const isInTagNav = selectedNav === "tags";
+  const headerName = isInTagNav ? selectedTag.name : selectedFolder?.name;
 
   const handleAddFile = function () {
     const defaultName = t("untitled");
@@ -69,30 +75,40 @@ const NotesList = function () {
     inputRef.current = event.target?.value;
   };
 
-  const handleDeleteFile = useCallback(function(file: IArticleItem) {
-    const len = dataSource.length;
-    const deleteIndex = dataSource.findIndex(item => item.id === file.id);
-    deleteFile(file.path).then(() => {
-      if (len === 1) {
-        setSelectedFile(null);
-        setDataSource([]);
-        return;
-      }
-      if (deleteIndex === len - 1) {
-        setSelectedFile(dataSource[deleteIndex - 1]);
-      } else {
-        setSelectedFile(dataSource[deleteIndex + 1]);
-      }
-      setDataSource(produce(dataSource, draft => {
-        draft.splice(deleteIndex, 1);
-      }));
-    }).catch(() => {
-      // todo: add exception log for delete fail
-    })
-  }, [dataSource]);
+  const handleDeleteFile = useCallback(
+    function (file: IArticleItem) {
+      const len = dataSource.length;
+      const deleteIndex = dataSource.findIndex((item) => item.id === file.id);
+      deleteFile(file.path)
+        .then(() => {
+          if (len === 1) {
+            setSelectedFile(null);
+            setDataSource([]);
+            return;
+          }
+          if (deleteIndex === len - 1) {
+            setSelectedFile(dataSource[deleteIndex - 1]);
+          } else {
+            setSelectedFile(dataSource[deleteIndex + 1]);
+          }
+          setDataSource(
+            produce(dataSource, (draft) => {
+              draft.splice(deleteIndex, 1);
+            })
+          );
+        })
+        .catch(() => {
+          // todo: add exception log for delete fail
+        });
+    },
+    [dataSource]
+  );
 
   useEffect(() => {
     if (!selectedFolder?.path) {
+      return;
+    }
+    if (isInTagNav) {
       return;
     }
     getFiles(selectedFolder.path).then((retStr) => {
@@ -114,36 +130,53 @@ const NotesList = function () {
   }, [selectedFolder]);
 
   useEffect(() => {
+    if (!isInTagNav) {
+      return;
+    }
+    setDataSource(selectedTag.files);
+  }, [selectedTag]);
 
-    emitter.on('deleteFile', handleDeleteFile);
+  useEffect(() => {
+    emitter.on("deleteFile", handleDeleteFile);
 
     return () => {
-      emitter.off('deleteFile', handleDeleteFile);
-    }
+      emitter.off("deleteFile", handleDeleteFile);
+    };
   }, []);
 
   return (
     <div className={styles.notes_list}>
-      <div className={styles.list_header}>
+      <div
+        className={cn(
+          styles.list_header,
+          isInTagNav ? styles.list_header_tags : ""
+        )}
+      >
         <span className={styles.header_label}>
-          {selectedFolder?.name || t("allNotes")}
+          {headerName || t("allNotes")}
         </span>
-        <FilePlus
-          className="cursor-pointer text-foreground"
-          size={16}
-          onClick={handleAddFile}
-        />
+        {!isInTagNav && (
+          <FilePlus
+            className="cursor-pointer text-foreground"
+            size={16}
+            onClick={handleAddFile}
+          />
+        )}
       </div>
       <Separator />
-      <div className={cn(styles.list_search, 'h-9')}>
-        <Search size={14} />
-        <Input
-          className="border-0 outline-0 focus-visible:border-0 focus-visible:ring-[0px]"
-          type="text"
-          placeholder={t("searchNotes")}
-        />
-      </div>
-      <Separator />
+      {!isInTagNav && (
+        <>
+          <div className={cn(styles.list_search, "h-9")}>
+            <Search size={14} />
+            <Input
+              className="border-0 outline-0 focus-visible:border-0 focus-visible:ring-[0px]"
+              type="text"
+              placeholder={t("searchNotes")}
+            />
+          </div>
+          <Separator />
+        </>
+      )}
       <div className={styles.list_display}>
         {dataSource.length > 0 ? (
           dataSource.map((item, index) => {

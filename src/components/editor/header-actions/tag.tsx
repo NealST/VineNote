@@ -23,6 +23,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { getTagList } from "@/components/navigation-bar/controllers/tag-action";
 import { useSelectedFile } from "@/components/notes-list/controllers/selected-file";
+import { useTagDataSource } from '@/components/navigation-bar/controllers/tag-datasource';
 import {
   addTagForFile,
   deleteTagForFile,
@@ -37,7 +38,7 @@ const AddTag = function () {
   const [inputValue, setInputValue] = useState("");
   const selectedFile = useSelectedFile((state) => state.selectedFile);
   const [selectedTags, setSelectedTags] = useState<ITagItem[]>([]);
-  const [availableTags, setAvailableTags] = useState<ITagItem[]>([]);
+  const { dataSource: availableTags, setDataSource: setAvailableTags } = useTagDataSource();
   const tagFilePathRef = useRef("");
 
   // filter the avaliable tags
@@ -60,8 +61,8 @@ const AddTag = function () {
       tagFilePathRef.current,
       newTag,
       selectedFile
-    ).then(() => {
-      setAvailableTags((pre) => pre.concat(newTag));
+    ).then((newDataSource) => {
+      setAvailableTags(newDataSource);
       setSelectedTags((pre) => pre.concat(newTag));
       setInputValue('');
     });
@@ -73,7 +74,8 @@ const AddTag = function () {
       tagFilePathRef.current,
       tag,
       selectedFile
-    ).then(() => {
+    ).then((newDataSource) => {
+      setAvailableTags(newDataSource);
       setSelectedTags((pre) => {
         const tagIndex = selectedTags.findIndex(
           (item) => tag.name === item.name
@@ -91,8 +93,10 @@ const AddTag = function () {
       tagFilePathRef.current,
       tag,
       selectedFile
-    ).then(() => {
+    ).then((newDataSource) => {
+      setAvailableTags(newDataSource);
       setSelectedTags((pre) => pre.concat(tag));
+      setInputValue('');
     });
   };
 

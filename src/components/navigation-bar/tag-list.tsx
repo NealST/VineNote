@@ -10,6 +10,7 @@ import {
 import {
   useSelectedTag,
 } from "./controllers/selected-tag";
+import { useTagDataSource } from './controllers/tag-datasource';
 import { useTranslation } from "react-i18next";
 import { Hash, BookmarkPlus, FolderPen, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -27,7 +28,7 @@ import type { ITagItem } from "./types";
 import styles from "./index.module.css";
 
 const TagList = function () {
-  const [dataSource, setDataSource] = useState([] as ITagItem[]);
+  const { dataSource, setDataSource } = useTagDataSource();
   const { tag: selectedTag, setTag: setSelectedTag } =
     useSelectedTag();
   const inputValueRef = useRef("");

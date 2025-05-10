@@ -25,6 +25,7 @@ export const addTagForFile = async function (
     }
   });
   await writeTextFile(tagFilePath, JSON.stringify(newDataSource));
+  return newDataSource;
 };
 
 export const deleteTagForFile = async function (
@@ -46,4 +47,5 @@ export const deleteTagForFile = async function (
     draft[tagIndex] = newTagItem;
   });
   await writeTextFile(tagFilePath, JSON.stringify(newDataSource));
+  return newDataSource;
 };
