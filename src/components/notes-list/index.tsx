@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, ChangeEvent, useCallback } from "react";
-import { FilePlus, Search } from "lucide-react";
+import { FilePlus, Search, FilePen, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import Empty from "./empty";
@@ -16,9 +16,17 @@ import {
 import { useSelectedFile } from "./controllers/selected-file";
 import { useSelectedTag } from "@/components/navigation-bar/controllers/selected-tag";
 import { useSelectedNav } from "../navigation-bar/controllers/selected-nav";
+import { deleteTagForFile } from "../editor/controllers/file-tag-action";
+import { useTagDataSource } from "../navigation-bar/controllers/tag-datasource";
 import { produce } from "immer";
 import { emitter } from "@/utils/events";
 import { cn } from "@/lib/utils";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 import type { IArticleItem } from "./types";
 import styles from "./index.module.css";
 
@@ -28,7 +36,9 @@ const NotesList = function () {
   const selectedFolder = useSelectedFolder((state) => state.folder);
   const selectedTag = useSelectedTag((state) => state.tag);
   const selectedNav = useSelectedNav((state) => state.id);
+  const tagDataSource = useTagDataSource(state => state.dataSource);
   const inputRef = useRef("");
+  const inputElRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
   const isInTagNav = selectedNav === "tags";
   const headerName = isInTagNav ? selectedTag.name : selectedFolder?.name;
@@ -56,16 +66,28 @@ const NotesList = function () {
   };
 
   const handleInputBlur = function (index: number) {
-    const inputValue = inputRef.current;
-    const newFilePath = `${selectedFolder.path}/${inputValue}.json`;
-    renameFile(dataSource[index].path, newFilePath).then(() => {
+    const inputValue = inputRef.current.trim();
+    const oldFile = dataSource[index];
+    if (!inputValue || inputValue === oldFile.name) {
       setDataSource(
         produce(dataSource, (draft) => {
-          draft[index] = {
-            ...draft[index],
-            name: inputValue,
-            path: newFilePath,
-          };
+          draft[index].action = "";
+        })
+      );
+      return;
+    }
+    const oldFilePath = oldFile.path;
+    const folderPaths = oldFilePath.split("/");
+    const theFolderPath = folderPaths
+      .slice(0, folderPaths.length - 1)
+      .join("/");
+    const newFilePath = `${theFolderPath}/${inputValue}-${oldFile.id}.json`;
+    renameFile(oldFilePath, newFilePath).then(() => {
+      setDataSource(
+        produce(dataSource, (draft) => {
+          draft[index].name = inputValue;
+          draft[index].path = newFilePath;
+          draft[index].action = "";
         })
       );
     });
@@ -75,43 +97,57 @@ const NotesList = function () {
     inputRef.current = event.target?.value;
   };
 
-  const handleDeleteFile = useCallback(
-    function (file: IArticleItem) {
-      const len = dataSource.length;
-      const deleteIndex = dataSource.findIndex((item) => item.id === file.id);
-      deleteFile(file.path)
-        .then(() => {
-          if (len === 1) {
-            setSelectedFile(null);
-            setDataSource([]);
-            return;
-          }
-          if (deleteIndex === len - 1) {
-            setSelectedFile(dataSource[deleteIndex - 1]);
-          } else {
-            setSelectedFile(dataSource[deleteIndex + 1]);
-          }
-          setDataSource(
-            produce(dataSource, (draft) => {
-              draft.splice(deleteIndex, 1);
-            })
-          );
-        })
-        .catch(() => {
-          // todo: add exception log for delete fail
-        });
-    },
-    [dataSource]
-  );
+  const handleRenameFile = function (index: number) {
+    setDataSource(
+      produce(dataSource, (draft) => {
+        draft[index].action = "input";
+      })
+    );
+    setTimeout(() => {
+      inputElRef.current?.focus();
+    }, 10);
+  };
+  
+  const handleDeleteInTag = function(deleteIndex: number) {
+    // todo
+    deleteTagForFile(tagDataSource,  selectedTag, dataSource[deleteIndex])
+  }
+
+  const handleDeleteFile = function (deleteIndex: number) {
+    const len = dataSource.length;
+    const file = dataSource[deleteIndex];
+    deleteFile(file.path)
+      .then(() => {
+        if (len === 1) {
+          setSelectedFile(null);
+          setDataSource([]);
+          return;
+        }
+        if (deleteIndex === len - 1) {
+          setSelectedFile(dataSource[deleteIndex - 1]);
+        } else {
+          setSelectedFile(dataSource[deleteIndex + 1]);
+        }
+        setDataSource(
+          produce(dataSource, (draft) => {
+            draft.splice(deleteIndex, 1);
+          })
+        );
+      })
+      .catch(() => {
+        // todo: add exception log for delete fail
+      });
+  };
 
   useEffect(() => {
-    if (!selectedFolder?.path) {
+    const folederPath = selectedFolder?.path;
+    if (!folederPath) {
       return;
     }
     if (isInTagNav) {
       return;
     }
-    getFiles(selectedFolder.path).then((retStr) => {
+    getFiles(folederPath).then((retStr) => {
       const searchResult = JSON.parse(retStr);
       console.log("searchResult", searchResult);
       const files: IArticleItem[] = searchResult.children || [];
@@ -123,18 +159,18 @@ const NotesList = function () {
         };
       });
       setDataSource(newDataSource);
-      if (newDataSource.length > 0) {
-        setSelectedFile(newDataSource[0]);
-      }
+      setSelectedFile(newDataSource[0]);
     });
-  }, [selectedFolder]);
+  }, [selectedFolder, isInTagNav]);
 
   useEffect(() => {
     if (!isInTagNav) {
       return;
     }
-    setDataSource(selectedTag.files);
-  }, [selectedTag]);
+    const tagFiles = selectedTag.files;
+    setDataSource(tagFiles);
+    setSelectedFile(tagFiles[0]);
+  }, [selectedTag, isInTagNav]);
 
   useEffect(() => {
     emitter.on("deleteFile", handleDeleteFile);
@@ -183,42 +219,62 @@ const NotesList = function () {
             const { id, name, action, metadata } = item;
             const isSelected = id === selectedFile?.id;
             return (
-              <div
-                className={cn(
-                  styles.file_item,
-                  "hover:bg-accent rounded-md cursor-pointer",
-                  isSelected ? "bg-accent" : ""
-                )}
-                key={id}
-                onClick={() => setSelectedFile(item)}
-              >
-                {action === "input" ? (
-                  <Input
-                    defaultValue={name}
-                    onChange={handleInputChange}
-                    onBlur={() => handleInputBlur(index)}
-                  />
-                ) : (
+              <ContextMenu key={id}>
+                <ContextMenuTrigger>
                   <div
                     className={cn(
-                      styles.item_name,
-                      "text-sm text-muted-foreground",
-                      isSelected ? "text-accent-foreground" : ""
+                      styles.file_item,
+                      "hover:bg-accent rounded-md cursor-pointer",
+                      isSelected ? "bg-accent" : ""
                     )}
+                    onClick={() => setSelectedFile(item)}
                   >
-                    {name}
+                    {action === "input" ? (
+                      <Input
+                        ref={inputElRef}
+                        defaultValue={name}
+                        onChange={handleInputChange}
+                        onBlur={() => handleInputBlur(index)}
+                      />
+                    ) : (
+                      <div
+                        className={cn(
+                          styles.item_name,
+                          "text-sm text-muted-foreground",
+                          isSelected ? "text-accent-foreground" : ""
+                        )}
+                      >
+                        {name}
+                      </div>
+                    )}
+                    <div
+                      className={cn(
+                        styles.item_time,
+                        "text-muted-foreground text-sm",
+                        isSelected ? "text-accent-foreground" : ""
+                      )}
+                    >
+                      {metadata.modified || metadata.created}
+                    </div>
                   </div>
-                )}
-                <div
-                  className={cn(
-                    styles.item_time,
-                    "text-muted-foreground text-sm",
-                    isSelected ? "text-accent-foreground" : ""
+                </ContextMenuTrigger>
+                <ContextMenuContent>
+                  <ContextMenuItem onClick={() => handleRenameFile(index)}>
+                    <FilePen size={12} />
+                    <span className={styles.menu_item}>{t("rename")}</span>
+                  </ContextMenuItem>
+                  {isInTagNav && (
+                    <ContextMenuItem onClick={() => handleDeleteInTag(index)}>
+                      <Trash2 size={12} />
+                      <span className={styles.menu_item}>{t("deleteInTag")}</span>
+                    </ContextMenuItem>
                   )}
-                >
-                  {metadata.modified || metadata.created}
-                </div>
-              </div>
+                  <ContextMenuItem onClick={() => handleDeleteFile(index)}>
+                    <Trash2 size={12} />
+                    <span className={styles.menu_item}>{t("deleteFile")}</span>
+                  </ContextMenuItem>
+                </ContextMenuContent>
+              </ContextMenu>
             );
           })
         ) : (

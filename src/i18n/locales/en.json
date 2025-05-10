@@ -15,6 +15,8 @@
   "searchNotes": "Search notes by keywords and tags",
   "rename": "Rename",
   "delete": "Delete",
+  "deleteInTag": "Delete in the tag",
+  "deleteFile": "Delete file",
   "confirmDelete": "Sure to delete?",
   "deleteWarn": "It will be not able to be recovered after deleted,please confirm your action!",
   "cancel": "Cancel",
