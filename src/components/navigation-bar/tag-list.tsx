@@ -177,7 +177,7 @@ const TagList = function () {
                     <div className={styles.item_content}>
                       <Hash
                         style={{
-                          marginRight: "8px",
+                          marginRight: "4px",
                         }}
                         size={14}
                       />

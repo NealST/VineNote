@@ -23,7 +23,13 @@ import {
 import { useTranslation } from "react-i18next";
 import { getTagList } from "@/components/navigation-bar/controllers/tag-action";
 import { useSelectedFile } from "@/components/notes-list/controllers/selected-file";
+import {
+  addTagForFile,
+  deleteTagForFile,
+} from "../controllers/file-tag-action";
 import type { ITagItem } from "@/components/navigation-bar/types";
+import { produce } from "immer";
+import { uid } from "uid";
 import styles from "./index.module.css";
 
 const AddTag = function () {
@@ -37,31 +43,73 @@ const AddTag = function () {
   // filter the avaliable tags
   const filteredTags = useMemo(() => {
     return availableTags.filter(
-      (tag) =>
-        tag.name.includes(inputValue.toLowerCase()) &&
-        !selectedTags.includes(tag)
+      (tag) => tag.name.includes(inputValue) && !selectedTags.includes(tag)
     );
   }, [inputValue, availableTags, selectedTags]);
 
   const handleCreateTag = function () {
     const inputTag = inputValue.trim();
     if (!inputTag) return;
+    const newTag = {
+      id: uid(),
+      name: inputTag,
+      files: [],
+    };
+    addTagForFile(
+      availableTags,
+      tagFilePathRef.current,
+      newTag,
+      selectedFile
+    ).then(() => {
+      setAvailableTags((pre) => pre.concat(newTag));
+      setSelectedTags((pre) => pre.concat(newTag));
+      setInputValue('');
+    });
   };
 
-  const handleDeleteTag = function (index: number) {};
+  const handleDeleteTag = function (tag: ITagItem) {
+    deleteTagForFile(
+      availableTags,
+      tagFilePathRef.current,
+      tag,
+      selectedFile
+    ).then(() => {
+      setSelectedTags((pre) => {
+        const tagIndex = selectedTags.findIndex(
+          (item) => tag.name === item.name
+        );
+        return produce(pre, (draft) => {
+          draft.splice(tagIndex, 1);
+        });
+      });
+    });
+  };
 
-  const handleAddTag = function (tag: ITagItem) {};
+  const handleAddTag = function (tag: ITagItem) {
+    addTagForFile(
+      availableTags,
+      tagFilePathRef.current,
+      tag,
+      selectedFile
+    ).then(() => {
+      setSelectedTags((pre) => pre.concat(tag));
+    });
+  };
 
   useEffect(() => {
     getTagList().then((ret) => {
-        console.log("file tags ret", ret);
-        const { filePath, dataSource } = ret;
-        tagFilePathRef.current = filePath;
-        setAvailableTags(dataSource);
-        if (dataSource.length > 0) {
-          setSelectedTags(dataSource.filter(item => item.files.some(fileItem => fileItem.path === selectedFile?.path)))
-        }
-      })
+      console.log("file tags ret", ret);
+      const { filePath, dataSource } = ret;
+      tagFilePathRef.current = filePath;
+      setAvailableTags(dataSource);
+      if (dataSource.length > 0) {
+        setSelectedTags(
+          dataSource.filter((item) =>
+            item.files.some((fileItem) => fileItem.path === selectedFile?.path)
+          )
+        );
+      }
+    });
   }, []);
 
   return (
@@ -108,30 +156,35 @@ const AddTag = function () {
                 ))}
 
                 {/* 创建新标签选项 */}
-                {inputValue && availableTags.every(item => !item.name.includes(inputValue)) && (
-                  <CommandItem
-                    onSelect={handleCreateTag}
-                    className="cursor-pointer px-4 py-2 text-sm text-primary hover:bg-accent"
-                  >
-                    {t('createNewTag')}:
-                    <span className="ml-1 font-medium">"{inputValue}"</span>
-                  </CommandItem>
-                )}
+                {inputValue &&
+                  availableTags.every(
+                    (item) => !item.name.includes(inputValue)
+                  ) && (
+                    <CommandItem
+                      onSelect={handleCreateTag}
+                      className="cursor-pointer px-4 py-2 text-sm"
+                    >
+                      {t("createNewTag")}:
+                      <span className="ml-1 font-medium">"{inputValue}"</span>
+                    </CommandItem>
+                  )}
 
                 {/* empty state */}
                 {!filteredTags.length && !inputValue.trim() && (
-                  <CommandEmpty className="px-4 py-2 text-sm text-muted-foreground">{t('input2AddTag')}</CommandEmpty>
+                  <CommandEmpty className="px-4 py-2 text-sm text-muted-foreground">
+                    {t("input2AddTag")}
+                  </CommandEmpty>
                 )}
               </CommandList>
             </Command>
           </div>
           <div className={styles.tag_selected}>
-            {selectedTags.map((tag, index) => (
-              <Badge key={tag.name} variant="secondary">
+            {selectedTags.map((tag) => (
+              <Badge key={tag.name} variant="secondary" className="mr-2">
                 {tag.name}
                 <button
-                  onClick={() => handleDeleteTag(index)}
-                  className="ml-2 rounded-full hover:bg-accent"
+                  onClick={() => handleDeleteTag(tag)}
+                  className="ml-1 rounded-full hover:bg-accent cursor-pointer"
                 >
                   <X className="h-3 w-3" />
                 </button>
