@@ -21,15 +21,19 @@ function PlateEditor() {
   const selectedFile = useSelectedFile((state) => state.selectedFile);
   const setTextCount = useTextCount(state => state.setCount);
   const editorRef = useRef<HTMLDivElement>(null);
+  const isFilePathChangeRef = useRef(false);
   const filePath = selectedFile?.path;
 
   const handleChange = useCallback(({value}) => {
     console.log("editor value", value);
     console.log("editor text content", editorRef.current?.textContent);
     // count the character number of editor
-    setTextCount(editorRef.current?.textContent?.length || 0);
+    setTextCount(editorRef.current?.textContent?.trim().length || 0);
     // write edit content to file path automatically
-    filePath && writeToFile(value, filePath);
+    if (!isFilePathChangeRef.current) {
+      filePath && writeToFile(value, filePath);
+    }
+    isFilePathChangeRef.current = false;
   }, [filePath]);
 
   useEffect(() => {
@@ -37,6 +41,7 @@ function PlateEditor() {
     if (filePath) {
       readFile(filePath).then(content => {
         console.log('file content', content);
+        isFilePathChangeRef.current = true;
         editor.tf.setValue(JSON.parse(content || '[]'));
       });
     }

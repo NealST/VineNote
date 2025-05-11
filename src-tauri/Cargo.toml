@@ -33,4 +33,6 @@ quick-xml = "0.37.5"
 serde-xml-rs = "0.8.0"
 tokio = "1.44.2"
 tauri-plugin-http = "2"
+rayon = "1.10.0"
+log = "0.4.27"
 

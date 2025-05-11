@@ -6,7 +6,7 @@ export interface INavState {
 }
 
 export const useSelectedNav = create<INavState>((set) => ({
-  id: '',
+  id: 'notes',
   setId: (newId: string) => {
     set({ id: newId });
   },

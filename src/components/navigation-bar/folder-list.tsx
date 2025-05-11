@@ -172,7 +172,7 @@ const FolderList = function () {
                 <ContextMenuTrigger>
                   <div
                     className={cn(
-                      styles.folder_item,
+                      styles.display_item,
                       "hover:bg-accent",
                       "text-sidebar-accent-foreground",
                       // 'text-muted-foreground hover:text-accent-foreground',
@@ -186,7 +186,7 @@ const FolderList = function () {
                     <div className={styles.item_content}>
                       <Folder
                         style={{
-                          marginRight: "8px",
+                          marginRight: "4px",
                         }}
                         size={14}
                       />

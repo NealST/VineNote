@@ -15,9 +15,14 @@ export const createTagFile = async function (filePath: string) {
   await file.close();
 };
 
-export const getTagList = async function () {
+export const getTagFilePath = async function() {
   const tagsDirPath = await getNavPath("tags");
   const tagsFilePath = `${tagsDirPath}/list.json`;
+  return tagsFilePath;
+}
+
+export const getTagList = async function () {
+  const tagsFilePath = await getTagFilePath();
   const isFileExists = await exists(tagsFilePath);
   if (!isFileExists) {
     await createTagFile(tagsFilePath);

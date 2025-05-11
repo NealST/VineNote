@@ -1,6 +1,6 @@
 .navigation_bar {
   position: relative;
-  flex: 0 0 200px;
+  flex: 0 0 180px;
   height: 100vh;
   border-right: 1px solid var(--sidebar-border);
   background-color: var(--sidebar);

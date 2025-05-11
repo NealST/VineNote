@@ -1,5 +1,5 @@
 .notes_list {
-  flex: 0 0 220px;
+  flex: 0 0 240px;
   height: 100vh;
   border-right: 1px solid var(--border);
 }

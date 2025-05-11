@@ -14,10 +14,12 @@ import {
   getFiles,
 } from "./controllers/file-actions";
 import { useSelectedFile } from "./controllers/selected-file";
+import { searchFilesForKeyword } from "./controllers/search-keyword";
 import { useSelectedTag } from "@/components/navigation-bar/controllers/selected-tag";
 import { useSelectedNav } from "../navigation-bar/controllers/selected-nav";
 import { deleteTagForFile } from "../editor/controllers/file-tag-action";
 import { useTagDataSource } from "../navigation-bar/controllers/tag-datasource";
+import { getTagFilePath } from "../navigation-bar/controllers/tag-action";
 import { produce } from "immer";
 import { emitter } from "@/utils/events";
 import { cn } from "@/lib/utils";
@@ -27,18 +29,24 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import { SearchResults } from "./search-result";
+import type { ISearchResult } from "./controllers/search-keyword";
 import type { IArticleItem } from "./types";
 import styles from "./index.module.css";
 
 const NotesList = function () {
   const [dataSource, setDataSource] = useState<IArticleItem[]>([]);
+  const [isInSearchMode, setIsInSearchMode] = useState(false);
+  const [searchDataSource, setSearchDataSource] = useState<ISearchResult[]>([]);
   const { selectedFile, setSelectedFile } = useSelectedFile();
   const selectedFolder = useSelectedFolder((state) => state.folder);
   const selectedTag = useSelectedTag((state) => state.tag);
   const selectedNav = useSelectedNav((state) => state.id);
-  const tagDataSource = useTagDataSource(state => state.dataSource);
+  const { dataSource: tagDataSource, setDataSource: setTagDataSource } =
+    useTagDataSource();
   const inputRef = useRef("");
   const inputElRef = useRef<HTMLInputElement>(null);
+  const searchTextRef = useRef("");
   const { t } = useTranslation();
   const isInTagNav = selectedNav === "tags";
   const headerName = isInTagNav ? selectedTag.name : selectedFolder?.name;
@@ -93,6 +101,21 @@ const NotesList = function () {
     });
   };
 
+  const handleSearchChange = function (inputValue: string) {
+    searchTextRef.current = inputValue;
+  };
+
+  const handleSearch = function () {
+    const searchText = searchTextRef.current.trim();
+    if (searchText) {
+      searchFilesForKeyword(selectedFolder.path, searchText).then((result) => {
+        console.log("search keyword result", result);
+        setIsInSearchMode(true);
+        setSearchDataSource(result);
+      });
+    }
+  };
+
   const handleInputChange = function (event: ChangeEvent<HTMLInputElement>) {
     inputRef.current = event.target?.value;
   };
@@ -107,11 +130,18 @@ const NotesList = function () {
       inputElRef.current?.focus();
     }, 10);
   };
-  
-  const handleDeleteInTag = function(deleteIndex: number) {
-    // todo
-    deleteTagForFile(tagDataSource,  selectedTag, dataSource[deleteIndex])
-  }
+
+  const handleDeleteInTag = async function (deleteIndex: number) {
+    const tagFilePath = await getTagFilePath();
+    deleteTagForFile(
+      tagDataSource,
+      tagFilePath,
+      selectedTag,
+      dataSource[deleteIndex]
+    ).then((newTagDataSource) => {
+      setTagDataSource(newTagDataSource);
+    });
+  };
 
   const handleDeleteFile = function (deleteIndex: number) {
     const len = dataSource.length;
@@ -155,7 +185,7 @@ const NotesList = function () {
       const newDataSource = files.map((item) => {
         return {
           ...item,
-          name: item.name.replace(/-([^-]+).json/, ""),
+          name: item.name.replace(/(-([^-]+)){5}.json/, ""),
         };
       });
       setDataSource(newDataSource);
@@ -203,18 +233,27 @@ const NotesList = function () {
       {!isInTagNav && (
         <>
           <div className={cn(styles.list_search, "h-9")}>
-            <Search size={14} />
+            <Search size={14} onClick={handleSearch} />
             <Input
               className="border-0 outline-0 focus-visible:border-0 focus-visible:ring-[0px]"
               type="text"
               placeholder={t("searchNotes")}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSearch();
+                }
+              }}
             />
           </div>
           <Separator />
         </>
       )}
+
       <div className={styles.list_display}>
-        {dataSource.length > 0 ? (
+        {!isInSearchMode &&
+          dataSource.length > 0 &&
           dataSource.map((item, index) => {
             const { id, name, action, metadata } = item;
             const isSelected = id === selectedFile?.id;
@@ -266,7 +305,9 @@ const NotesList = function () {
                   {isInTagNav && (
                     <ContextMenuItem onClick={() => handleDeleteInTag(index)}>
                       <Trash2 size={12} />
-                      <span className={styles.menu_item}>{t("deleteInTag")}</span>
+                      <span className={styles.menu_item}>
+                        {t("deleteInTag")}
+                      </span>
                     </ContextMenuItem>
                   )}
                   <ContextMenuItem onClick={() => handleDeleteFile(index)}>
@@ -276,10 +317,15 @@ const NotesList = function () {
                 </ContextMenuContent>
               </ContextMenu>
             );
-          })
-        ) : (
-          <Empty />
+          })}
+        {isInSearchMode && searchDataSource.length > 0 && (
+          <SearchResults
+            keyword={searchTextRef.current.trim()}
+            results={searchDataSource}
+          />
         )}
+        {((isInSearchMode && searchDataSource.length === 0) ||
+          (!isInSearchMode && dataSource.length === 0)) && <Empty />}
       </div>
     </div>
   );
