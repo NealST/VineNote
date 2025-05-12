@@ -31,10 +31,7 @@ const HighlightText = ({
     <span>
       {parts.map((part, i) =>
         part.toLowerCase() === keyword.toLowerCase() ? (
-          <span
-            key={i}
-            className="bg-secondary rounded px-1 text-secondary-foreground"
-          >
+          <span key={i} className="bg-ring rounded px-1 text-white">
             {part}
           </span>
         ) : (
@@ -62,20 +59,22 @@ export function SearchResults({ results, keyword }: SearchResultsProps) {
       {results.map((result) => {
         const { file_path, matches } = result;
         const isSelected = selectedItem.file_path === file_path;
+        const showFilePath = file_path.replace(/(-([^-]+)){1,5}.json/, "");
+        const showFilePathStrs = showFilePath.split('/');
+        const showFileName = showFilePathStrs[showFilePathStrs.length - 1];
         return (
-          <Collapsible
-            open={openItems[file_path]}
-            onOpenChange={() => toggleItem(file_path)}
+          <div
+            className={cn(
+              styles.file_item,
+              "hover:bg-accent rounded-md cursor-pointer shadow-accent",
+              isSelected ? "bg-accent" : ""
+            )}
           >
-            <CollapsibleTrigger className="w-full">
-              <div
-                className={cn(
-                  styles.file_item,
-                  "hover:bg-accent rounded-md cursor-pointer",
-                  isSelected ? "bg-accent" : ""
-                )}
-                onClick={() => setSelectedItem(result)}
-              >
+            <Collapsible
+              open={openItems[file_path]}
+              onOpenChange={() => toggleItem(file_path)}
+            >
+              <CollapsibleTrigger className="w-full">
                 <div
                   className={cn(
                     styles.item_name,
@@ -84,12 +83,17 @@ export function SearchResults({ results, keyword }: SearchResultsProps) {
                   )}
                 >
                   {openItems[result.file_path] ? (
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown size={14} fontSize={14} style={{flexShrink: 0}} />
                   ) : (
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight size={14} fontSize={14} style={{flexShrink: 0}} />
                   )}
-                  <div className={cn(styles.name_text, 'line-clamp-1', 'ml-1')}>{file_path.replace(/(-([^-]+)){1,5}.json/, "")}</div>
+                  <span>【{matches.length} matches】</span>
+                  <span className={cn(styles.name_text, "line-clamp-1", "ml-1")}>
+                    {showFileName}
+                  </span>
                 </div>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
                 <div
                   className={cn(
                     styles.item_time,
@@ -97,36 +101,20 @@ export function SearchResults({ results, keyword }: SearchResultsProps) {
                     isSelected ? "text-accent-foreground" : ""
                   )}
                 >
-                  <Badge variant="secondary" className="ml-2">
-                    {matches.length} matches
-                  </Badge>
-                </div>
-              </div>
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <div
-                className={cn(
-                  styles.item_time,
-                  "text-muted-foreground text-sm",
-                  isSelected ? "text-accent-foreground" : ""
-                )}
-              >
-                {matches.map((match, index) => {
-                  const { node, text } = match;
-                  return (
-                    <div
-                      key={`${node.id}-${index}`}
-                      className="rounded-lg border bg-card p-4"
-                    >
-                      <div className="prose prose-sm dark:prose-invert max-w-none">
-                        <HighlightText text={text} keyword={keyword} />
+                  {matches.map((match, index) => {
+                    const { node, text } = match;
+                    return (
+                      <div key={`${node.id}-${index}`} className="ml-3">
+                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                          <HighlightText text={text} keyword={keyword} />
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
+                    );
+                  })}
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+          </div>
         );
       })}
     </ScrollArea>

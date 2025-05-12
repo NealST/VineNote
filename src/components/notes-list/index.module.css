@@ -36,8 +36,13 @@
 }
 
 .file_item {
+  width: 220px;
   padding: 10px;
   margin-bottom: 8px;
+}
+
+.item_name {
+  white-space: nowrap;
 }
 
 .item_time {

@@ -103,6 +103,9 @@ const NotesList = function () {
 
   const handleSearchChange = function (inputValue: string) {
     searchTextRef.current = inputValue;
+    if (!inputValue.trim()) {
+      setIsInSearchMode(false);
+    }
   };
 
   const handleSearch = function () {
@@ -185,7 +188,7 @@ const NotesList = function () {
       const newDataSource = files.map((item) => {
         return {
           ...item,
-          name: item.name.replace(/(-([^-]+)){5}.json/, ""),
+          name: item.name.replace(/(-([^-]+)){1,5}.json/, ""),
         };
       });
       setDataSource(newDataSource);
@@ -221,7 +224,7 @@ const NotesList = function () {
         <span className={styles.header_label}>
           {headerName || t("allNotes")}
         </span>
-        {!isInTagNav && (
+        {!isInTagNav && !isInSearchMode && (
           <FilePlus
             className="cursor-pointer text-foreground"
             size={16}
