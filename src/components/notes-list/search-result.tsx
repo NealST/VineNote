@@ -28,7 +28,7 @@ const HighlightText = ({
 
   const parts = text.split(new RegExp(`(${keyword})`, "gi"));
   return (
-    <span>
+    <span className="line-clamp-1">
       {parts.map((part, i) =>
         part.toLowerCase() === keyword.toLowerCase() ? (
           <span key={i} className="bg-ring rounded px-1 text-white">
@@ -66,7 +66,7 @@ export function SearchResults({ results, keyword }: SearchResultsProps) {
           <div
             className={cn(
               styles.file_item,
-              "hover:bg-accent rounded-md cursor-pointer shadow-accent",
+              "hover:bg-accent rounded-md cursor-pointer",
               isSelected ? "bg-accent" : ""
             )}
           >
