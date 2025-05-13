@@ -238,8 +238,9 @@ const NotesList = function () {
           <div className={cn(styles.list_search, "h-9")}>
             <Search size={14} onClick={handleSearch} />
             <Input
-              className="border-0 outline-0 focus-visible:border-0 focus-visible:ring-[0px]"
+              className="border-0 outline-0 focus-visible:border-0 focus-visible:ring-[0px] caret-ring"
               type="text"
+              style={{backgroundColor: 'var(--background)'}}
               placeholder={t("searchNotes")}
               onChange={(e) => handleSearchChange(e.target.value)}
               onKeyDown={(e) => {

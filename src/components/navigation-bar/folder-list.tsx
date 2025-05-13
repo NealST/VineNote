@@ -176,7 +176,7 @@ const FolderList = function () {
                       "hover:bg-accent",
                       "text-sidebar-accent-foreground",
                       // 'text-muted-foreground hover:text-accent-foreground',
-                      "dark:hover:bg-accent/50",
+                      // "dark:hover:bg-accent/50",
                       "h-8 rounded-md cursor-pointer",
                       isSelected && !isInput ? "bg-accent" : "",
                       isInput ? styles.item_input : ""
