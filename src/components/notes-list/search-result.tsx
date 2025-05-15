@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -20,15 +20,25 @@ interface SearchResultsProps {
 const HighlightText = ({
   text,
   keyword,
+  nodeId,
+  onAnchorNode
 }: {
   text: string;
   keyword: string;
-}) => {
+  nodeId: string;
+  onAnchorNode: (nodeId: string) => void;
+ }) => {
   if (!keyword) return <span>{text}</span>;
 
   const parts = text.split(new RegExp(`(${keyword})`, "gi"));
+
+  const handleAnchorNode = function(e: MouseEvent) {
+    e.stopPropagation();
+    onAnchorNode(nodeId);
+  }
+
   return (
-    <span className="line-clamp-1">
+    <span className="line-clamp-1" onClick={handleAnchorNode}>
       {parts.map((part, i) =>
         part.toLowerCase() === keyword.toLowerCase() ? (
           <span key={i} className="bg-ring rounded px-1 text-white">
@@ -54,6 +64,14 @@ export function SearchResults({ results, keyword }: SearchResultsProps) {
     }));
   };
 
+  const handleSelect = function(resultItem: ISearchResult) {
+    setSelectedItem(resultItem);
+  }
+
+  const handleAnchorNode = function(nodeId: string) {
+    
+  }
+
   return (
     <ScrollArea className="h-full">
       {results.map((result) => {
@@ -69,6 +87,7 @@ export function SearchResults({ results, keyword }: SearchResultsProps) {
               "hover:bg-accent rounded-md cursor-pointer",
               isSelected ? "bg-accent" : ""
             )}
+            onClick={() => handleSelect(result)}
           >
             <Collapsible
               open={openItems[file_path]}
@@ -106,7 +125,7 @@ export function SearchResults({ results, keyword }: SearchResultsProps) {
                     return (
                       <div key={`${node.id}-${index}`} className="ml-3">
                         <div className="prose prose-sm dark:prose-invert max-w-none">
-                          <HighlightText text={text} keyword={keyword} />
+                          <HighlightText text={text} keyword={keyword} nodeId={node.id} onAnchorNode={handleAnchorNode} />
                         </div>
                       </div>
                     );
