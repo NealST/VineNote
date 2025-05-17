@@ -8,6 +8,7 @@ import getNavPath from "@/utils/get-nav-path";
 import { uid } from "uid";
 import { produce } from "immer";
 import type { ITagItem } from "../types";
+import type { IArticleItem } from '@/components/notes-list/types';
 
 export const createTagFile = async function (filePath: string) {
   const file = await create(filePath);
@@ -19,7 +20,7 @@ export const getTagFilePath = async function() {
   const tagsDirPath = await getNavPath("tags");
   const tagsFilePath = `${tagsDirPath}/list.json`;
   return tagsFilePath;
-}
+};
 
 export const getTagList = async function () {
   const tagsFilePath = await getTagFilePath();
@@ -82,4 +83,32 @@ export const renameTag = async function (
     draft[renameIndex].name = newName;
   });
   await writeTextFile(filePath, JSON.stringify(newTagsContent));
+};
+
+export const syncDeletedFile2Tag = async function(deletedFile: IArticleItem) {
+  const { filePath, dataSource } = await getTagList();
+  const newDataSource = produce(dataSource, draft => {
+    draft.forEach((item, index) => {
+      const deletedFileIndex = item.files.findIndex(fileItem => fileItem.path === deletedFile.path);
+      if (deletedFileIndex < 0) {
+        return
+      }
+      draft[index].files.splice(deletedFileIndex, 1);
+    });
+  });
+  await writeTextFile(filePath, JSON.stringify(newDataSource));
+};
+
+export const syncRenamedFile2Tag = async function(originFile: IArticleItem, renamedFile: IArticleItem) {
+  const { filePath, dataSource } = await getTagList();
+  const newDataSource = produce(dataSource, draft => {
+    draft.forEach((item, index) => {
+      const deletedFileIndex = item.files.findIndex(fileItem => fileItem.path === originFile.path);
+      if (deletedFileIndex < 0) {
+        return
+      }
+      draft[index].files.splice(deletedFileIndex, 1, renamedFile);
+    });
+  });
+  await writeTextFile(filePath, JSON.stringify(newDataSource));
 };

@@ -30,13 +30,16 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { SearchResults } from "./search-result";
+import { syncDeletedFile2Tag, syncRenamedFile2Tag } from '@/components/navigation-bar/controllers/tag-action';
 import type { ISearchResult } from "./controllers/search-keyword";
 import type { IArticleItem } from "./types";
 import styles from "./index.module.css";
 
+type Mode = "normal" | "tag" | "search";
+
 const NotesList = function () {
   const [dataSource, setDataSource] = useState<IArticleItem[]>([]);
-  const [isInSearchMode, setIsInSearchMode] = useState(false);
+  const [mode, setMode] = useState<Mode>("normal");
   const [searchDataSource, setSearchDataSource] = useState<ISearchResult[]>([]);
   const { selectedFile, setSelectedFile } = useSelectedFile();
   const selectedFolder = useSelectedFolder((state) => state.folder);
@@ -48,8 +51,7 @@ const NotesList = function () {
   const inputElRef = useRef<HTMLInputElement>(null);
   const searchTextRef = useRef("");
   const { t } = useTranslation();
-  const isInTagNav = selectedNav === "tags";
-  const headerName = isInTagNav ? selectedTag.name : selectedFolder?.name;
+  const headerName = mode === "tag" ? selectedTag.name : selectedFolder?.name;
 
   const handleAddFile = function () {
     const defaultName = t("untitled");
@@ -91,11 +93,18 @@ const NotesList = function () {
       .join("/");
     const newFilePath = `${theFolderPath}/${inputValue}-${oldFile.id}.json`;
     renameFile(oldFilePath, newFilePath).then(() => {
+      const newFile = {
+        id: oldFile.id,
+        metadata: oldFile.metadata,
+        name: inputValue,
+        path: newFilePath,
+      }
+      // sync the renamed file to tags
+      syncRenamedFile2Tag(oldFile, newFile);
+
       setDataSource(
         produce(dataSource, (draft) => {
-          draft[index].name = inputValue;
-          draft[index].path = newFilePath;
-          draft[index].action = "";
+          draft[index] = newFile;
         })
       );
     });
@@ -104,7 +113,7 @@ const NotesList = function () {
   const handleSearchChange = function (inputValue: string) {
     searchTextRef.current = inputValue;
     if (!inputValue.trim()) {
-      setIsInSearchMode(false);
+      setMode('normal');
     }
   };
 
@@ -113,7 +122,7 @@ const NotesList = function () {
     if (searchText) {
       searchFilesForKeyword(selectedFolder.path, searchText).then((result) => {
         console.log("search keyword result", result);
-        setIsInSearchMode(true);
+        setMode('search');
         setSearchDataSource(result);
       });
     }
@@ -151,6 +160,9 @@ const NotesList = function () {
     const file = dataSource[deleteIndex];
     deleteFile(file.path)
       .then(() => {
+        // sync the deleted file to tags
+        syncDeletedFile2Tag(file);
+
         if (len === 1) {
           setSelectedFile(null);
           setDataSource([]);
@@ -177,9 +189,7 @@ const NotesList = function () {
     if (!folederPath) {
       return;
     }
-    if (isInTagNav) {
-      return;
-    }
+    setMode("normal");
     getFiles(folederPath).then((retStr) => {
       const searchResult = JSON.parse(retStr);
       console.log("searchResult", searchResult);
@@ -194,16 +204,21 @@ const NotesList = function () {
       setDataSource(newDataSource);
       setSelectedFile(newDataSource[0]);
     });
-  }, [selectedFolder, isInTagNav]);
+  }, [selectedFolder]);
 
   useEffect(() => {
-    if (!isInTagNav) {
-      return;
-    }
     const tagFiles = selectedTag.files;
     setDataSource(tagFiles);
     setSelectedFile(tagFiles[0]);
-  }, [selectedTag, isInTagNav]);
+  }, [selectedTag]);
+
+  useEffect(() => {
+    if (selectedNav === "tags") {
+      setMode("tag");
+    } else {
+      setMode("normal");
+    }
+  }, [selectedNav]);
 
   useEffect(() => {
     emitter.on("deleteFile", handleDeleteFile);
@@ -218,13 +233,13 @@ const NotesList = function () {
       <div
         className={cn(
           styles.list_header,
-          isInTagNav ? styles.list_header_tags : ""
+          mode === "tag" ? styles.list_header_tags : ""
         )}
       >
         <span className={styles.header_label}>
           {headerName || t("allNotes")}
         </span>
-        {!isInTagNav && !isInSearchMode && (
+        {mode === "normal" && (
           <FilePlus
             className="cursor-pointer text-foreground"
             size={16}
@@ -233,14 +248,14 @@ const NotesList = function () {
         )}
       </div>
       <Separator />
-      {!isInTagNav && (
+      {mode !== "tag" && (
         <>
           <div className={cn(styles.list_search, "h-9")}>
             <Search size={14} onClick={handleSearch} />
             <Input
               className="border-0 outline-0 focus-visible:border-0 focus-visible:ring-[0px] caret-ring"
               type="text"
-              style={{backgroundColor: 'var(--background)'}}
+              style={{ backgroundColor: "var(--background)" }}
               placeholder={t("searchNotes")}
               onChange={(e) => handleSearchChange(e.target.value)}
               onKeyDown={(e) => {
@@ -256,7 +271,7 @@ const NotesList = function () {
       )}
 
       <div className={styles.list_display}>
-        {!isInSearchMode &&
+        {mode !== 'search' &&
           dataSource.length > 0 &&
           dataSource.map((item, index) => {
             const { id, name, action, metadata } = item;
@@ -306,7 +321,7 @@ const NotesList = function () {
                     <FilePen size={12} />
                     <span className={styles.menu_item}>{t("rename")}</span>
                   </ContextMenuItem>
-                  {isInTagNav && (
+                  {mode === "tag" && (
                     <ContextMenuItem onClick={() => handleDeleteInTag(index)}>
                       <Trash2 size={12} />
                       <span className={styles.menu_item}>
@@ -322,14 +337,15 @@ const NotesList = function () {
               </ContextMenu>
             );
           })}
-        {isInSearchMode && searchDataSource.length > 0 && (
+        {mode === 'search' && searchDataSource.length > 0 && (
           <SearchResults
             keyword={searchTextRef.current.trim()}
             results={searchDataSource}
+            allFiles={dataSource}
           />
         )}
-        {((isInSearchMode && searchDataSource.length === 0) ||
-          (!isInSearchMode && dataSource.length === 0)) && <Empty />}
+        {((mode === 'search' && searchDataSource.length === 0) ||
+          (mode !== 'search' && dataSource.length === 0)) && <Empty />}
       </div>
     </div>
   );

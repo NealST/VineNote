@@ -5,14 +5,15 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { cn } from "@/lib/utils";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ChevronRight, ChevronDown, FileText } from "lucide-react";
+import { ChevronRight, ChevronDown } from "lucide-react";
+import { useSelectedFile } from './controllers/selected-file';
 import type { ISearchResult } from "./controllers/search-keyword";
+import type { IArticleItem } from "./types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import styles from "./index.module.css";
 
 interface SearchResultsProps {
+  allFiles: IArticleItem[];
   results: ISearchResult[];
   keyword: string;
 }
@@ -21,12 +22,14 @@ const HighlightText = ({
   text,
   keyword,
   nodeId,
+  resultIndex,
   onAnchorNode
 }: {
   text: string;
   keyword: string;
   nodeId: string;
-  onAnchorNode: (nodeId: string) => void;
+  resultIndex: number;
+  onAnchorNode: (resultIndex: number, nodeId: string) => void;
  }) => {
   if (!keyword) return <span>{text}</span>;
 
@@ -34,7 +37,7 @@ const HighlightText = ({
 
   const handleAnchorNode = function(e: MouseEvent) {
     e.stopPropagation();
-    onAnchorNode(nodeId);
+    onAnchorNode(resultIndex, nodeId);
   }
 
   return (
@@ -52,11 +55,12 @@ const HighlightText = ({
   );
 };
 
-export function SearchResults({ results, keyword }: SearchResultsProps) {
+export function SearchResults({ results, keyword, allFiles }: SearchResultsProps) {
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
   const [selectedItem, setSelectedItem] = useState<ISearchResult>(
     {} as ISearchResult
   );
+  const setSelectedFile = useSelectedFile(state => state.setSelectedFile);
   const toggleItem = (path: string) => {
     setOpenItems((prev) => ({
       ...prev,
@@ -66,15 +70,28 @@ export function SearchResults({ results, keyword }: SearchResultsProps) {
 
   const handleSelect = function(resultItem: ISearchResult) {
     setSelectedItem(resultItem);
+    // filter the selected file through the file path
+    setSelectedFile(allFiles.find(item => item.path === resultItem.file_path) ?? null);
   }
 
-  const handleAnchorNode = function(nodeId: string) {
+  const handleAnchorNode = function(resultIndex: number, nodeId: string) {
+    handleSelect(results[resultIndex]);
+    // set the editor scroll to the node
+    setTimeout(() => {
+      const docNode = document.querySelector(`[data-block-id="${nodeId}"]`);
+      if (docNode) {
+        docNode.scrollIntoView({
+          block: 'end',
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
     
   }
 
   return (
     <ScrollArea className="h-full">
-      {results.map((result) => {
+      {results.map((result, resultIndex) => {
         const { file_path, matches } = result;
         const isSelected = selectedItem.file_path === file_path;
         const showFilePath = file_path.replace(/(-([^-]+)){1,5}.json/, "");
@@ -87,6 +104,7 @@ export function SearchResults({ results, keyword }: SearchResultsProps) {
               "hover:bg-accent rounded-md cursor-pointer",
               isSelected ? "bg-accent" : ""
             )}
+            key={file_path}
             onClick={() => handleSelect(result)}
           >
             <Collapsible
@@ -125,7 +143,7 @@ export function SearchResults({ results, keyword }: SearchResultsProps) {
                     return (
                       <div key={`${node.id}-${index}`} className="ml-3">
                         <div className="prose prose-sm dark:prose-invert max-w-none">
-                          <HighlightText text={text} keyword={keyword} nodeId={node.id} onAnchorNode={handleAnchorNode} />
+                          <HighlightText text={text} keyword={keyword} nodeId={node.id} resultIndex={resultIndex} onAnchorNode={handleAnchorNode} />
                         </div>
                       </div>
                     );
