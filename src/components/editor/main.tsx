@@ -23,18 +23,20 @@ function PlateEditor() {
   const editorRef = useRef<HTMLDivElement>(null);
   const isFilePathChangeRef = useRef(false);
   const filePath = selectedFile?.path;
-
-  const handleChange = useCallback(({value}) => {
+  
+  const handleChange = ({value}) => {
     console.log("editor value", value);
     console.log("editor text content", editorRef.current?.textContent);
     // count the character number of editor
     setTextCount(editorRef.current?.textContent?.trim().length || 0);
-    // write edit content to file path automatically
-    if (!isFilePathChangeRef.current) {
-      filePath && writeToFile(value, filePath);
+    // to avoid the file write caused by the file path change
+    if (isFilePathChangeRef.current) {
+      isFilePathChangeRef.current = false;
+      return;
     }
-    isFilePathChangeRef.current = false;
-  }, [filePath]);
+    // write edit content to file path automatically
+    filePath && writeToFile(value, filePath);
+  }
 
   useEffect(() => {
     console.log('selected path', filePath);

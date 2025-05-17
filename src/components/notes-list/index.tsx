@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, ChangeEvent, useCallback } from "react";
+import { useState, useRef, useEffect, ChangeEvent } from "react";
 import { FilePlus, Search, FilePen, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -107,6 +107,8 @@ const NotesList = function () {
           draft[index] = newFile;
         })
       );
+      // update the selected file
+      setSelectedFile(newFile);
     });
   };
 
