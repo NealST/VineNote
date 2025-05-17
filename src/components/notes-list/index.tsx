@@ -56,23 +56,25 @@ const NotesList = function () {
   const handleAddFile = function () {
     const defaultName = t("untitled");
     const id = uid();
-    createFile(selectedFolder, `${defaultName}-${id}`).then((filePath) => {
-      const newDataSource = [
-        {
-          id: id,
-          name: defaultName,
-          path: filePath,
-          metadata: {
-            is_file: true,
-            is_dir: false,
-            len: 0,
-            created: createTimeStamp(),
-          },
-        } as IArticleItem,
-      ].concat(dataSource);
-      setDataSource(newDataSource);
-      setSelectedFile(newDataSource[0]);
-    });
+    if (selectedFolder) {
+      createFile(selectedFolder, `${defaultName}-${id}`).then((filePath) => {
+        const newDataSource = [
+          {
+            id: id,
+            name: defaultName,
+            path: filePath,
+            metadata: {
+              is_file: true,
+              is_dir: false,
+              len: 0,
+              created: createTimeStamp(),
+            },
+          } as IArticleItem,
+        ].concat(dataSource);
+        setDataSource(newDataSource);
+        setSelectedFile(newDataSource[0]);
+      });
+    }
   };
 
   const handleInputBlur = function (index: number) {
@@ -121,7 +123,7 @@ const NotesList = function () {
 
   const handleSearch = function () {
     const searchText = searchTextRef.current.trim();
-    if (searchText) {
+    if (searchText && selectedFolder) {
       searchFilesForKeyword(selectedFolder.path, searchText).then((result) => {
         console.log("search keyword result", result);
         setMode('search');
@@ -187,11 +189,16 @@ const NotesList = function () {
   };
 
   useEffect(() => {
-    const folederPath = selectedFolder?.path;
+    setMode("normal");
+    if (!selectedFolder) {
+      setDataSource([]);
+      setSelectedFile(null);
+      return;
+    }
+    const folederPath = selectedFolder.path;
     if (!folederPath) {
       return;
     }
-    setMode("normal");
     getFiles(folederPath).then((retStr) => {
       const searchResult = JSON.parse(retStr);
       console.log("searchResult", searchResult);

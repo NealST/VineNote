@@ -4,8 +4,8 @@ import { create } from 'zustand';
 import type { IFolderItem } from '../types';
 
 export interface IFolderState {
-  folder: IFolderItem;
-  setFolder: (newFolder: IFolderItem) => void;
+  folder: IFolderItem | null;
+  setFolder: (newFolder: IFolderItem | null) => void;
 }
 
 export const useSelectedFolder = create<IFolderState>(set => ({
@@ -14,7 +14,7 @@ export const useSelectedFolder = create<IFolderState>(set => ({
     type: 'folder',
     path: '',
   },
-  setFolder: (newFolder: IFolderItem) => {
+  setFolder: (newFolder: IFolderItem | null) => {
     set({ folder: newFolder });
   },
 }));

@@ -13,6 +13,7 @@ export const renameFolder = async function(oldName: string, newName: string) {
   const oldPath = `${notesPath}/${oldName}`;
   const newPath = `${notesPath}/${newName}`;
   await rename(oldPath, newPath);
+  return newPath;
 }
 
 export const deleteFolder = async function(path: string) {

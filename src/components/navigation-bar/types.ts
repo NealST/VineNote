@@ -19,18 +19,3 @@ export interface ITagItem {
 export interface IEnclosure {
   url: string;
 }
-
-export interface IRssArticle {
-  title: string;
-  link: string;
-  description: string;
-  pubDate: string;
-  enclosure?: IEnclosure;
-}
-
-export interface IRssItem {
-  title: string;
-  link: string;
-  description: string;
-  items?: IRssArticle[];
-}

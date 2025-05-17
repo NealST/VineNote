@@ -76,11 +76,15 @@ const FolderList = function () {
       }
       createFolder(inputValue)
         .then((folderPath) => {
+          const newFolder = {
+            type: 'folder',
+            name: inputValue,
+            path: folderPath
+          };
           setDataSource(produce(dataSource, draft => {
-            draft[0].type = 'folder';
-            draft[0].name = inputValue;
-            draft[0].path = folderPath;
+            draft[0] = newFolder;
           }));
+          setSelectedFolder(newFolder);
         })
         .catch(() => {
           setDataSource(produce(dataSource, draft => {
@@ -98,13 +102,18 @@ const FolderList = function () {
       );
       return;
     }
-    renameFolder(renameOrigin, inputValue).then(() => {
+    renameFolder(renameOrigin, inputValue).then((newFolderPath) => {
+      const newFolder = {
+        type: 'folder',
+        name: inputValue,
+        path: newFolderPath,
+      };
       setDataSource(
         produce(dataSource, (draft) => {
-          draft[index].type = 'folder';
-          draft[index].name = inputValue;
+          draft[index] = newFolder;
         })
       );
+      setSelectedFolder(newFolder);
     });
   };
 
@@ -120,12 +129,26 @@ const FolderList = function () {
     }, 10);
   };
 
-  const handleDelete = function (index: number) {
-    deleteFolder(dataSource[index].path).then(() => {
-      setDataSource(produce(dataSource, draft => {
-        draft.splice(index, 1);
-      }))
-    })
+  const handleDelete = function (deleteIndex: number) {
+    const len = dataSource.length;
+    deleteFolder(dataSource[deleteIndex].path).then(() => {
+
+      if (len === 1) {
+        setSelectedFolder(null);
+        setDataSource([]);
+        return;
+      }
+      if (deleteIndex === len - 1) {
+        setSelectedFolder(dataSource[deleteIndex - 1]);
+      } else {
+        setSelectedFolder(dataSource[deleteIndex + 1]);
+      }
+      setDataSource(
+        produce(dataSource, (draft) => {
+          draft.splice(deleteIndex, 1);
+        })
+      );
+    });
   };
 
   useEffect(() => {
@@ -165,7 +188,7 @@ const FolderList = function () {
         {dataSource.length > 0 ? (
           dataSource.map((item, index) => {
             const { name, type } = item;
-            const isSelected = name === selectedFolder.name;
+            const isSelected = name === selectedFolder?.name;
             const isInput = type === "input";
             return (
               <ContextMenu key={index}>
