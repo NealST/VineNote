@@ -34,12 +34,13 @@ export function FloatingToolbarButtons() {
     <>
       {!readOnly && (
         <>
-          <ToolbarGroup>
+          {/* todo: add ai function */}
+          {/* <ToolbarGroup>
             <AIToolbarButton tooltip={t('aiCommands')}>
               <WandSparklesIcon />
               {t('askAi')}
             </AIToolbarButton>
-          </ToolbarGroup>
+          </ToolbarGroup> */}
 
           <ToolbarGroup>
             <TurnIntoDropdownMenu />
@@ -82,9 +83,9 @@ export function FloatingToolbarButtons() {
 
       <ToolbarGroup>
         <CommentToolbarButton />
-        <SuggestionToolbarButton />
+        {/* <SuggestionToolbarButton /> */}
 
-        {!readOnly && <MoreDropdownMenu />}
+        {/* {!readOnly && <MoreDropdownMenu />} */}
       </ToolbarGroup>
     </>
   );

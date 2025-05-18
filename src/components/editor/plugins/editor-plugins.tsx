@@ -87,7 +87,8 @@ export const viewPlugins = [
 
 export const editorPlugins = [
   // AI
-  ...aiPlugins,
+  // todo: add ai function
+  //...aiPlugins,
 
   // Nodes
   ...viewPlugins,

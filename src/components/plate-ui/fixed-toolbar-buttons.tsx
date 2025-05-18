@@ -73,12 +73,13 @@ export function FixedToolbarButtons() {
             <UndoToolbarButton />
             <RedoToolbarButton />
           </ToolbarGroup>
-
-          <ToolbarGroup>
+          
+          {/* todo: add ai function */}
+          {/* <ToolbarGroup>
             <AIToolbarButton tooltip={t('aiCommands')}>
               <WandSparklesIcon />
             </AIToolbarButton>
-          </ToolbarGroup>
+          </ToolbarGroup> */}
 
           <ToolbarGroup>
             <ExportToolbarButton>
@@ -182,9 +183,9 @@ export function FixedToolbarButtons() {
         <CommentToolbarButton />
       </ToolbarGroup>
 
-      <ToolbarGroup>
+      {/* <ToolbarGroup>
         <ModeDropdownMenu />
-      </ToolbarGroup>
+      </ToolbarGroup> */}
     </div>
   );
 }

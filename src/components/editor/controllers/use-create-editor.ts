@@ -154,7 +154,8 @@ export const viewComponents = {
 
 export const editorComponents = {
   ...viewComponents,
-  [AIPlugin.key]: AILeaf,
+  // todo: add ai function
+  //[AIPlugin.key]: AILeaf,
   [EmojiInputPlugin.key]: EmojiInputElement,
   [MentionInputPlugin.key]: MentionInputElement,
   [SlashInputPlugin.key]: SlashInputElement,
@@ -183,7 +184,8 @@ export const useCreateEditor = (
         ...override,
       },
       plugins: [
-        ...copilotPlugins,
+        // todo: add ai function
+        //...copilotPlugins,
         ...editorPlugins,
         FixedToolbarPlugin,
         FloatingToolbarPlugin,
