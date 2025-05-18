@@ -50,7 +50,7 @@ const AddTag = function () {
 
   const handleCreateTag = function () {
     const inputTag = inputValue.trim();
-    if (!inputTag) return;
+    if (!inputTag || !selectedFile) return;
     const newTag = {
       id: uid(),
       name: inputTag,
@@ -69,6 +69,9 @@ const AddTag = function () {
   };
 
   const handleDeleteTag = function (tag: ITagItem) {
+    if (!selectedFile) {
+      return
+    }
     deleteTagForFile(
       availableTags,
       tagFilePathRef.current,
@@ -88,6 +91,9 @@ const AddTag = function () {
   };
 
   const handleAddTag = function (tag: ITagItem) {
+    if (!selectedFile) {
+      return;
+    }
     addTagForFile(
       availableTags,
       tagFilePathRef.current,

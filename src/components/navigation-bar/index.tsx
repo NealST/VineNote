@@ -8,7 +8,7 @@ import styles from './index.module.css';
 
 const NavigationBar = function() {
   
-  const selectedNav = useSelectedNav(state => state.id);
+  const selectedNav = useSelectedNav(state => state.selectedNav);
   
   return (
     <div className={styles.navigation_bar}>

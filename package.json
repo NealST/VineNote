@@ -37,7 +37,7 @@
     "@tauri-apps/plugin-dialog": "~2",
     "@tauri-apps/plugin-fs": "~2",
     "@tauri-apps/plugin-http": "~2",
-    "@tauri-apps/plugin-opener": "^2",
+    "@tauri-apps/plugin-opener": "^2.2.6",
     "@tauri-apps/plugin-store": "~2",
     "@udecode/cmdk": "^0.2.0",
     "@udecode/cn": "46.0.9",

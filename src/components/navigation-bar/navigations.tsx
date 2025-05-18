@@ -1,26 +1,23 @@
 "use client";
 
 import { useTranslation } from "react-i18next";
-import { Notebook, Rss, Tag, Settings, CircleHelp } from "lucide-react";
+import { Notebook, Tag, Settings, CircleHelp } from "lucide-react";
 import { Button } from "../ui/button";
+import { cn } from '@/lib/utils';
 import { useSelectedNav } from './controllers/selected-nav';
 import { SettingsDialog } from "../settings";
+import openIssue from "./controllers/open-issue";
 import styles from "./index.module.css";
 
 const Navigation = function () {
   const { t } = useTranslation();
-  const setSelectedNav = useSelectedNav(state => state.setId);
+  const { selectedNav, setSelectedNav } = useSelectedNav();
   const dataSource = [
     {
       id: "notes",
       name: t("notes"),
       Icon: Notebook,
     },
-    // {
-    //   id: "rss",
-    //   name: t("rss"),
-    //   Icon: Rss,
-    // },
     {
       id: "tags",
       name: t("tags"),
@@ -39,9 +36,7 @@ const Navigation = function () {
   ];
 
   const handleSelect = function(id: string) {
-    if (['notes', 'rss', 'tags'].includes(id)) {
-      setSelectedNav(id);
-    }
+    setSelectedNav(id);
   }
 
   return (
@@ -62,13 +57,27 @@ const Navigation = function () {
             </SettingsDialog>
           );
         }
+        if (id === 'help') {
+          return (
+            <Button
+              key={id}
+              variant="ghost"
+              className="w-full justify-start cursor-pointer"
+              style={{ fontSize: "12px" }}
+              onClick={() => openIssue()}
+            >
+              <Icon className="text-muted-foreground" size={14} />
+              <span className="text-muted-foreground">{name}</span>
+            </Button>
+          )
+        }
         return (
           <Button
             key={id}
             variant="ghost"
-            className="w-full justify-start cursor-pointer"
+            className={cn("w-full justify-start cursor-pointer", selectedNav === id ? 'bg-accent' : '')}
             style={{ fontSize: "12px" }}
-            onClick={() => handleSelect(id)}
+            onClick={() => setSelectedNav(id)}
           >
             <Icon className="text-muted-foreground" size={14} />
             <span className="text-muted-foreground">{name}</span>

@@ -1,10 +1,12 @@
 .info_title {
   font-size: 14px;
-  margin-right: 10px;
+  line-height: 14px;
+  margin-right: 16px;
 }
 
 .info_count {
   font-size: 12px;
+  line-height: 12px;
 }
 
 .tag_command {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useCallback, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Plate } from '@udecode/plate/react';
@@ -24,7 +24,7 @@ function PlateEditor() {
   const isFilePathChangeRef = useRef(false);
   const filePath = selectedFile?.path;
   
-  const handleChange = ({value}) => {
+  const handleChange = ({ value }: {value: []}) => {
     console.log("editor value", value);
     console.log("editor text content", editorRef.current?.textContent);
     // count the character number of editor

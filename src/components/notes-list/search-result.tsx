@@ -124,7 +124,7 @@ export function SearchResults({ results, keyword, allFiles }: SearchResultsProps
                   ) : (
                     <ChevronRight size={14} fontSize={14} style={{flexShrink: 0}} />
                   )}
-                  <span>【{matches.length} matches】</span>
+                  {/* <span className="ml-1">[{matches.length} matches]</span> */}
                   <span className={cn(styles.name_text, "line-clamp-1", "ml-1")}>
                     {showFileName}
                   </span>

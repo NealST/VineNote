@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/context-menu";
 import { SearchResults } from "./search-result";
 import { syncDeletedFile2Tag, syncRenamedFile2Tag } from '@/components/navigation-bar/controllers/tag-action';
+import useDataSource from "./controllers/use-datasource";
 import type { ISearchResult } from "./controllers/search-keyword";
 import type { IArticleItem } from "./types";
 import styles from "./index.module.css";
@@ -38,13 +39,13 @@ import styles from "./index.module.css";
 type Mode = "normal" | "tag" | "search";
 
 const NotesList = function () {
-  const [dataSource, setDataSource] = useState<IArticleItem[]>([]);
+  const [dataSource, dataSourceRef, setDataSource] = useDataSource();
   const [mode, setMode] = useState<Mode>("normal");
   const [searchDataSource, setSearchDataSource] = useState<ISearchResult[]>([]);
   const { selectedFile, setSelectedFile } = useSelectedFile();
   const selectedFolder = useSelectedFolder((state) => state.folder);
   const selectedTag = useSelectedTag((state) => state.tag);
-  const selectedNav = useSelectedNav((state) => state.id);
+  const selectedNav = useSelectedNav((state) => state.selectedNav);
   const { dataSource: tagDataSource, setDataSource: setTagDataSource } =
     useTagDataSource();
   const inputRef = useRef("");
@@ -136,12 +137,13 @@ const NotesList = function () {
     inputRef.current = event.target?.value;
   };
 
-  const handleRenameFile = function (index: number) {
-    setDataSource(
-      produce(dataSource, (draft) => {
-        draft[index].action = "input";
-      })
-    );
+  const handleRenameFile = function (renamedFile: IArticleItem) {
+    const curDataSource = dataSourceRef.current ?? [];
+    console.log('curDataSource', curDataSource);
+    const renamedIndex = curDataSource.findIndex(item => item.path === renamedFile.path);
+    setDataSource(produce(curDataSource, (draft) => {
+      draft[renamedIndex].action = "input";
+    }));
     setTimeout(() => {
       inputElRef.current?.focus();
     }, 10);
@@ -159,13 +161,14 @@ const NotesList = function () {
     });
   };
 
-  const handleDeleteFile = function (deleteIndex: number) {
-    const len = dataSource.length;
-    const file = dataSource[deleteIndex];
-    deleteFile(file.path)
+  const handleDeleteFile = function (deletedFile: IArticleItem) {
+    const curDataSource = dataSourceRef.current ?? [];
+    const len = curDataSource.length;
+    const deleteIndex = curDataSource.findIndex(item => item.path === deletedFile.path);
+    deleteFile(deletedFile.path)
       .then(() => {
         // sync the deleted file to tags
-        syncDeletedFile2Tag(file);
+        syncDeletedFile2Tag(deletedFile);
 
         if (len === 1) {
           setSelectedFile(null);
@@ -173,12 +176,12 @@ const NotesList = function () {
           return;
         }
         if (deleteIndex === len - 1) {
-          setSelectedFile(dataSource[deleteIndex - 1]);
+          setSelectedFile(curDataSource[deleteIndex - 1]);
         } else {
-          setSelectedFile(dataSource[deleteIndex + 1]);
+          setSelectedFile(curDataSource[deleteIndex + 1]);
         }
         setDataSource(
-          produce(dataSource, (draft) => {
+          produce(curDataSource, (draft) => {
             draft.splice(deleteIndex, 1);
           })
         );
@@ -231,9 +234,11 @@ const NotesList = function () {
 
   useEffect(() => {
     emitter.on("deleteFile", handleDeleteFile);
+    emitter.on("renameFile", handleRenameFile);
 
     return () => {
       emitter.off("deleteFile", handleDeleteFile);
+      emitter.off("renameFile", handleRenameFile);
     };
   }, []);
 
@@ -242,7 +247,6 @@ const NotesList = function () {
       <div
         className={cn(
           styles.list_header,
-          mode === "tag" ? styles.list_header_tags : ""
         )}
       >
         <span className={styles.header_label}>
@@ -326,7 +330,7 @@ const NotesList = function () {
                   </div>
                 </ContextMenuTrigger>
                 <ContextMenuContent>
-                  <ContextMenuItem onClick={() => handleRenameFile(index)}>
+                  <ContextMenuItem onClick={() => handleRenameFile(item)}>
                     <FilePen size={12} />
                     <span className={styles.menu_item}>{t("rename")}</span>
                   </ContextMenuItem>
@@ -338,7 +342,7 @@ const NotesList = function () {
                       </span>
                     </ContextMenuItem>
                   )}
-                  <ContextMenuItem onClick={() => handleDeleteFile(index)}>
+                  <ContextMenuItem onClick={() => handleDeleteFile(item)}>
                     <Trash2 size={12} />
                     <span className={styles.menu_item}>{t("deleteFile")}</span>
                   </ContextMenuItem>
