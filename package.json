@@ -8,8 +8,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "tauri": "tauri",
-    "start": "electron ."
+    "tauri": "tauri"
   },
   "dependencies": {
     "@ai-sdk/react": "^1.2.9",
