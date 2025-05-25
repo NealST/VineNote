@@ -49,7 +49,7 @@ const Navigation = function () {
               <Button
                 variant="ghost"
                 className="w-full justify-start cursor-pointer"
-                style={{ fontSize: "12px" }}
+                style={{ fontSize: "13px" }}
               >
                 <Icon className="text-muted-foreground" size={14} />
                 <span className="text-muted-foreground">{name}</span>
@@ -63,7 +63,7 @@ const Navigation = function () {
               key={id}
               variant="ghost"
               className="w-full justify-start cursor-pointer"
-              style={{ fontSize: "12px" }}
+              style={{ fontSize: "13px" }}
               onClick={() => openIssue()}
             >
               <Icon className="text-muted-foreground" size={14} />
@@ -76,7 +76,7 @@ const Navigation = function () {
             key={id}
             variant="ghost"
             className={cn("w-full justify-start cursor-pointer", selectedNav === id ? 'bg-accent' : '')}
-            style={{ fontSize: "12px" }}
+            style={{ fontSize: "13px" }}
             onClick={() => setSelectedNav(id)}
           >
             <Icon className="text-muted-foreground" size={14} />

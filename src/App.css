@@ -196,6 +196,22 @@
   box-sizing: border-box;
 }
 
+@font-face {
+  font-family: 'CangerJinkai';
+  src: url('/fonts/cangerJinkai04-W03.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CangerXuansan';
+  src: url('/fonts/cangerXuansanM-W03.ttf') format('truetype');
+  font-display: swap;
+}
+
+html {
+  font-family: 'CangerJinkai';
+}
+
 .main {
   display: flex;
   flex-direction: row;

@@ -20,6 +20,7 @@ import {
   Upload,
   SunMoon,
   BookA,
+  Type
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/plate-ui/button";
@@ -40,6 +41,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { setTheme, type Theme } from "@/utils/set-theme";
+import { setFont, type Font } from "@/utils/set-font";
 import { setConfig, getConfig } from "@/utils/store-config";
 import i18n from "@/i18n";
 
@@ -53,7 +55,7 @@ interface Model {
 export interface ISettings {
   theme: Theme;
   language: Language;
-  fontFamily: any;
+  font: Font;
   model: string;
   modelApiKey: string;
   uploadThingApiKey: string;
@@ -82,7 +84,7 @@ const languages = [
 export const defaultSettings = {
   theme: "system" as Theme,
   language: (window.navigator.language === "zh-CN" ? "zh" : "en") as Language,
-  fontFamily: "",
+  font: "cangerJinkai" as Font,
   model: "",
   modelApiKey: "",
   uploadThingApiKey: "",
@@ -122,6 +124,7 @@ export function SettingsProvider({
   useLayoutEffect(() => {
     getConfig().then((config: ISettings) => {
       if (config.theme) {
+        console.log("config.language", config.language);
         i18n.changeLanguage(config.language);
         setTheme(config.theme);
         setSettings(config);
@@ -158,6 +161,7 @@ export function SettingsDialog({ children }: { children: ReactNode }) {
       theme: value,
     };
     setSettings(newSettings);
+    setConfig(JSON.stringify(newSettings));
   };
 
   const handleLanguageChange = function (value: Language) {
@@ -167,12 +171,14 @@ export function SettingsDialog({ children }: { children: ReactNode }) {
       language: value,
     };
     setSettings(newSettings);
+    setConfig(JSON.stringify(newSettings));
   };
 
-  const handleFontChange = function (value: string) {
+  const handleFontChange = function (value: Font) {
+    setFont(value);
     const newSettings = {
       ...settings,
-      fontFamily: value,
+      font: value,
     };
     setSettings(newSettings);
     setConfig(JSON.stringify(newSettings));
@@ -257,6 +263,23 @@ export function SettingsDialog({ children }: { children: ReactNode }) {
                 </SelectItem>
               );
             })}
+          </SelectContent>
+        </Select>
+      </div>
+    );
+  };
+
+  const renderFont = () => {
+    return (
+      <div className="group relative">
+        <Select defaultValue={settings.font} onValueChange={handleFontChange}>
+          <SelectTrigger id="select-font" className="w-full">
+            <SelectValue className="w-full" role="combobox" />
+          </SelectTrigger>
+          <SelectContent className="w-full p-0">
+            <SelectItem value="system">{t("systemFont")}</SelectItem>
+            <SelectItem value="cangerJinkai">{t("cangerJinkai")}</SelectItem>
+            <SelectItem value="cangerXuansan">{t("cangerXuansan")}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -392,8 +415,20 @@ export function SettingsDialog({ children }: { children: ReactNode }) {
             <div className="space-y-2">{renderLanguageMode()}</div>
           </div>
 
-          {/* AI Settings Group */}
+          {/* theme Settings Group */}
           <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="size-8 rounded-full bg-purple-100 p-2 dark:bg-purple-900">
+                <Type className="size-4 text-purple-600 dark:text-purple-400" />
+              </div>
+              <h4 className="font-semibold">{t("font")}</h4>
+            </div>
+
+            <div className="space-y-2">{renderFont()}</div>
+          </div>
+
+          {/* AI Settings Group */}
+          {/* <div className="space-y-2">
             <div className="flex items-center gap-2">
               <div className="size-8 rounded-full bg-purple-100 p-2 dark:bg-purple-900">
                 <Wand2Icon className="size-4 text-purple-600 dark:text-purple-400" />
@@ -405,7 +440,7 @@ export function SettingsDialog({ children }: { children: ReactNode }) {
               {renderModel()}
               {renderApiKeyInput("openai", "OpenAI API key")}
             </div>
-          </div>
+          </div> */}
 
           {/* Upload Settings Group */}
           <div className="space-y-2">
