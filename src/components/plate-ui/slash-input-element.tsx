@@ -41,7 +41,7 @@ import {
   insertBlock,
   insertInlineElement,
 } from '@/components/editor/transforms';
-import i18n from '@/i18n';
+import { useTranslation } from 'react-i18next';
 import {
   InlineCombobox,
   InlineComboboxContent,
@@ -60,9 +60,7 @@ type Group = {
 
 interface Item {
   icon: React.ReactNode;
-
   value: string;
-
   onSelect: (editor: PlateEditor, value: string) => void;
   className?: string;
   focusEditor?: boolean;
@@ -70,157 +68,155 @@ interface Item {
   label?: string;
 }
 
-const t = i18n.t;
-
-const groups: Group[] = [
-  {
-    id: "AI",
-    group: t('AI'),
-    items: [
-      {
-        focusEditor: false,
-        icon: <SparklesIcon />,
-        value: 'AI',
-        onSelect: (editor) => {
-          editor.getApi(AIChatPlugin).aiChat.show();
-        },
-      },
-    ],
-  },
-  {
-    id: 'Basic blocks',
-    group: t('basicBlocks'),
-    items: [
-      {
-        icon: <PilcrowIcon />,
-        keywords: ['paragraph'],
-        label: t('text'),
-        value: ParagraphPlugin.key,
-      },
-      {
-        icon: <Heading1Icon />,
-        keywords: ['title', 'h1'],
-        label: t('heading1'),
-        value: HEADING_KEYS.h1,
-      },
-      {
-        icon: <Heading2Icon />,
-        keywords: ['subtitle', 'h2'],
-        label: t('heading2'),
-        value: HEADING_KEYS.h2,
-      },
-      {
-        icon: <Heading3Icon />,
-        keywords: ['subtitle', 'h3'],
-        label: t('heading3'),
-        value: HEADING_KEYS.h3,
-      },
-      {
-        icon: <ListIcon />,
-        keywords: ['unordered', 'ul', '-'],
-        label: t('bulletedList'),
-        value: ListStyleType.Disc,
-      },
-      {
-        icon: <ListOrdered />,
-        keywords: ['ordered', 'ol', '1'],
-        label: t('numberedList'),
-        value: ListStyleType.Decimal,
-      },
-      {
-        icon: <Square />,
-        keywords: ['checklist', 'task', 'checkbox', '[]'],
-        label: t('todoList'),
-        value: INDENT_LIST_KEYS.todo,
-      },
-      {
-        icon: <ChevronRightIcon />,
-        keywords: ['collapsible', 'expandable'],
-        label: t('toggle'),
-        value: TogglePlugin.key,
-      },
-      {
-        icon: <Code2 />,
-        keywords: ['```'],
-        label: t('codeBlock'),
-        value: CodeBlockPlugin.key,
-      },
-      {
-        icon: <Table />,
-        label: t('table'),
-        value: TablePlugin.key,
-      },
-      {
-        icon: <Quote />,
-        keywords: ['citation', 'blockquote', 'quote', '>'],
-        label: t('blockQuote'),
-        value: BlockquotePlugin.key,
-      },
-    ].map((item) => ({
-      ...item,
-      onSelect: (editor, value) => {
-        insertBlock(editor, value);
-      },
-    })),
-  },
-  {
-    id: 'Advanced blocks',
-    group: t('advancedBlocks'),
-    items: [
-      {
-        icon: <TableOfContentsIcon />,
-        keywords: ['toc'],
-        label: t('toc'),
-        value: TocPlugin.key,
-      },
-      {
-        icon: <Columns3Icon />,
-        label: t('3columns'),
-        value: 'action_three_columns',
-      },
-      {
-        focusEditor: false,
-        icon: <RadicalIcon />,
-        label: t('equation'),
-        value: EquationPlugin.key,
-      },
-    ].map((item) => ({
-      ...item,
-      onSelect: (editor, value) => {
-        insertBlock(editor, value);
-      },
-    })),
-  },
-  {
-    id: "Inline",
-    group: t('inline'),
-    items: [
-      {
-        focusEditor: true,
-        icon: <CalendarIcon />,
-        keywords: ['time'],
-        label: t('date'),
-        value: DatePlugin.key,
-      },
-      {
-        focusEditor: false,
-        icon: <RadicalIcon />,
-        label: t('inlineEquation'),
-        value: InlineEquationPlugin.key,
-      },
-    ].map((item) => ({
-      ...item,
-      onSelect: (editor, value) => {
-        insertInlineElement(editor, value);
-      },
-    })),
-  },
-];
-
 export const SlashInputElement = withRef<typeof PlateElement>(
   ({ className, ...props }, ref) => {
     const { children, editor, element } = props;
-
+    const { t } = useTranslation();
+    const groups: Group[] = [
+      // todo: add ai function
+      // {
+      //   id: "AI",
+      //   group: t('AI'),
+      //   items: [
+      //     {
+      //       focusEditor: false,
+      //       icon: <SparklesIcon />,
+      //       value: 'AI',
+      //       onSelect: (editor) => {
+      //         editor.getApi(AIChatPlugin).aiChat.show();
+      //       },
+      //     },
+      //   ],
+      // },
+      {
+        id: 'Basic blocks',
+        group: t('basicBlocks'),
+        items: [
+          {
+            icon: <PilcrowIcon />,
+            keywords: ['paragraph'],
+            label: t('text'),
+            value: ParagraphPlugin.key,
+          },
+          {
+            icon: <Heading1Icon />,
+            keywords: ['title', 'h1'],
+            label: t('heading1'),
+            value: HEADING_KEYS.h1,
+          },
+          {
+            icon: <Heading2Icon />,
+            keywords: ['subtitle', 'h2'],
+            label: t('heading2'),
+            value: HEADING_KEYS.h2,
+          },
+          {
+            icon: <Heading3Icon />,
+            keywords: ['subtitle', 'h3'],
+            label: t('heading3'),
+            value: HEADING_KEYS.h3,
+          },
+          {
+            icon: <ListIcon />,
+            keywords: ['unordered', 'ul', '-'],
+            label: t('bulletedList'),
+            value: ListStyleType.Disc,
+          },
+          {
+            icon: <ListOrdered />,
+            keywords: ['ordered', 'ol', '1'],
+            label: t('numberedList'),
+            value: ListStyleType.Decimal,
+          },
+          {
+            icon: <Square />,
+            keywords: ['checklist', 'task', 'checkbox', '[]'],
+            label: t('todoList'),
+            value: INDENT_LIST_KEYS.todo,
+          },
+          {
+            icon: <ChevronRightIcon />,
+            keywords: ['collapsible', 'expandable'],
+            label: t('toggle'),
+            value: TogglePlugin.key,
+          },
+          {
+            icon: <Code2 />,
+            keywords: ['```'],
+            label: t('codeBlock'),
+            value: CodeBlockPlugin.key,
+          },
+          {
+            icon: <Table />,
+            label: t('table'),
+            value: TablePlugin.key,
+          },
+          {
+            icon: <Quote />,
+            keywords: ['citation', 'blockquote', 'quote', '>'],
+            label: t('blockQuote'),
+            value: BlockquotePlugin.key,
+          },
+        ].map((item) => ({
+          ...item,
+          onSelect: (editor, value) => {
+            insertBlock(editor, value);
+          },
+        })),
+      },
+      {
+        id: 'Advanced blocks',
+        group: t('advancedBlocks'),
+        items: [
+          {
+            icon: <TableOfContentsIcon />,
+            keywords: ['toc'],
+            label: t('toc'),
+            value: TocPlugin.key,
+          },
+          {
+            icon: <Columns3Icon />,
+            label: t('3columns'),
+            value: 'action_three_columns',
+          },
+          {
+            focusEditor: false,
+            icon: <RadicalIcon />,
+            label: t('equation'),
+            value: EquationPlugin.key,
+          },
+        ].map((item) => ({
+          ...item,
+          onSelect: (editor, value) => {
+            insertBlock(editor, value);
+          },
+        })),
+      },
+      {
+        id: "Inline",
+        group: t('inline'),
+        items: [
+          {
+            focusEditor: true,
+            icon: <CalendarIcon />,
+            keywords: ['time'],
+            label: t('date'),
+            value: DatePlugin.key,
+          },
+          {
+            focusEditor: false,
+            icon: <RadicalIcon />,
+            label: t('inlineEquation'),
+            value: InlineEquationPlugin.key,
+          },
+        ].map((item) => ({
+          ...item,
+          onSelect: (editor, value) => {
+            insertInlineElement(editor, value);
+          },
+        })),
+      },
+    ];
     return (
       <PlateElement
         ref={ref}
@@ -233,7 +229,7 @@ export const SlashInputElement = withRef<typeof PlateElement>(
           <InlineComboboxInput />
 
           <InlineComboboxContent>
-            <InlineComboboxEmpty>No results</InlineComboboxEmpty>
+            <InlineComboboxEmpty>{t('noResults')}</InlineComboboxEmpty>
 
             {groups.map(({ id, group, items }) => (
               <InlineComboboxGroup key={id}>

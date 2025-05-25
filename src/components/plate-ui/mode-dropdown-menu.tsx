@@ -9,7 +9,7 @@ import {
   usePluginOption,
 } from '@udecode/plate/react';
 import { Eye, Pen, PencilLineIcon } from 'lucide-react';
-import i18n from '@/i18n';
+import { useTranslation } from 'react-i18next';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,13 +20,11 @@ import {
 } from './dropdown-menu';
 import { ToolbarButton } from './toolbar';
 
-const t = i18n.t;
-
 export function ModeDropdownMenu(props: DropdownMenuProps) {
   const editor = useEditorRef();
   const [readOnly, setReadOnly] = usePlateState('readOnly');
   const openState = useOpenState();
-
+  const { t } = useTranslation();
   const isSuggesting = usePluginOption(SuggestionPlugin, 'isSuggesting');
 
   let value = 'editing';

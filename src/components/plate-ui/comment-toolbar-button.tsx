@@ -5,14 +5,14 @@ import React from 'react';
 import { getDraftCommentKey } from '@udecode/plate-comments';
 import { useEditorPlugin } from '@udecode/plate/react';
 import { MessageSquareTextIcon } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 import { commentsPlugin } from '@/components/editor/plugins/comments-plugin';
 
 import { ToolbarButton } from './toolbar';
 
 export function CommentToolbarButton() {
   const { editor, setOption, tf } = useEditorPlugin(commentsPlugin);
-
+  const { t } = useTranslation();
   const onCommentToolbarButton = React.useCallback(() => {
     if (!editor.selection) return;
 
@@ -26,7 +26,7 @@ export function CommentToolbarButton() {
     <ToolbarButton
       onClick={onCommentToolbarButton}
       data-plate-prevent-overlay
-      tooltip="Comment"
+      tooltip={t('comment')}
     >
       <MessageSquareTextIcon />
     </ToolbarButton>

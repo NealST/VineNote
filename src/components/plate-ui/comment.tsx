@@ -24,8 +24,6 @@ import { useTranslation } from 'react-i18next';
 import { Avatar, AvatarFallback, AvatarImage } from './avatar';
 import {
   discussionStore,
-  useFakeCurrentUserId,
-  useFakeUserInfo,
 } from './block-discussion';
 import { Button } from './button';
 import { useCommentEditor } from './comment-create-form';
@@ -37,6 +35,7 @@ import {
   DropdownMenuTrigger,
 } from './dropdown-menu';
 import { Editor, EditorContainer } from './editor';
+import LogoImg from '@/assets/vinenote-logo.png';
 
 export const formatCommentDate = (date: Date) => {
   const now = new Date();
@@ -87,10 +86,12 @@ export function Comment(props: {
     onEditorClick,
   } = props;
   // const { user } = comment;
-
+  const { t } = useTranslation();
   const discussions = useStoreValue(discussionStore, 'discussions');
-  const userInfo = useFakeUserInfo(comment.userId);
-  const currentUserId = useFakeCurrentUserId();
+  const userInfo = {
+    id: 'user',
+    name: t('you'),
+  };
 
   const resolveDiscussion = async (id: string) => {
     const updatedDiscussions = discussions.map((discussion) => {
@@ -136,9 +137,6 @@ export function Comment(props: {
   };
 
   const { tf } = useEditorPlugin(CommentsPlugin);
-
-  // Replace to your own backend or refer to potion
-  const isMyComment = currentUserId === comment.userId;
 
   const initialValue = comment.contentRich;
 
@@ -187,12 +185,12 @@ export function Comment(props: {
     >
       <div className="relative flex items-center">
         <Avatar className="size-6">
-          <AvatarImage alt={userInfo?.name} src={userInfo?.avatarUrl} />
-          <AvatarFallback>{userInfo?.name?.[0]}</AvatarFallback>
+          <AvatarImage alt={userInfo.name} src={LogoImg} />
+          <AvatarFallback>{userInfo.name}</AvatarFallback>
         </Avatar>
         <h4 className="mx-2 text-sm leading-none font-semibold">
           {/* Replace to your own backend or refer to potion */}
-          {userInfo?.name}
+          {userInfo.name}
         </h4>
 
         <div className="text-xs leading-none text-muted-foreground/80">
@@ -202,7 +200,7 @@ export function Comment(props: {
           {comment.isEdited && <span>(edited)</span>}
         </div>
 
-        {isMyComment && (hovering || dropdownOpen) && (
+        {(hovering || dropdownOpen) && (
           <div className="absolute top-0 right-0 flex space-x-1">
             {index === 0 && (
               <Button

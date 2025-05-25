@@ -84,6 +84,7 @@
   "horiRule": "Horizontal Rule",
   "image": "Image",
   "media": "Media",
+  "todo": "Todo",
   "todoList": "Todo List",
   "orderedList": "Ordered List",
   "list": "List",
@@ -103,6 +104,8 @@
   "commandDesc": "Search through commands and documentation using the command menu",
   "reply": "Reply...",
   "operateTip": "You are operating too quickly, please try again later.",
+  "comment": "Comment",
+  "you": "You",
   "editComment": "Edit comment",
   "deleteComment": "Delete comment",
   "today": "Today",
@@ -123,6 +126,7 @@
   "textColor": "Text color",
   "bgColor": "Background color",
   "highlight": "Highlight",
+  "lineHeight": "Line height",
   "redo": "Redo",
   "undo": "Undo",
   "writeCaption": "Write a caption...",
@@ -215,5 +219,8 @@
   "get": "Get",
   "hide": "Hide",
   "show": "Show",
-  "saveChanges": "Save changes"
+  "saveChanges": "Save changes",
+  "emptyDocs": "No documents",
+  "emptyFolders": "No folders",
+  "emptyTags": "No tags"
 }

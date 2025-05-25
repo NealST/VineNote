@@ -84,6 +84,7 @@
   "horiRule": "分隔线",
   "image": "图片",
   "media": "媒体",
+  "todo": "待办",
   "todoList": "待办列表",
   "orderedList": "有序列表",
   "list": "无序列表",
@@ -103,6 +104,8 @@
   "commandDesc": "通过命令菜单搜索指令和文档",
   "reply": "回复...",
   "operateTip": "操作频率过高，请稍后再试",
+  "comment": "评论",
+  "you": "你",
   "editComment": "编辑评论",
   "deleteComment": "删除评论",
   "today": "今天",
@@ -123,6 +126,7 @@
   "textColor": "文字颜色",
   "bgColor": "背景色",
   "highlight": "高亮",
+  "lineHeight": "行高",
   "redo": "恢复",
   "undo": "撤销",
   "writeCaption": "添加描述...",
@@ -171,7 +175,7 @@
   "viewing": "浏览态",
   "editingMode": "编辑模式",
   "insert": "插入",
-  "kbInput": "键盘输入",
+  "kbInput": "键盘符号",
   "superscript": "上标",
   "subscript": "下标",
   "typaragraph": "段落输入",
@@ -215,5 +219,8 @@
   "get": "获取",
   "hide": "隐藏",
   "show": "显示",
-  "saveChanges": "保存"
+  "saveChanges": "保存",
+  "emptyDocs": "无文档",
+  "emptyFolders": "无文件夹",
+  "emptyTags": "无标签"
 }

@@ -33,7 +33,7 @@ import {
   setBlockType,
   STRUCTURAL_TYPES,
 } from '@/components/editor/transforms';
-import i18n from '@/i18n';
+import { useTranslation } from 'react-i18next';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,80 +44,77 @@ import {
 } from './dropdown-menu';
 import { ToolbarButton } from './toolbar';
 
-const t = i18n.t;
-
-const turnIntoItems = [
-  {
-    icon: <PilcrowIcon />,
-    keywords: ['paragraph'],
-    label: t('text'),
-    value: ParagraphPlugin.key,
-  },
-  {
-    icon: <Heading1Icon />,
-    keywords: ['title', 'h1'],
-    label: t('heading1'),
-    value: HEADING_KEYS.h1,
-  },
-  {
-    icon: <Heading2Icon />,
-    keywords: ['subtitle', 'h2'],
-    label: t('heading2'),
-    value: HEADING_KEYS.h2,
-  },
-  {
-    icon: <Heading3Icon />,
-    keywords: ['subtitle', 'h3'],
-    label: t('heading3'),
-    value: HEADING_KEYS.h3,
-  },
-  {
-    icon: <ListIcon />,
-    keywords: ['unordered', 'ul', '-'],
-    label: t('bulletedList'),
-    value: ListStyleType.Disc,
-  },
-  {
-    icon: <ListOrderedIcon />,
-    keywords: ['ordered', 'ol', '1'],
-    label: t('numberedList'),
-    value: ListStyleType.Decimal,
-  },
-  {
-    icon: <SquareIcon />,
-    keywords: ['checklist', 'task', 'checkbox', '[]'],
-    label: t('todoList'),
-    value: INDENT_LIST_KEYS.todo,
-  },
-  {
-    icon: <ChevronRightIcon />,
-    keywords: ['collapsible', 'expandable'],
-    label: t('toggleList'),
-    value: TogglePlugin.key,
-  },
-  {
-    icon: <FileCodeIcon />,
-    keywords: ['```'],
-    label: t('code'),
-    value: CodeBlockPlugin.key,
-  },
-  {
-    icon: <QuoteIcon />,
-    keywords: ['citation', 'blockquote', '>'],
-    label: t('quote'),
-    value: BlockquotePlugin.key,
-  },
-  {
-    icon: <Columns3Icon />,
-    label: t('3columns'),
-    value: 'action_three_columns',
-  },
-];
-
 export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
   const editor = useEditorRef();
   const openState = useOpenState();
-
+  const { t } = useTranslation();
+  const turnIntoItems = [
+    {
+      icon: <PilcrowIcon />,
+      keywords: ['paragraph'],
+      label: t('text'),
+      value: ParagraphPlugin.key,
+    },
+    {
+      icon: <Heading1Icon />,
+      keywords: ['title', 'h1'],
+      label: t('heading1'),
+      value: HEADING_KEYS.h1,
+    },
+    {
+      icon: <Heading2Icon />,
+      keywords: ['subtitle', 'h2'],
+      label: t('heading2'),
+      value: HEADING_KEYS.h2,
+    },
+    {
+      icon: <Heading3Icon />,
+      keywords: ['subtitle', 'h3'],
+      label: t('heading3'),
+      value: HEADING_KEYS.h3,
+    },
+    {
+      icon: <ListIcon />,
+      keywords: ['unordered', 'ul', '-'],
+      label: t('bulletedList'),
+      value: ListStyleType.Disc,
+    },
+    {
+      icon: <ListOrderedIcon />,
+      keywords: ['ordered', 'ol', '1'],
+      label: t('numberedList'),
+      value: ListStyleType.Decimal,
+    },
+    {
+      icon: <SquareIcon />,
+      keywords: ['checklist', 'task', 'checkbox', '[]'],
+      label: t('todoList'),
+      value: INDENT_LIST_KEYS.todo,
+    },
+    {
+      icon: <ChevronRightIcon />,
+      keywords: ['collapsible', 'expandable'],
+      label: t('toggleList'),
+      value: TogglePlugin.key,
+    },
+    {
+      icon: <FileCodeIcon />,
+      keywords: ['```'],
+      label: t('code'),
+      value: CodeBlockPlugin.key,
+    },
+    {
+      icon: <QuoteIcon />,
+      keywords: ['citation', 'blockquote', '>'],
+      label: t('quote'),
+      value: BlockquotePlugin.key,
+    },
+    {
+      icon: <Columns3Icon />,
+      label: t('3columns'),
+      value: 'action_three_columns',
+    },
+  ];
   const value = useSelectionFragmentProp({
     defaultValue: ParagraphPlugin.key,
     structuralTypes: STRUCTURAL_TYPES,

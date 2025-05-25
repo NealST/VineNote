@@ -113,13 +113,14 @@ export function BlockContextMenu({ children }: { children: React.ReactNode }) {
         }}
       >
         <ContextMenuGroup>
-          <ContextMenuItem
+          {/* todo: add ai function */}
+          {/* <ContextMenuItem
             onClick={() => {
               setValue('askAI');
             }}
           >
             {t('askAi')}
-          </ContextMenuItem>
+          </ContextMenuItem> */}
           <ContextMenuItem
             onClick={() => {
               editor

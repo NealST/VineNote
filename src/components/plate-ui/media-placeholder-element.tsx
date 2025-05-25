@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import type { ReactNode } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
 
-import type { TPlaceholderElement } from '@udecode/plate-media';
+import type { TPlaceholderElement } from "@udecode/plate-media";
 
-import { cn } from '@udecode/cn';
+import { cn } from "@udecode/cn";
 import {
   AudioPlugin,
   FilePlugin,
@@ -14,53 +14,18 @@ import {
   PlaceholderProvider,
   updateUploadHistory,
   VideoPlugin,
-} from '@udecode/plate-media/react';
+} from "@udecode/plate-media/react";
 import {
   PlateElement,
   useEditorPlugin,
   withHOC,
   withRef,
-} from '@udecode/plate/react';
-import { AudioLines, FileUp, Film, ImageIcon } from 'lucide-react';
-import { useFilePicker } from 'use-file-picker';
-
-import { useUploadFile } from '@/lib/uploadthing';
-
-import { Spinner } from './spinner';
-
-import i18n from '@/i18n';
-
-const t = i18n.t;
-
-const CONTENT: Record<
-  string,
-  {
-    accept: string[];
-    content: ReactNode;
-    icon: ReactNode;
-  }
-> = {
-  [AudioPlugin.key]: {
-    accept: ['audio/*'],
-    content: t('addAudioFile'),
-    icon: <AudioLines />,
-  },
-  [FilePlugin.key]: {
-    accept: ['*'],
-    content: t('addFile'),
-    icon: <FileUp />,
-  },
-  [ImagePlugin.key]: {
-    accept: ['image/*'],
-    content: t('addImage'),
-    icon: <ImageIcon />,
-  },
-  [VideoPlugin.key]: {
-    accept: ['video/*'],
-    content: t('addVideo'),
-    icon: <Film />,
-  },
-};
+} from "@udecode/plate/react";
+import { AudioLines, FileUp, Film, ImageIcon } from "lucide-react";
+import { useFilePicker } from "use-file-picker";
+import { useTranslation } from "react-i18next";
+import { useUploadFile } from "@/hooks/use-upload-file";
+import { Spinner } from "./spinner";
 
 export const MediaPlaceholderElement = withHOC(
   PlaceholderProvider,
@@ -68,6 +33,69 @@ export const MediaPlaceholderElement = withHOC(
     ({ children, className, nodeProps, ...props }, ref) => {
       const editor = props.editor;
       const element = props.element as TPlaceholderElement;
+      const { t } = useTranslation();
+      const CONTENT: Record<
+        string,
+        {
+          accept: string[];
+          content: ReactNode;
+          icon: ReactNode;
+        }
+      > = {
+        [AudioPlugin.key]: {
+          accept: [
+            ".mp3",
+            ".flac",
+            ".wav",
+            ".aac",
+            ".ogg",
+            ".wma",
+            ".aiff",
+            ".aif",
+            ".alac",
+            ".m4a",
+            ".mqa",
+            ".dsd",
+            ".aiff",
+          ],
+          content: t("addAudioFile"),
+          icon: <AudioLines />,
+        },
+        [FilePlugin.key]: {
+          accept: ["*"],
+          content: t("addFile"),
+          icon: <FileUp />,
+        },
+        [ImagePlugin.key]: {
+          accept: [
+            ".jpg",
+            ".jpeg",
+            ".png",
+            ".gif",
+            ".tiff",
+            ".bmp",
+            ".svg",
+            ".webp",
+            ".psd",
+            ".ai",
+            ".eps",
+            ".ico",
+            ".heic",
+            ".heif",
+            ".tif",
+            ".raw",
+            ".pdf",
+            ".avif",
+          ],
+          content: t("addImage"),
+          icon: <ImageIcon />,
+        },
+        [VideoPlugin.key]: {
+          accept: [".mp4", ".mov", ".avi", ".flv"],
+          content: t("addVideo"),
+          icon: <Film />,
+        },
+      };
 
       const { api } = useEditorPlugin(PlaceholderPlugin);
 
@@ -112,11 +140,11 @@ export const MediaPlaceholderElement = withHOC(
           editor.tf.removeNodes({ at: path });
 
           const node = {
-            children: [{ text: '' }],
+            children: [{ text: "" }],
             initialHeight: imageRef.current?.height,
             initialWidth: imageRef.current?.width,
             isUpload: true,
-            name: element.mediaType === FilePlugin.key ? uploadedFile.name : '',
+            name: element.mediaType === FilePlugin.key ? uploadedFile.name : "",
             placeholderId: element.id as string,
             type: element.mediaType!,
             url: uploadedFile.url,
@@ -151,11 +179,11 @@ export const MediaPlaceholderElement = withHOC(
       }, [isReplaced]);
 
       return (
-        <PlateElement ref={ref} className={cn(className, 'my-1')} {...props}>
+        <PlateElement ref={ref} className={cn(className, "my-1")} {...props}>
           {(!loading || !isImage) && (
             <div
               className={cn(
-                'flex cursor-pointer items-center rounded-sm bg-muted p-3 pr-9 select-none hover:bg-primary/10'
+                "flex cursor-pointer items-center rounded-sm bg-muted p-3 pr-9 select-none hover:bg-primary/10"
               )}
               onClick={() => !loading && openFilePicker()}
               contentEditable={false}
@@ -205,7 +233,7 @@ export function ImageProgress({
 }: {
   file: File;
   className?: string;
-  imageRef?: React.RefObject<HTMLImageElement | null>;
+  imageRef?: React.LegacyRef<HTMLImageElement> | undefined;
   progress?: number;
 }) {
   const [objectUrl, setObjectUrl] = useState<string | null>(null);
@@ -224,7 +252,7 @@ export function ImageProgress({
   }
 
   return (
-    <div className={cn('relative', className)} contentEditable={false}>
+    <div className={cn("relative", className)} contentEditable={false}>
       <img
         ref={imageRef}
         className="h-auto w-full rounded-sm object-cover"
@@ -247,21 +275,19 @@ export function formatBytes(
   bytes: number,
   opts: {
     decimals?: number;
-    sizeType?: 'accurate' | 'normal';
+    sizeType?: "accurate" | "normal";
   } = {}
 ) {
-  const { decimals = 0, sizeType = 'normal' } = opts;
+  const { decimals = 0, sizeType = "normal" } = opts;
 
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  const accurateSizes = ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB'];
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+  const accurateSizes = ["Bytes", "KiB", "MiB", "GiB", "TiB"];
 
-  if (bytes === 0) return '0 Byte';
+  if (bytes === 0) return "0 Byte";
 
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
 
   return `${(bytes / Math.pow(1024, i)).toFixed(decimals)} ${
-    sizeType === 'accurate'
-      ? (accurateSizes[i] ?? 'Bytest')
-      : (sizes[i] ?? 'Bytes')
+    sizeType === "accurate" ? accurateSizes[i] ?? "Bytest" : sizes[i] ?? "Bytes"
   }`;
 }

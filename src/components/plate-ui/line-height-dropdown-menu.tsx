@@ -7,7 +7,7 @@ import {
   useLineHeightDropdownMenuState,
 } from '@udecode/plate-line-height/react';
 import { WrapText } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,13 +22,13 @@ export function LineHeightDropdownMenu({ ...props }: DropdownMenuProps) {
   const openState = useOpenState();
   const state = useLineHeightDropdownMenuState();
   const { radioGroupProps } = useLineHeightDropdownMenu(state);
-
+  const { t } = useTranslation();
   return (
     <DropdownMenu modal={false} {...openState} {...props}>
       <DropdownMenuTrigger asChild>
         <ToolbarButton
           pressed={openState.open}
-          tooltip="Line height"
+          tooltip={t('lineHeight')}
           isDropdown
         >
           <WrapText />

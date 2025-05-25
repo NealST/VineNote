@@ -218,7 +218,7 @@ const TagList = function () {
             );
           })
         ) : (
-          <Empty tip={t("emptyFolders")} />
+          <Empty tipKey="emptyTags" />
         )}
       </div>
     </div>

@@ -1,27 +1,27 @@
-'use client';
+"use client";
 
-import React, { useCallback, useState, useTransition } from 'react';
+import React, { useCallback, useState } from "react";
 
-import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
-import { isUrl } from '@udecode/plate';
+import { isUrl } from "@udecode/plate";
 import {
   AudioPlugin,
   FilePlugin,
   ImagePlugin,
   VideoPlugin,
-} from '@udecode/plate-media/react';
-import { useEditorRef } from '@udecode/plate/react';
+} from "@udecode/plate-media/react";
+import { useEditorRef } from "@udecode/plate/react";
+import { useTranslation } from "react-i18next";
 import {
   AudioLinesIcon,
   FileUpIcon,
   FilmIcon,
   ImageIcon,
   LinkIcon,
-} from 'lucide-react';
-import { toast } from 'sonner';
-import { useFilePicker } from 'use-file-picker';
-import i18n from '@/i18n';
+} from "lucide-react";
+import { toast } from "sonner";
+import { useFilePicker } from "use-file-picker";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,7 +31,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from './alert-dialog';
+} from "./alert-dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,55 +39,87 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   useOpenState,
-} from './dropdown-menu';
-import { FloatingInput } from './input';
+} from "./dropdown-menu";
+import { FloatingInput } from "./input";
 import {
   ToolbarSplitButton,
   ToolbarSplitButtonPrimary,
   ToolbarSplitButtonSecondary,
-} from './toolbar';
-
-const t = i18n.t;
-const MEDIA_CONFIG: Record<
-  string,
-  {
-    accept: string[];
-    icon: React.ReactNode;
-    title: string;
-    tooltip: string;
-  }
-> = {
-  [AudioPlugin.key]: {
-    accept: ['audio/*'],
-    icon: <AudioLinesIcon className="size-4" />,
-    title: t('insertAudio'),
-    tooltip: t('audio'),
-  },
-  [FilePlugin.key]: {
-    accept: ['*'],
-    icon: <FileUpIcon className="size-4" />,
-    title: t('insertFile'),
-    tooltip: t('file'),
-  },
-  [ImagePlugin.key]: {
-    accept: ['image/*'],
-    icon: <ImageIcon className="size-4" />,
-    title: t('insertImage'),
-    tooltip: t('image'),
-  },
-  [VideoPlugin.key]: {
-    accept: ['video/*'],
-    icon: <FilmIcon className="size-4" />,
-    title: t('insertVideo'),
-    tooltip: t('video'),
-  },
-};
+} from "./toolbar";
 
 export function MediaToolbarButton({
   children,
   nodeType,
   ...props
 }: DropdownMenuProps & { nodeType: string }) {
+  const { t } = useTranslation();
+  const MEDIA_CONFIG: Record<
+    string,
+    {
+      accept: string[];
+      icon: React.ReactNode;
+      title: string;
+      tooltip: string;
+    }
+  > = {
+    [AudioPlugin.key]: {
+      accept: [
+        ".mp3",
+        ".flac",
+        ".wav",
+        ".aac",
+        ".ogg",
+        ".wma",
+        ".aiff",
+        ".aif",
+        ".alac",
+        ".m4a",
+        ".mqa",
+        ".dsd",
+        ".aiff",
+      ],
+      icon: <AudioLinesIcon className="size-4" />,
+      title: t("insertAudio"),
+      tooltip: t("audio"),
+    },
+    [FilePlugin.key]: {
+      accept: ["*"],
+      icon: <FileUpIcon className="size-4" />,
+      title: t("insertFile"),
+      tooltip: t("file"),
+    },
+    [ImagePlugin.key]: {
+      accept: [
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".gif",
+        ".tiff",
+        ".bmp",
+        ".svg",
+        ".webp",
+        ".psd",
+        ".ai",
+        ".eps",
+        ".ico",
+        ".heic",
+        ".heif",
+        ".tif",
+        ".raw",
+        ".pdf",
+        ".avif",
+      ],
+      icon: <ImageIcon className="size-4" />,
+      title: t("insertImage"),
+      tooltip: t("image"),
+    },
+    [VideoPlugin.key]: {
+      accept: [".mp4", ".mov", ".avi", ".flv"],
+      icon: <FilmIcon className="size-4" />,
+      title: t("insertVideo"),
+      tooltip: t("video"),
+    },
+  };
   const currentConfig = MEDIA_CONFIG[nodeType];
 
   const editor = useEditorRef();
@@ -109,7 +141,7 @@ export function MediaToolbarButton({
           openFilePicker();
         }}
         onKeyDown={(e) => {
-          if (e.key === 'ArrowDown') {
+          if (e.key === "ArrowDown") {
             e.preventDefault();
             openState.onOpenChange(true);
           }
@@ -133,11 +165,11 @@ export function MediaToolbarButton({
             <DropdownMenuGroup>
               <DropdownMenuItem onSelect={() => openFilePicker()}>
                 {currentConfig.icon}
-                {t('uploadFromComputer')}
+                {t("uploadFromComputer")}
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setDialogOpen(true)}>
                 <LinkIcon />
-                {t('insertViaUrl')}
+                {t("insertViaUrl")}
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
@@ -167,19 +199,25 @@ function MediaUrlDialogContent({
   nodeType,
   setOpen,
 }: {
-  currentConfig: (typeof MEDIA_CONFIG)[string];
+  currentConfig: {
+    accept: string[];
+    icon: React.ReactNode;
+    title: string;
+    tooltip: string;
+  };
   nodeType: string;
   setOpen: (value: boolean) => void;
 }) {
   const editor = useEditorRef();
-  const [url, setUrl] = useState('');
+  const [url, setUrl] = useState("");
+  const { t } = useTranslation();
   const embedMedia = useCallback(() => {
-    if (!isUrl(url)) return toast.error(t('invalidUrl'));
+    if (!isUrl(url)) return toast.error(t("invalidUrl"));
 
     setOpen(false);
     editor.tf.insertNodes({
-      children: [{ text: '' }],
-      name: nodeType === FilePlugin.key ? url.split('/').pop() : undefined,
+      children: [{ text: "" }],
+      name: nodeType === FilePlugin.key ? url.split("/").pop() : undefined,
       type: nodeType,
       url,
     });
@@ -198,7 +236,7 @@ function MediaUrlDialogContent({
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') embedMedia();
+            if (e.key === "Enter") embedMedia();
           }}
           label="URL"
           placeholder=""
@@ -208,14 +246,14 @@ function MediaUrlDialogContent({
       </AlertDialogDescription>
 
       <AlertDialogFooter>
-        <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+        <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
         <AlertDialogAction
           onClick={(e) => {
             e.preventDefault();
             embedMedia();
           }}
         >
-          {t('accept')}
+          {t("accept")}
         </AlertDialogAction>
       </AlertDialogFooter>
     </>

@@ -174,16 +174,6 @@ export const useFakeUserInfo = (userId: string) => {
       avatarUrl: 'https://avatars.githubusercontent.com/u/19695832?s=96&v=4',
       name: 'zbeyens',
     },
-    {
-      id: 'user2',
-      avatarUrl: 'https://avatars.githubusercontent.com/u/4272090?v=4',
-      name: '12joan',
-    },
-    {
-      id: 'user3',
-      avatarUrl: 'https://avatars.githubusercontent.com/u/164472012?v=4',
-      name: 'felixfeng33',
-    },
   ];
 
   return mockUsers.find((user) => user.id === userId);

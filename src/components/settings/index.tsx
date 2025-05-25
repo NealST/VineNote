@@ -443,7 +443,7 @@ export function SettingsDialog({ children }: { children: ReactNode }) {
           </div> */}
 
           {/* Upload Settings Group */}
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <div className="flex items-center gap-2">
               <div className="size-8 rounded-full bg-red-100 p-2 dark:bg-red-900">
                 <Upload className="size-4 text-red-600 dark:text-red-400" />
@@ -454,7 +454,7 @@ export function SettingsDialog({ children }: { children: ReactNode }) {
             <div className="space-y-2">
               {renderApiKeyInput("uploadthing", "Uploadthing API key")}
             </div>
-          </div>
+          </div> */}
 
           <Button size="lg" className="w-full" type="submit">
             {t('saveChanges')}

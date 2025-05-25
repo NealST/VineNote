@@ -249,7 +249,7 @@ const FolderList = function () {
             );
           })
         ) : (
-          <Empty tip={t("emptyFolders")} />
+          <Empty tipKey="emptyFolders" />
         )}
       </div>
     </div>

@@ -32,15 +32,13 @@ import {
   AvatarFallback,
   AvatarImage,
 } from '@/components/plate-ui/avatar';
-
+import LogoImg from '@/assets/vinenote-logo.png';
 import type { TDiscussion } from './block-discussion';
 import type { TComment } from './comment';
 
-import { AILeaf } from './ai-leaf';
+// import { AILeaf } from './ai-leaf';
 import {
   discussionStore,
-  useFakeCurrentUserId,
-  useFakeUserInfo,
 } from './block-discussion';
 import { Button } from './button';
 import { DateElement } from './date-element';
@@ -60,7 +58,8 @@ export const useCommentEditor = (
       id: 'comment',
       override: {
         components: {
-          [AIPlugin.key]: AILeaf,
+          // todo: add ai function
+          //[AIPlugin.key]: AILeaf,
           [BoldPlugin.key]: withProps(PlateLeaf, { as: 'strong' }),
           [DatePlugin.key]: DateElement,
           [EmojiInputPlugin.key]: EmojiInputElement,
@@ -106,8 +105,6 @@ export function CommentCreateForm({
   const discussionId = useCommentId() ?? discussionIdProp;
   const [resetKey, setResetKey] = React.useState(0);
 
-  const currentUserId = useFakeCurrentUserId();
-  const userInfo = useFakeUserInfo(currentUserId);
   const [commentValue, setCommentValue] = React.useState<Value | undefined>();
   const commentContent = useMemo(
     () =>
@@ -141,7 +138,7 @@ export function CommentCreateForm({
         discussionId,
         isEdited: false,
         // mock user id
-        userId: currentUserId,
+        userId: 'you'
       };
 
       // Add reply to discussion comments
@@ -181,13 +178,13 @@ export function CommentCreateForm({
           createdAt: new Date(),
           discussionId: _discussionId,
           isEdited: false,
-          userId: currentUserId,
+          userId: 'you',
         },
       ],
       createdAt: new Date(),
       documentContent,
       isResolved: false,
-      userId: currentUserId,
+      userId: 'you',
     };
 
     // Update discussions store
@@ -204,7 +201,7 @@ export function CommentCreateForm({
       );
       editor.tf.unsetNodes([getDraftCommentKey()], { at: path });
     });
-  }, [discussionId, editor, commentValue, currentUserId, discussions]);
+  }, [discussionId, editor, commentValue, discussions]);
 
   const onAddSuggestion = React.useCallback(async () => {
     if (!discussionId) return;
@@ -238,8 +235,8 @@ export function CommentCreateForm({
       <div className="mt-1 mr-1 shrink-0">
         {/* Replace to your own backend or refer to potion */}
         <Avatar className="size-6">
-          <AvatarImage alt={userInfo?.name} src={userInfo?.avatarUrl} />
-          <AvatarFallback>{userInfo?.name?.[0]}</AvatarFallback>
+          <AvatarImage alt={t('you')} src={LogoImg} />
+          <AvatarFallback>{t('you')}</AvatarFallback>
         </Avatar>
       </div>
 

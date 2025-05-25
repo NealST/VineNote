@@ -63,7 +63,7 @@ import {
   useOpenState,
 } from './dropdown-menu';
 import { ToolbarButton } from './toolbar';
-import i18n from '@/i18n';
+import { useTranslation } from 'react-i18next';
 
 type Group = {
   id: string;
@@ -79,182 +79,180 @@ interface Item {
   label?: string;
 }
 
-const t = i18n.t;
-
-const groups: Group[] = [
-  {
-    id: 'basicBlocks',
-    group: t('basicBlocks'),
-    items: [
-      {
-        icon: <PilcrowIcon />,
-        label: t('paragraph'),
-        value: ParagraphPlugin.key,
-      },
-      {
-        icon: <Heading1Icon />,
-        label: t('heading1'),
-        value: HEADING_KEYS.h1,
-      },
-      {
-        icon: <Heading2Icon />,
-        label: t('heading2'),
-        value: HEADING_KEYS.h2,
-      },
-      {
-        icon: <Heading3Icon />,
-        label: t('heading3'),
-        value: HEADING_KEYS.h3,
-      },
-      {
-        icon: <TableIcon />,
-        label: t('table'),
-        value: TablePlugin.key,
-      },
-      {
-        icon: <FileCodeIcon />,
-        label: t('code'),
-        value: CodeBlockPlugin.key,
-      },
-      {
-        icon: <QuoteIcon />,
-        label: t('quote'),
-        value: BlockquotePlugin.key,
-      },
-      {
-        icon: <MinusIcon />,
-        label: t('divider'),
-        value: HorizontalRulePlugin.key,
-      },
-    ].map((item) => ({
-      ...item,
-      onSelect: (editor, value) => {
-        insertBlock(editor, value);
-      },
-    })),
-  },
-  {
-    id: 'lists',
-    group: t('lists'),
-    items: [
-      {
-        icon: <ListIcon />,
-        label: t('bulletedList'),
-        value: ListStyleType.Disc,
-      },
-      {
-        icon: <ListOrderedIcon />,
-        label: t('numberedList'),
-        value: ListStyleType.Decimal,
-      },
-      {
-        icon: <SquareIcon />,
-        label: t('todoList'),
-        value: INDENT_LIST_KEYS.todo,
-      },
-      {
-        icon: <ChevronRightIcon />,
-        label: t('toggleList'),
-        value: TogglePlugin.key,
-      },
-    ].map((item) => ({
-      ...item,
-      onSelect: (editor, value) => {
-        insertBlock(editor, value);
-      },
-    })),
-  },
-  {
-    id: 'media',
-    group: t('media'),
-    items: [
-      {
-        icon: <ImageIcon />,
-        label: t('image'),
-        value: ImagePlugin.key,
-      },
-      {
-        icon: <FilmIcon />,
-        label: t('embed'),
-        value: MediaEmbedPlugin.key,
-      },
-      {
-        icon: <PenToolIcon />,
-        label: t('excalidraw'),
-        value: ExcalidrawPlugin.key,
-      },
-    ].map((item) => ({
-      ...item,
-      onSelect: (editor, value) => {
-        insertBlock(editor, value);
-      },
-    })),
-  },
-  {
-    id: 'advanceBlocks',
-    group: t('advancedBlocks'),
-    items: [
-      {
-        icon: <TableOfContentsIcon />,
-        label: t('toc'),
-        value: TocPlugin.key,
-      },
-      {
-        icon: <Columns3Icon />,
-        label: t('3columns'),
-        value: 'action_three_columns',
-      },
-      {
-        focusEditor: false,
-        icon: <RadicalIcon />,
-        label: t('equation'),
-        value: EquationPlugin.key,
-      },
-    ].map((item) => ({
-      ...item,
-      onSelect: (editor, value) => {
-        insertBlock(editor, value);
-      },
-    })),
-  },
-  {
-    id: 'inline',
-    group: t('inline'),
-    items: [
-      {
-        icon: <Link2Icon />,
-        label: t('link'),
-        value: LinkPlugin.key,
-      },
-      {
-        focusEditor: true,
-        icon: <CalendarIcon />,
-        label: t('date'),
-        value: DatePlugin.key,
-      },
-      {
-        focusEditor: false,
-        icon: <RadicalIcon />,
-        label: t('inlineEquation'),
-        value: InlineEquationPlugin.key,
-      },
-    ].map((item) => ({
-      ...item,
-      onSelect: (editor, value) => {
-        insertInlineElement(editor, value);
-      },
-    })),
-  },
-];
-
 export function InsertDropdownMenu(props: DropdownMenuProps) {
   const editor = useEditorRef();
   const openState = useOpenState();
+  const { t } = useTranslation();
+  const groups: Group[] = [
+    {
+      id: 'basicBlocks',
+      group: t('basicBlocks'),
+      items: [
+        {
+          icon: <PilcrowIcon />,
+          label: t('paragraph'),
+          value: ParagraphPlugin.key,
+        },
+        {
+          icon: <Heading1Icon />,
+          label: t('heading1'),
+          value: HEADING_KEYS.h1,
+        },
+        {
+          icon: <Heading2Icon />,
+          label: t('heading2'),
+          value: HEADING_KEYS.h2,
+        },
+        {
+          icon: <Heading3Icon />,
+          label: t('heading3'),
+          value: HEADING_KEYS.h3,
+        },
+        {
+          icon: <TableIcon />,
+          label: t('table'),
+          value: TablePlugin.key,
+        },
+        {
+          icon: <FileCodeIcon />,
+          label: t('code'),
+          value: CodeBlockPlugin.key,
+        },
+        {
+          icon: <QuoteIcon />,
+          label: t('quote'),
+          value: BlockquotePlugin.key,
+        },
+        {
+          icon: <MinusIcon />,
+          label: t('divider'),
+          value: HorizontalRulePlugin.key,
+        },
+      ].map((item) => ({
+        ...item,
+        onSelect: (editor, value) => {
+          insertBlock(editor, value);
+        },
+      })),
+    },
+    {
+      id: 'lists',
+      group: t('lists'),
+      items: [
+        {
+          icon: <ListIcon />,
+          label: t('bulletedList'),
+          value: ListStyleType.Disc,
+        },
+        {
+          icon: <ListOrderedIcon />,
+          label: t('numberedList'),
+          value: ListStyleType.Decimal,
+        },
+        {
+          icon: <SquareIcon />,
+          label: t('todoList'),
+          value: INDENT_LIST_KEYS.todo,
+        },
+        {
+          icon: <ChevronRightIcon />,
+          label: t('toggleList'),
+          value: TogglePlugin.key,
+        },
+      ].map((item) => ({
+        ...item,
+        onSelect: (editor, value) => {
+          insertBlock(editor, value);
+        },
+      })),
+    },
+    {
+      id: 'media',
+      group: t('media'),
+      items: [
+        {
+          icon: <ImageIcon />,
+          label: t('image'),
+          value: ImagePlugin.key,
+        },
+        {
+          icon: <FilmIcon />,
+          label: t('embed'),
+          value: MediaEmbedPlugin.key,
+        },
+        {
+          icon: <PenToolIcon />,
+          label: t('excalidraw'),
+          value: ExcalidrawPlugin.key,
+        },
+      ].map((item) => ({
+        ...item,
+        onSelect: (editor, value) => {
+          insertBlock(editor, value);
+        },
+      })),
+    },
+    {
+      id: 'advanceBlocks',
+      group: t('advancedBlocks'),
+      items: [
+        {
+          icon: <TableOfContentsIcon />,
+          label: t('toc'),
+          value: TocPlugin.key,
+        },
+        {
+          icon: <Columns3Icon />,
+          label: t('3columns'),
+          value: 'action_three_columns',
+        },
+        {
+          focusEditor: false,
+          icon: <RadicalIcon />,
+          label: t('equation'),
+          value: EquationPlugin.key,
+        },
+      ].map((item) => ({
+        ...item,
+        onSelect: (editor, value) => {
+          insertBlock(editor, value);
+        },
+      })),
+    },
+    {
+      id: 'inline',
+      group: t('inline'),
+      items: [
+        {
+          icon: <Link2Icon />,
+          label: t('link'),
+          value: LinkPlugin.key,
+        },
+        {
+          focusEditor: true,
+          icon: <CalendarIcon />,
+          label: t('date'),
+          value: DatePlugin.key,
+        },
+        {
+          focusEditor: false,
+          icon: <RadicalIcon />,
+          label: t('inlineEquation'),
+          value: InlineEquationPlugin.key,
+        },
+      ].map((item) => ({
+        ...item,
+        onSelect: (editor, value) => {
+          insertInlineElement(editor, value);
+        },
+      })),
+    },
+  ];
 
   return (
     <DropdownMenu modal={false} {...openState} {...props}>
       <DropdownMenuTrigger asChild>
-        <ToolbarButton pressed={openState.open} tooltip="Insert" isDropdown>
+        <ToolbarButton pressed={openState.open} tooltip={t("insert")} isDropdown>
           <PlusIcon />
         </ToolbarButton>
       </DropdownMenuTrigger>
