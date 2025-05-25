@@ -3,7 +3,7 @@ import { useState } from "react";
 import { generateReactHelpers } from "@uploadthing/react";
 import { toast } from "sonner";
 import { z } from "zod";
-import type { OurFileRouter } from '@/lib/uploadthing';
+import type { OurFileRouter } from "@/lib/uploadthing";
 
 export interface UploadedFile<T = unknown> extends ClientUploadedFileData<T> {}
 
@@ -12,79 +12,78 @@ interface UseUploadFileProps {
   onUploadError?: (error: unknown) => void;
 }
 
-export function useUploadFile({
-  onUploadComplete,
-  onUploadError,
-  ...props
-}: UseUploadFileProps = {}) {
+export function useUploadFile({}: //   onUploadComplete,
+//   onUploadError,
+//...props
+UseUploadFileProps = {}) {
   const [uploadedFile, setUploadedFile] = useState<UploadedFile>();
   const [uploadingFile, setUploadingFile] = useState<File>();
   const [progress, setProgress] = useState<number>(0);
   const [isUploading, setIsUploading] = useState(false);
 
-  async function uploadThing(file: File) {
-    setIsUploading(true);
-    setUploadingFile(file);
+  //   async function uploadThing(file: File) {
+  //     setIsUploading(true);
+  //     setUploadingFile(file);
 
-    try {
-      const res = await uploadFiles("editorUploader", {
-        ...props,
-        files: [file],
-        onUploadProgress: ({ progress }: { progress: number }) => {
-          setProgress(Math.min(progress, 100));
-        },
-      });
+  //     try {
+  //       const res = await uploadFiles("editorUploader", {
+  //         ...props,
+  //         files: [file],
+  //         onUploadProgress: ({ progress }: { progress: number }) => {
+  //           setProgress(Math.min(progress, 100));
+  //         },
+  //       });
 
-      setUploadedFile(res[0]);
+  //       setUploadedFile(res[0]);
 
-      onUploadComplete?.(res[0]);
+  //       onUploadComplete?.(res[0]);
 
-      return uploadedFile;
-    } catch (error) {
-      const errorMessage = getErrorMessage(error);
+  //       return uploadedFile;
+  //     } catch (error) {
+  //       const errorMessage = getErrorMessage(error);
 
-      const message =
-        errorMessage.length > 0
-          ? errorMessage
-          : "Something went wrong, please try again later.";
+  //       const message =
+  //         errorMessage.length > 0
+  //           ? errorMessage
+  //           : "Something went wrong, please try again later.";
 
-      toast.error(message);
+  //       toast.error(message);
 
-      onUploadError?.(error);
+  //       onUploadError?.(error);
 
-      // Mock upload for unauthenticated users
-      // toast.info('User not logged in. Mocking upload process.');
-      const mockUploadedFile = {
-        key: "mock-key-0",
-        appUrl: `https://mock-app-url.com/${file.name}`,
-        name: file.name,
-        size: file.size,
-        type: file.type,
-        url: URL.createObjectURL(file),
-      } as UploadedFile;
+  //       // Mock upload for unauthenticated users
+  //       // toast.info('User not logged in. Mocking upload process.');
+  //       const mockUploadedFile = {
+  //         key: "mock-key-0",
+  //         appUrl: `https://mock-app-url.com/${file.name}`,
+  //         name: file.name,
+  //         size: file.size,
+  //         type: file.type,
+  //         url: URL.createObjectURL(file),
+  //       } as UploadedFile;
 
-      // Simulate upload progress
-      let progress = 0;
+  //       // Simulate upload progress
+  //       let progress = 0;
 
-      const simulateProgress = async () => {
-        while (progress < 100) {
-          await new Promise((resolve) => setTimeout(resolve, 50));
-          progress += 2;
-          setProgress(Math.min(progress, 100));
-        }
-      };
+  //       const simulateProgress = async () => {
+  //         while (progress < 100) {
+  //           await new Promise((resolve) => setTimeout(resolve, 50));
+  //           progress += 2;
+  //           setProgress(Math.min(progress, 100));
+  //         }
+  //       };
 
-      await simulateProgress();
+  //       await simulateProgress();
 
-      setUploadedFile(mockUploadedFile);
+  //       setUploadedFile(mockUploadedFile);
 
-      return mockUploadedFile;
-    } finally {
-      setProgress(0);
-      setIsUploading(false);
-      setUploadingFile(undefined);
-    }
-  }
+  //       return mockUploadedFile;
+  //     } finally {
+  //       setProgress(0);
+  //       setIsUploading(false);
+  //       setUploadingFile(undefined);
+  //     }
+  //   }
 
   async function mockUploadThing(file: File) {
     setIsUploading(true);

@@ -12,7 +12,6 @@ import {
 import { Tags, X } from "lucide-react";
 import { useState, useMemo, useEffect, useRef } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Command,

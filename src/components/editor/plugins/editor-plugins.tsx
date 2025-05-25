@@ -25,7 +25,7 @@ import { FloatingToolbarPlugin } from '@/components/editor/plugins/floating-tool
 import { BlockDiscussion } from '@/components/plate-ui/block-discussion';
 import { SuggestionBelowNodes } from '@/components/plate-ui/suggestion-line-break';
 
-import { aiPlugins } from './ai-plugins';
+// import { aiPlugins } from './ai-plugins';
 import { alignPlugin } from './align-plugin';
 import { autoformatPlugin } from './autoformat-plugin';
 import { basicNodesPlugins } from './basic-nodes-plugins';

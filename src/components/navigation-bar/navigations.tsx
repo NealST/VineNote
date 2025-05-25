@@ -35,10 +35,6 @@ const Navigation = function () {
     },
   ];
 
-  const handleSelect = function(id: string) {
-    setSelectedNav(id);
-  }
-
   return (
     <div className={styles.navigation}>
       {dataSource.map((item) => {

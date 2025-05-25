@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef, ChangeEvent } from "react";
+import { useEffect, useRef, ChangeEvent } from "react";
 import {
   createTag,
   renameTag,

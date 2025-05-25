@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useCallback } from 'react';
+import { memo, useCallback, RefObject } from 'react';
 
 import type { UseEmojiPickerType } from '@udecode/plate-emoji/react';
 
@@ -114,7 +114,7 @@ export function EmojiPickerContent({
         return (
           <div
             key={categoryId}
-            ref={section.root}
+            ref={section.root as RefObject<HTMLDivElement>}
             style={{ width: getRowWidth }}
             data-id={categoryId}
           >
@@ -181,7 +181,7 @@ export function EmojiPickerContent({
 
   return (
     <div
-      ref={refs.current.contentRoot}
+      ref={refs.current.contentRoot as RefObject<HTMLDivElement>}
       className={cn(
         'h-full min-h-[50%] overflow-x-hidden overflow-y-auto px-2',
         '[&::-webkit-scrollbar]:w-4',
@@ -191,7 +191,7 @@ export function EmojiPickerContent({
       )}
       data-id="scroll"
     >
-      <div ref={refs.current.content} className="h-full">
+      <div ref={refs.current.content as RefObject<HTMLDivElement>} className="h-full">
         {isSearching ? SearchList() : EmojiList()}
       </div>
     </div>

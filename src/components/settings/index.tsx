@@ -13,11 +13,11 @@ import {
 //import { CopilotPlugin } from '@udecode/plate-ai/react';
 //import { useEditorPlugin } from '@udecode/plate/react';
 import {
-  ExternalLinkIcon,
-  Eye,
-  EyeOff,
-  Wand2Icon,
-  Upload,
+  // ExternalLinkIcon,
+  // Eye,
+  // EyeOff,
+  // Wand2Icon,
+  // Upload,
   SunMoon,
   BookA,
   Type
@@ -32,7 +32,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/plate-ui/dialog";
-import { Input } from "@/components/plate-ui/input";
+// import { Input } from "@/components/plate-ui/input";
 import {
   Select,
   SelectContent,
@@ -146,7 +146,7 @@ export function SettingsProvider({
 
 export function SettingsDialog({ children }: { children: ReactNode }) {
   const { settings, setSettings } = useSettings();
-  const [showKey, setShowKey] = useState<Record<string, boolean>>({});
+  // const [showKey, setShowKey] = useState<Record<string, boolean>>({});
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
   const modelApiKeyRef = useRef("");
@@ -184,21 +184,21 @@ export function SettingsDialog({ children }: { children: ReactNode }) {
     setConfig(JSON.stringify(newSettings));
   };
 
-  const handleModelChange = function (value: string) {
-    const newSettings = {
-      ...settings,
-      model: value,
-    };
-    setSettings(newSettings);
-  };
+  // const handleModelChange = function (value: string) {
+  //   const newSettings = {
+  //     ...settings,
+  //     model: value,
+  //   };
+  //   setSettings(newSettings);
+  // };
 
-  const handleModelApiKeyChange = function (value: string) {
-    modelApiKeyRef.current = value;
-  };
+  // const handleModelApiKeyChange = function (value: string) {
+  //   modelApiKeyRef.current = value;
+  // };
 
-  const handleUploadApiKeyChange = function (value: string) {
-    uploadApiKeyRef.current = value;
-  };
+  // const handleUploadApiKeyChange = function (value: string) {
+  //   uploadApiKeyRef.current = value;
+  // };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -223,9 +223,9 @@ export function SettingsDialog({ children }: { children: ReactNode }) {
     // });
   };
 
-  const toggleKeyVisibility = (key: string) => {
-    setShowKey((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
+  // const toggleKeyVisibility = (key: string) => {
+  //   setShowKey((prev) => ({ ...prev, [key]: !prev[key] }));
+  // };
 
   const renderThemeMode = () => {
     return (
@@ -286,100 +286,100 @@ export function SettingsDialog({ children }: { children: ReactNode }) {
     );
   };
 
-  const renderModel = () => {
-    return (
-      <div className="group relative">
-        <label
-          className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-xs font-medium text-foreground group-has-[:disabled]:opacity-50"
-          htmlFor="select-model"
-        >
-          {t("model")}
-        </label>
-        <Select
-          defaultValue={settings.language}
-          onValueChange={handleModelChange}
-        >
-          <SelectTrigger id="select-model" className="w-full">
-            <SelectValue className="w-full" role="combobox" />
-          </SelectTrigger>
-          <SelectContent className="w-full p-0">
-            {models.map((item) => {
-              const { label, value } = item;
-              return (
-                <SelectItem key={value} value={value}>
-                  {label}
-                </SelectItem>
-              );
-            })}
-          </SelectContent>
-        </Select>
-      </div>
-    );
-  };
+  // const renderModel = () => {
+  //   return (
+  //     <div className="group relative">
+  //       <label
+  //         className="absolute start-1 top-0 z-10 block -translate-y-1/2 bg-background px-2 text-xs font-medium text-foreground group-has-[:disabled]:opacity-50"
+  //         htmlFor="select-model"
+  //       >
+  //         {t("model")}
+  //       </label>
+  //       <Select
+  //         defaultValue={settings.language}
+  //         onValueChange={handleModelChange}
+  //       >
+  //         <SelectTrigger id="select-model" className="w-full">
+  //           <SelectValue className="w-full" role="combobox" />
+  //         </SelectTrigger>
+  //         <SelectContent className="w-full p-0">
+  //           {models.map((item) => {
+  //             const { label, value } = item;
+  //             return (
+  //               <SelectItem key={value} value={value}>
+  //                 {label}
+  //               </SelectItem>
+  //             );
+  //           })}
+  //         </SelectContent>
+  //       </Select>
+  //     </div>
+  //   );
+  // };
 
-  const renderApiKeyInput = (service: string, label: string) => {
-    const defaultValue =
-      settings[service === "ai" ? "modelApiKey" : "uploadThingApiKey"];
-    const handleChange =
-      service === "ai" ? handleModelApiKeyChange : handleUploadApiKeyChange;
-    return (
-      <div className="group relative">
-        <div className="flex items-center justify-between">
-          <label
-            className="absolute top-1/2 block -translate-y-1/2 cursor-text px-1 text-sm text-muted-foreground/70 transition-all group-focus-within:pointer-events-none group-focus-within:top-0 group-focus-within:cursor-default group-focus-within:text-xs group-focus-within:font-medium group-focus-within:text-foreground has-[+input:not(:placeholder-shown)]:pointer-events-none has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:cursor-default has-[+input:not(:placeholder-shown)]:text-xs has-[+input:not(:placeholder-shown)]:font-medium has-[+input:not(:placeholder-shown)]:text-foreground"
-            htmlFor={label}
-          >
-            <span className="inline-flex bg-background px-2">{label}</span>
-          </label>
-          <Button
-            asChild
-            size="icon"
-            variant="ghost"
-            className="absolute top-0 right-[28px] h-full"
-          >
-            <a
-              className="flex items-center"
-              href={
-                service === "openai"
-                  ? "https://platform.openai.com/api-keys"
-                  : "https://uploadthing.com/dashboard"
-              }
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <ExternalLinkIcon className="size-4" />
-              <span className="sr-only">{t('get')} {label}</span>
-            </a>
-          </Button>
-        </div>
+  // const renderApiKeyInput = (service: string, label: string) => {
+  //   const defaultValue =
+  //     settings[service === "ai" ? "modelApiKey" : "uploadThingApiKey"];
+  //   const handleChange =
+  //     service === "ai" ? handleModelApiKeyChange : handleUploadApiKeyChange;
+  //   return (
+  //     <div className="group relative">
+  //       <div className="flex items-center justify-between">
+  //         <label
+  //           className="absolute top-1/2 block -translate-y-1/2 cursor-text px-1 text-sm text-muted-foreground/70 transition-all group-focus-within:pointer-events-none group-focus-within:top-0 group-focus-within:cursor-default group-focus-within:text-xs group-focus-within:font-medium group-focus-within:text-foreground has-[+input:not(:placeholder-shown)]:pointer-events-none has-[+input:not(:placeholder-shown)]:top-0 has-[+input:not(:placeholder-shown)]:cursor-default has-[+input:not(:placeholder-shown)]:text-xs has-[+input:not(:placeholder-shown)]:font-medium has-[+input:not(:placeholder-shown)]:text-foreground"
+  //           htmlFor={label}
+  //         >
+  //           <span className="inline-flex bg-background px-2">{label}</span>
+  //         </label>
+  //         <Button
+  //           asChild
+  //           size="icon"
+  //           variant="ghost"
+  //           className="absolute top-0 right-[28px] h-full"
+  //         >
+  //           <a
+  //             className="flex items-center"
+  //             href={
+  //               service === "openai"
+  //                 ? "https://platform.openai.com/api-keys"
+  //                 : "https://uploadthing.com/dashboard"
+  //             }
+  //             rel="noopener noreferrer"
+  //             target="_blank"
+  //           >
+  //             <ExternalLinkIcon className="size-4" />
+  //             <span className="sr-only">{t('get')} {label}</span>
+  //           </a>
+  //         </Button>
+  //       </div>
 
-        <Input
-          id={label}
-          defaultValue={defaultValue}
-          onChange={(e) => handleChange(e.target.value)}
-          placeholder=""
-          data-1p-ignore
-          type={showKey[service] ? "text" : "password"}
-        />
-        <Button
-          size="icon"
-          variant="ghost"
-          className="absolute top-0 right-0 h-full"
-          onClick={() => toggleKeyVisibility(service)}
-          type="button"
-        >
-          {showKey[service] ? (
-            <EyeOff className="size-4" />
-          ) : (
-            <Eye className="size-4" />
-          )}
-          <span className="sr-only">
-            {showKey[service] ? t("hide") : t("show")} {label}
-          </span>
-        </Button>
-      </div>
-    );
-  };
+  //       <Input
+  //         id={label}
+  //         defaultValue={defaultValue}
+  //         onChange={(e) => handleChange(e.target.value)}
+  //         placeholder=""
+  //         data-1p-ignore
+  //         type={showKey[service] ? "text" : "password"}
+  //       />
+  //       <Button
+  //         size="icon"
+  //         variant="ghost"
+  //         className="absolute top-0 right-0 h-full"
+  //         onClick={() => toggleKeyVisibility(service)}
+  //         type="button"
+  //       >
+  //         {showKey[service] ? (
+  //           <EyeOff className="size-4" />
+  //         ) : (
+  //           <Eye className="size-4" />
+  //         )}
+  //         <span className="sr-only">
+  //           {showKey[service] ? t("hide") : t("show")} {label}
+  //         </span>
+  //       </Button>
+  //     </div>
+  //   );
+  // };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

@@ -1,6 +1,6 @@
 'use client';
 
-import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+// import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 
 import { withProps } from '@udecode/cn';
 import {
@@ -68,7 +68,7 @@ import {
 import { BaseTogglePlugin } from '@udecode/plate-toggle';
 import { useEditorRef } from '@udecode/plate/react';
 import { all, createLowlight } from 'lowlight';
-import { ArrowDownToLineIcon } from 'lucide-react';
+// import { ArrowDownToLineIcon } from 'lucide-react';
 
 import { BlockquoteElementStatic } from '@/components/plate-ui/blockquote-element-static';
 import { CodeBlockElementStatic } from '@/components/plate-ui/code-block-element-static';
@@ -107,18 +107,10 @@ import { TableRowElementStatic } from '@/components/plate-ui/table-row-element-s
 import { TocElementStatic } from '@/components/plate-ui/toc-element-static';
 import { ToggleElementStatic } from '@/components/plate-ui/toggle-element-static';
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  useOpenState,
-} from './dropdown-menu';
 import { EditorStatic } from './editor-static';
 import { EquationElementStatic } from './equation-element-static';
 import { InlineEquationElementStatic } from './inline-equation-element-static';
-import { ToolbarButton } from './toolbar';
+// import { ToolbarButton } from './toolbar';
 
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
@@ -130,9 +122,8 @@ import { writeFile, writeTextFile } from '@tauri-apps/plugin-fs';
 const siteUrl = 'https://platejs.org';
 const lowlight = createLowlight(all);
 
-export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
+export function ExportToolbarButton() {
   const editor = useEditorRef();
-  const openState = useOpenState();
   const { t } = useTranslation();
 
   const getCanvas = async () => {
@@ -160,23 +151,6 @@ export function ExportToolbarButton({ children, ...props }: DropdownMenuProps) {
     style.remove();
 
     return canvas;
-  };
-
-  const downloadFile = async (url: string, filename: string) => {
-    const response = await fetch(url);
-
-    const blob = await response.blob();
-    const blobUrl = window.URL.createObjectURL(blob);
-
-    const link = document.createElement('a');
-    link.href = blobUrl;
-    link.download = filename;
-    document.body.append(link);
-    link.click();
-    link.remove();
-
-    // Clean up the blob URL
-    window.URL.revokeObjectURL(blobUrl);
   };
 
   const exportToPdf = async (file: IArticleItem) => {

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, RefObject } from 'react';
 
 import { cn, withRef } from '@udecode/cn';
 import { isType } from '@udecode/plate';
@@ -146,7 +146,7 @@ export const Draggable = withRef<'div', PlateRenderElementProps>(
           </Gutter>
         )}
 
-        <div ref={previewRef} className="slate-blockWrapper">
+        <div ref={previewRef as RefObject<HTMLDivElement>} className="slate-blockWrapper">
           <MemoizedChildren>{children}</MemoizedChildren>
 
           <DropLine />

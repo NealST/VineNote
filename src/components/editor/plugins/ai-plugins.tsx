@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 import { AIChatPlugin, AIPlugin } from '@udecode/plate-ai/react';
 
 import { markdownPlugin } from '@/components/editor/plugins/markdown-plugin';

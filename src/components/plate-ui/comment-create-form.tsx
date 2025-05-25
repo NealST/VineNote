@@ -4,7 +4,7 @@ import React, { useEffect, useMemo } from 'react';
 
 import { cn, withProps } from '@udecode/cn';
 import { type Value, nanoid, NodeApi } from '@udecode/plate';
-import { AIPlugin } from '@udecode/plate-ai/react';
+// import { AIPlugin } from '@udecode/plate-ai/react';
 import {
   BasicMarksPlugin,
   BoldPlugin,

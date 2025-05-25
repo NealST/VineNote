@@ -3,7 +3,7 @@
 import React from 'react';
 
 import { withRef } from '@udecode/cn';
-import { AIChatPlugin } from '@udecode/plate-ai/react';
+// import { AIChatPlugin } from '@udecode/plate-ai/react';
 import { BlockquotePlugin } from '@udecode/plate-block-quote/react';
 import { CodeBlockPlugin } from '@udecode/plate-code-block/react';
 import { DatePlugin } from '@udecode/plate-date/react';
@@ -31,7 +31,7 @@ import {
   PilcrowIcon,
   Quote,
   RadicalIcon,
-  SparklesIcon,
+  // SparklesIcon,
   Square,
   Table,
   TableOfContentsIcon,

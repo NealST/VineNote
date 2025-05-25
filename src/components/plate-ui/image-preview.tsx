@@ -1,5 +1,6 @@
 'use client';
 
+import { RefObject } from 'react';
 import { cn } from '@udecode/cn';
 import {
   PreviewImage,
@@ -147,5 +148,5 @@ export const ImagePreview = () => {
 export function ScaleInput(props: React.ComponentProps<'input'>) {
   const { props: scaleInputProps, ref } = useScaleInput();
 
-  return <input {...scaleInputProps} {...props} ref={ref} />;
+  return <input {...scaleInputProps} {...props} ref={ref as RefObject<HTMLInputElement>} />;
 }

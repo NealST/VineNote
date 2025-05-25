@@ -45,7 +45,7 @@ export function ImportToolbarButton({ children, ...props }: DropdownMenuProps) {
   };
 
   const { openFilePicker: openMdFilePicker } = useFilePicker({
-    accept: ['.md'],
+    accept,
     multiple: false,
     onFilesSelected: async ({ plainFiles }) => {
       const text = await plainFiles[0].text();

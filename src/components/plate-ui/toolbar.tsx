@@ -15,8 +15,6 @@ export const Toolbar = withCn(
   'relative flex items-center select-none toolbar-container'
 );
 
-const a = cn('flex items-center');
-
 export const ToolbarToggleGroup = withCn(
   ToolbarPrimitive.ToolbarToggleGroup,
   'flex items-center'
