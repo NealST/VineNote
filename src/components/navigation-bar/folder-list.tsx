@@ -16,18 +16,19 @@ import { Folder, FolderPlus, FolderPen, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { produce } from "immer";
 import Empty from "./empty";
-import { Input } from "@/components/ui/input";
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import { InputWithAlert } from "../ui/input-with-alert";
 import type { IFolderItem } from "./types";
 import styles from "./index.module.css";
 
 const FolderList = function () {
   const [dataSource, setDataSource] = useState([] as IFolderItem[]);
+  const [inputAlert, setInputAlert] = useState('');
   const { folder: selectedFolder, setFolder: setSelectedFolder } =
     useSelectedFolder((state: IFolderState) => state);
   const inputValueRef = useRef("");
@@ -52,8 +53,17 @@ const FolderList = function () {
     }, 10);
   };
 
-  const handleInputChange = function (event: ChangeEvent<HTMLInputElement>) {
-    inputValueRef.current = event.target?.value;
+  const handleInputChange = function (event: ChangeEvent<HTMLInputElement>, index: number) {
+    const inputValue = event.target?.value?.trim();
+    if (!inputValue) {
+      setInputAlert(t('emptyInput'));
+      return
+    }
+    if (dataSource.some((item, dataIndex) => item.name === inputValue && dataIndex !== index)) {
+      setInputAlert(t('existedInput'));
+      return
+    }
+    inputValueRef.current = inputValue;
   };
 
   const handleSelect = function (folder: IFolderItem) {
@@ -214,12 +224,13 @@ const FolderList = function () {
                         size={14}
                       />
                       {isInput ? (
-                        <Input
+                        <InputWithAlert
                           className="h-8"
                           ref={inputRef}
                           type="text"
                           defaultValue={name}
-                          onChange={handleInputChange}
+                          alertTip={inputAlert}
+                          onChange={(event) => handleInputChange(event, index)}
                           onBlur={() => handleInputBlur(index)}
                         />
                       ) : (

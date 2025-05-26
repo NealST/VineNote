@@ -222,5 +222,7 @@
   "saveChanges": "保存",
   "emptyDocs": "无文档",
   "emptyFolders": "无文件夹",
-  "emptyTags": "无标签"
+  "emptyTags": "无标签",
+  "emptyInput": "输入值不能为空",
+  "existedInput": "当前名称已存在"
 }

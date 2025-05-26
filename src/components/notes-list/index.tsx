@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, ChangeEvent } from "react";
 import { FilePlus, Search, FilePen, Trash2 } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { InputWithAlert } from "../ui/input-with-alert";
+import { Input } from "../ui/input";
 import { Separator } from "@/components/ui/separator";
 import Empty from "./empty";
 import { useTranslation } from "react-i18next";
@@ -30,8 +31,12 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { SearchResults } from "./search-result";
-import { syncDeletedFile2Tag, syncRenamedFile2Tag } from '@/components/navigation-bar/controllers/tag-action';
+import {
+  syncDeletedFile2Tag,
+  syncRenamedFile2Tag,
+} from "@/components/navigation-bar/controllers/tag-action";
 import useDataSource from "./controllers/use-datasource";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import type { ISearchResult } from "./controllers/search-keyword";
 import type { IArticleItem } from "./types";
 import styles from "./index.module.css";
@@ -42,6 +47,7 @@ const NotesList = function () {
   const [dataSource, dataSourceRef, setDataSource] = useDataSource();
   const [mode, setMode] = useState<Mode>("normal");
   const [searchDataSource, setSearchDataSource] = useState<ISearchResult[]>([]);
+  const [inputAlert, setInputAlert] = useState('');
   const { selectedFile, setSelectedFile } = useSelectedFile();
   const selectedFolder = useSelectedFolder((state) => state.folder);
   const selectedTag = useSelectedTag((state) => state.tag);
@@ -101,7 +107,7 @@ const NotesList = function () {
         metadata: oldFile.metadata,
         name: inputValue,
         path: newFilePath,
-      }
+      };
       // sync the renamed file to tags
       syncRenamedFile2Tag(oldFile, newFile);
 
@@ -118,7 +124,7 @@ const NotesList = function () {
   const handleSearchChange = function (inputValue: string) {
     searchTextRef.current = inputValue;
     if (!inputValue.trim()) {
-      setMode('normal');
+      setMode("normal");
     }
   };
 
@@ -127,23 +133,36 @@ const NotesList = function () {
     if (searchText && selectedFolder) {
       searchFilesForKeyword(selectedFolder.path, searchText).then((result) => {
         console.log("search keyword result", result);
-        setMode('search');
+        setMode("search");
         setSearchDataSource(result);
       });
     }
   };
 
-  const handleInputChange = function (event: ChangeEvent<HTMLInputElement>) {
-    inputRef.current = event.target?.value;
+  const handleInputChange = function (event: ChangeEvent<HTMLInputElement>, index: number) {
+    const inputValue = event.target?.value?.trim();
+    if (!inputValue) {
+      setInputAlert(t('emptyInput'));
+      return
+    }
+    if (dataSource.some((item, dataIndex) => item.name === inputValue && dataIndex !== index)) {
+      setInputAlert(t('existedInput'));
+      return
+    }
+    inputRef.current = inputValue;
   };
 
   const handleRenameFile = function (renamedFile: IArticleItem) {
     const curDataSource = dataSourceRef.current ?? [];
-    console.log('curDataSource', curDataSource);
-    const renamedIndex = curDataSource.findIndex(item => item.path === renamedFile.path);
-    setDataSource(produce(curDataSource, (draft) => {
-      draft[renamedIndex].action = "input";
-    }));
+    console.log("curDataSource", curDataSource);
+    const renamedIndex = curDataSource.findIndex(
+      (item) => item.path === renamedFile.path
+    );
+    setDataSource(
+      produce(curDataSource, (draft) => {
+        draft[renamedIndex].action = "input";
+      })
+    );
     setTimeout(() => {
       inputElRef.current?.focus();
     }, 10);
@@ -164,7 +183,9 @@ const NotesList = function () {
   const handleDeleteFile = function (deletedFile: IArticleItem) {
     const curDataSource = dataSourceRef.current ?? [];
     const len = curDataSource.length;
-    const deleteIndex = curDataSource.findIndex(item => item.path === deletedFile.path);
+    const deleteIndex = curDataSource.findIndex(
+      (item) => item.path === deletedFile.path
+    );
     deleteFile(deletedFile.path)
       .then(() => {
         // sync the deleted file to tags
@@ -244,11 +265,7 @@ const NotesList = function () {
 
   return (
     <div className={styles.notes_list}>
-      <div
-        className={cn(
-          styles.list_header,
-        )}
-      >
+      <div className={cn(styles.list_header)}>
         <span className={styles.header_label}>
           {headerName || t("allNotes")}
         </span>
@@ -284,81 +301,86 @@ const NotesList = function () {
       )}
 
       <div className={styles.list_display}>
-        {mode !== 'search' &&
-          dataSource.length > 0 &&
-          dataSource.map((item, index) => {
-            const { id, name, action, metadata } = item;
-            const isSelected = id === selectedFile?.id;
-            return (
-              <ContextMenu key={id}>
-                <ContextMenuTrigger>
-                  <div
-                    className={cn(
-                      styles.file_item,
-                      "hover:bg-accent rounded-md cursor-pointer",
-                      isSelected ? "bg-accent" : ""
-                    )}
-                    onClick={() => setSelectedFile(item)}
-                  >
-                    {action === "input" ? (
-                      <Input
-                        ref={inputElRef}
-                        defaultValue={name}
-                        onChange={handleInputChange}
-                        onBlur={() => handleInputBlur(index)}
-                      />
-                    ) : (
+        {mode !== "search" && dataSource.length > 0 && (
+          <ScrollArea className="h-full">
+            {dataSource.map((item, index) => {
+              const { id, name, action, metadata } = item;
+              const isSelected = id === selectedFile?.id;
+              return (
+                <ContextMenu key={id}>
+                  <ContextMenuTrigger>
+                    <div
+                      className={cn(
+                        styles.file_item,
+                        "hover:bg-accent rounded-md cursor-pointer",
+                        isSelected ? "bg-accent" : ""
+                      )}
+                      onClick={() => setSelectedFile(item)}
+                    >
+                      {action === "input" ? (
+                        <InputWithAlert
+                          ref={inputElRef}
+                          defaultValue={name}
+                          alertTip={inputAlert}
+                          onChange={(event) => handleInputChange(event, index)}
+                          onBlur={() => handleInputBlur(index)}
+                        />
+                      ) : (
+                        <div
+                          className={cn(
+                            styles.item_name,
+                            "text-sm text-muted-foreground",
+                            isSelected ? "text-accent-foreground" : ""
+                          )}
+                        >
+                          {name}
+                        </div>
+                      )}
                       <div
                         className={cn(
-                          styles.item_name,
-                          "text-sm text-muted-foreground",
+                          styles.item_time,
+                          "text-muted-foreground text-sm",
                           isSelected ? "text-accent-foreground" : ""
                         )}
                       >
-                        {name}
+                        {metadata.modified || metadata.created}
                       </div>
-                    )}
-                    <div
-                      className={cn(
-                        styles.item_time,
-                        "text-muted-foreground text-sm",
-                        isSelected ? "text-accent-foreground" : ""
-                      )}
-                    >
-                      {metadata.modified || metadata.created}
                     </div>
-                  </div>
-                </ContextMenuTrigger>
-                <ContextMenuContent>
-                  <ContextMenuItem onClick={() => handleRenameFile(item)}>
-                    <FilePen size={12} />
-                    <span className={styles.menu_item}>{t("rename")}</span>
-                  </ContextMenuItem>
-                  {mode === "tag" && (
-                    <ContextMenuItem onClick={() => handleDeleteInTag(index)}>
+                  </ContextMenuTrigger>
+                  <ContextMenuContent>
+                    <ContextMenuItem onClick={() => handleRenameFile(item)}>
+                      <FilePen size={12} />
+                      <span className={styles.menu_item}>{t("rename")}</span>
+                    </ContextMenuItem>
+                    {mode === "tag" && (
+                      <ContextMenuItem onClick={() => handleDeleteInTag(index)}>
+                        <Trash2 size={12} />
+                        <span className={styles.menu_item}>
+                          {t("deleteInTag")}
+                        </span>
+                      </ContextMenuItem>
+                    )}
+                    <ContextMenuItem onClick={() => handleDeleteFile(item)}>
                       <Trash2 size={12} />
                       <span className={styles.menu_item}>
-                        {t("deleteInTag")}
+                        {t("deleteFile")}
                       </span>
                     </ContextMenuItem>
-                  )}
-                  <ContextMenuItem onClick={() => handleDeleteFile(item)}>
-                    <Trash2 size={12} />
-                    <span className={styles.menu_item}>{t("deleteFile")}</span>
-                  </ContextMenuItem>
-                </ContextMenuContent>
-              </ContextMenu>
-            );
-          })}
-        {mode === 'search' && searchDataSource.length > 0 && (
+                  </ContextMenuContent>
+                </ContextMenu>
+              );
+            })}
+          </ScrollArea>
+        )}
+        {mode === "search" && searchDataSource.length > 0 && (
           <SearchResults
             keyword={searchTextRef.current.trim()}
             results={searchDataSource}
             allFiles={dataSource}
           />
         )}
-        {((mode === 'search' && searchDataSource.length === 0) ||
-          (mode !== 'search' && dataSource.length === 0)) && <Empty />}
+        {((mode === "search" && searchDataSource.length === 0) ||
+          (mode !== "search" && dataSource.length === 0)) && <Empty />}
       </div>
     </div>
   );

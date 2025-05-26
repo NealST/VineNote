@@ -222,5 +222,7 @@
   "saveChanges": "Save changes",
   "emptyDocs": "No documents",
   "emptyFolders": "No folders",
-  "emptyTags": "No tags"
+  "emptyTags": "No tags",
+  "emptyInput": "Input value should not be empty",
+  "existedInput": "Current input name has existed"
 }

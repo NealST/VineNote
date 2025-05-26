@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, ChangeEvent } from "react";
+import { useEffect, useRef, ChangeEvent, useState } from "react";
 import {
   createTag,
   renameTag,
@@ -16,7 +16,7 @@ import { Hash, BookmarkPlus, FolderPen, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { produce } from "immer";
 import Empty from "./empty";
-import { Input } from "@/components/ui/input";
+import { InputWithAlert } from "../ui/input-with-alert";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -29,6 +29,7 @@ import styles from "./index.module.css";
 
 const TagList = function () {
   const { dataSource, setDataSource } = useTagDataSource();
+  const [inputAlert, setInputAlert] = useState('');
   const { tag: selectedTag, setTag: setSelectedTag } =
     useSelectedTag();
   const inputValueRef = useRef("");
@@ -54,8 +55,17 @@ const TagList = function () {
     }, 10);
   };
 
-  const handleInputChange = function (event: ChangeEvent<HTMLInputElement>) {
-    inputValueRef.current = event.target?.value;
+  const handleInputChange = function (event: ChangeEvent<HTMLInputElement>, index: number) {
+    const inputValue = event.target?.value?.trim();
+    if (!inputValue) {
+      setInputAlert(t('emptyInput'));
+      return
+    }
+    if (dataSource.some((item, dataIndex) => item.name === inputValue && dataIndex !== index)) {
+      setInputAlert(t('existedInput'));
+      return
+    }
+    inputValueRef.current = inputValue;
   };
 
   const handleSelect = function (tag: ITagItem) {
@@ -183,12 +193,13 @@ const TagList = function () {
                         size={14}
                       />
                       {isInput ? (
-                        <Input
+                        <InputWithAlert
                           className="h-8"
                           ref={inputRef}
                           type="text"
                           defaultValue={name}
-                          onChange={handleInputChange}
+                          alertTip={inputAlert}
+                          onChange={(event) => handleInputChange(event, index)}
                           onBlur={() => handleInputBlur(index)}
                         />
                       ) : (
