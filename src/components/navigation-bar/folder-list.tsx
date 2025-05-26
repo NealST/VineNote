@@ -57,11 +57,10 @@ const FolderList = function () {
     const inputValue = event.target?.value?.trim();
     if (!inputValue) {
       setInputAlert(t('emptyInput'));
-      return
-    }
-    if (dataSource.some((item, dataIndex) => item.name === inputValue && dataIndex !== index)) {
+    } else if (dataSource.some((item, dataIndex) => item.name === inputValue && dataIndex !== index)) {
       setInputAlert(t('existedInput'));
-      return
+    } else {
+      setInputAlert('');
     }
     inputValueRef.current = inputValue;
   };
@@ -76,6 +75,7 @@ const FolderList = function () {
   const handleInputBlur = function (index: number) {
     const renameOrigin = renameOriginRef.current;
     const inputValue = inputValueRef.current;
+    setInputAlert('');
     // no rename indicates that it is in add mode
     if (!renameOrigin) {
       if (!inputValue) {
@@ -104,7 +104,7 @@ const FolderList = function () {
       return;
     }
     // verify whether the inputValue has existed
-    if (!inputValue || dataSource.some(item => item.name === inputValue)) {
+    if (!inputValue || inputValue === dataSource[index].name) {
       setDataSource(
         produce(dataSource, (draft) => {
           draft[index].type = 'folder';
@@ -136,7 +136,7 @@ const FolderList = function () {
     );
     setTimeout(() => {
       inputRef.current?.focus();
-    }, 10);
+    }, 100);
   };
 
   const handleDelete = function (deleteIndex: number) {
@@ -210,7 +210,7 @@ const FolderList = function () {
                       "text-sidebar-accent-foreground",
                       // 'text-muted-foreground hover:text-accent-foreground',
                       // "dark:hover:bg-accent/50",
-                      "h-8 rounded-md cursor-pointer",
+                      "min-h-8 rounded-md cursor-pointer",
                       isSelected && !isInput ? "bg-accent" : "",
                       isInput ? styles.item_input : ""
                     )}
@@ -220,12 +220,12 @@ const FolderList = function () {
                       <Folder
                         style={{
                           marginRight: "4px",
+                          flexShrink: 0
                         }}
                         size={14}
                       />
                       {isInput ? (
                         <InputWithAlert
-                          className="h-8"
                           ref={inputRef}
                           type="text"
                           defaultValue={name}

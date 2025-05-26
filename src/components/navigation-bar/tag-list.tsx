@@ -59,11 +59,10 @@ const TagList = function () {
     const inputValue = event.target?.value?.trim();
     if (!inputValue) {
       setInputAlert(t('emptyInput'));
-      return
-    }
-    if (dataSource.some((item, dataIndex) => item.name === inputValue && dataIndex !== index)) {
+    } else if (dataSource.some((item, dataIndex) => item.name === inputValue && dataIndex !== index)) {
       setInputAlert(t('existedInput'));
-      return
+    } else {
+      setInputAlert('');
     }
     inputValueRef.current = inputValue;
   };
@@ -79,6 +78,7 @@ const TagList = function () {
     const renameOrigin = renameOriginRef.current;
     const inputValue = inputValueRef.current;
     // no rename indicates that it is in add mode
+    setInputAlert('');
     if (!renameOrigin) {
       if (!inputValue) {
         setDataSource(produce(dataSource, draft => {
@@ -101,7 +101,7 @@ const TagList = function () {
       return;
     }
     // verify whether the inputValue has existed
-    if (!inputValue || dataSource.some(item => item.name === inputValue)) {
+    if (!inputValue || inputValue === dataSource[index].name) {
       setDataSource(
         produce(dataSource, (draft) => {
           draft[index].type = '';
@@ -128,7 +128,7 @@ const TagList = function () {
     );
     setTimeout(() => {
       inputRef.current?.focus();
-    }, 10);
+    }, 100);
   };
 
   const handleDelete = function (index: number) {
@@ -179,7 +179,7 @@ const TagList = function () {
                       "text-sidebar-accent-foreground",
                       // 'text-muted-foreground hover:text-accent-foreground',
                       "dark:hover:bg-accent/50",
-                      "h-8 rounded-md cursor-pointer",
+                      "min-h-8 rounded-md cursor-pointer",
                       isSelected && !isInput ? "bg-accent" : "",
                       isInput ? styles.item_input : ""
                     )}
@@ -189,12 +189,12 @@ const TagList = function () {
                       <Hash
                         style={{
                           marginRight: "4px",
+                          flexShrink: 0
                         }}
                         size={14}
                       />
                       {isInput ? (
                         <InputWithAlert
-                          className="h-8"
                           ref={inputRef}
                           type="text"
                           defaultValue={name}

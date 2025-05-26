@@ -11,7 +11,7 @@ function InputWithAlert({ className, type, ...props }: IProps) {
   const hasAlert = !!alertTip;
 
   return (
-    <>
+    <div>
       <input
         type={type}
         data-slot="input"
@@ -26,7 +26,7 @@ function InputWithAlert({ className, type, ...props }: IProps) {
         {...props}
       />
       {<p className="text-destructive mt-1" style={{fontSize: "12px"}}>{alertTip}</p>}
-    </>
+    </div>
   );
 }
 

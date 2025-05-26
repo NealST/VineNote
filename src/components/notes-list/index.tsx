@@ -149,12 +149,12 @@ const NotesList = function () {
       setInputAlert(t('existedInput'));
       return
     }
+    setInputAlert('');
     inputRef.current = inputValue;
   };
 
   const handleRenameFile = function (renamedFile: IArticleItem) {
     const curDataSource = dataSourceRef.current ?? [];
-    console.log("curDataSource", curDataSource);
     const renamedIndex = curDataSource.findIndex(
       (item) => item.path === renamedFile.path
     );
@@ -165,7 +165,7 @@ const NotesList = function () {
     );
     setTimeout(() => {
       inputElRef.current?.focus();
-    }, 10);
+    }, 100);
   };
 
   const handleDeleteInTag = async function (deleteIndex: number) {
