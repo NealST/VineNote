@@ -86,9 +86,12 @@ jobs:
       - name: Decode API key path
         env:
           APPLE_API_KEY_PATH: ${{ secrets.APPLE_API_KEY_PATH }}
-          KEY_FILE_PATH: ./apiKeyPath.p8
+          KEY_FILE_PATH: /Users/runner/work/VineNote/VineNote/appleApiKey.p8
         run: |
           echo $APPLE_API_KEY_PATH | base64 --decode > "$KEY_FILE_PATH"
+          ls -l "$KEY_FILE_PATH"
+          file "$KEY_FILE_PATH"
+          echo "KEY_FILE_PATH=$KEY_FILE_PATH" >> $GITHUB_ENV
 
       - name: Build with Notarization
         uses: tauri-apps/tauri-action@v0
@@ -96,7 +99,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
           APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
-          APPLE_API_KEY_PATH: ./apiKeyPath.p8
+          APPLE_API_KEY_PATH: ${{ env.KEY_FILE_PATH }}
           APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
           APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
           APPLE_SIGNING_IDENTITY: ${{ env.CERT_ID }}
