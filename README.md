@@ -44,4 +44,3 @@ This is why I created VineNote, I want to build a perfect note app for myself an
   * The application runs entirely locally and works offline, eliminating concerns about service reliability
   * No user data is ever uploaded; the project is open-source and transparent in its operations
 
-
