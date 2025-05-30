@@ -166,9 +166,14 @@ export function SettingsDialog({ children }: { children: ReactNode }) {
 
   const handleLanguageChange = function (value: Language) {
     i18n.changeLanguage(value);
+    // if set language to en, then set the font to default
+    if (value === 'en') {
+      setFont('system');
+    }
     const newSettings = {
       ...settings,
       language: value,
+      font: value === 'en' ? 'system' : settings.font,
     };
     setSettings(newSettings);
     setConfig(JSON.stringify(newSettings));
@@ -272,7 +277,7 @@ export function SettingsDialog({ children }: { children: ReactNode }) {
   const renderFont = () => {
     return (
       <div className="group relative">
-        <Select defaultValue={settings.font} onValueChange={handleFontChange}>
+        <Select value={settings.font} onValueChange={handleFontChange}>
           <SelectTrigger id="select-font" className="w-full">
             <SelectValue className="w-full" role="combobox" />
           </SelectTrigger>
