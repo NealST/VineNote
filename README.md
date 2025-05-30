@@ -1,6 +1,6 @@
 # VineNote
 
-[中文文档](https://github.com/NealST/VineNote/README.zh-CN.md)
+[中文文档](https://github.com/NealST/VineNote/blob/main/README.zh-CN.md)
 
 <img src="https://img.alicdn.com/imgextra/i1/O1CN01kT9jMJ27VpYqXreD2_!!6000000007803-1-tps-2600-1600.gif" style="border-radius:6px;" alt="demo" />
 
