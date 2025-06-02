@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "main": "main.js",
+  "homepage": "https://vinenote-home.vercel.app/en",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
