@@ -324,6 +324,12 @@ const NotesList = function () {
                           alertTip={inputAlert}
                           onChange={(event) => handleInputChange(event, index)}
                           onBlur={() => handleInputBlur(index)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              handleInputBlur(index);
+                            }
+                          }}
                         />
                       ) : (
                         <div
